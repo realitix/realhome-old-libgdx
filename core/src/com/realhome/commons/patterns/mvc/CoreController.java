@@ -4,6 +4,8 @@ package com.realhome.commons.patterns.mvc;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.realhome.commons.patterns.command.Command;
 import com.realhome.commons.patterns.observer.BaseObserver;
 import com.realhome.commons.patterns.observer.Notification;
@@ -92,9 +94,9 @@ public class CoreController implements Controller {
 		if (commandClass != null) {
 			Command command;
 			try {
-				command = commandClass.newInstance();
+				command = ClassReflection.newInstance(commandClass);
 				command.execute(note);
-			} catch (InstantiationException | IllegalAccessException e) {
+			} catch (ReflectionException e) {
 				e.printStackTrace();
 			}
 

@@ -4,6 +4,8 @@ package com.realhome.commons.patterns.command;
 import java.util.Collection;
 import java.util.Vector;
 
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.realhome.commons.patterns.observer.BaseNotifier;
 import com.realhome.commons.patterns.observer.Notification;
 
@@ -84,9 +86,9 @@ public class MacroCommand extends BaseNotifier implements Command {
 	public void execute (Notification notification) {
 		for (Class<? extends Command> commandClass : subCommands) {
 			try {
-				Command command = commandClass.newInstance();
+				Command command = ClassReflection.newInstance(commandClass);
 				command.execute(notification);
-			} catch (InstantiationException | IllegalAccessException e) {
+			} catch (ReflectionException e) {
 				e.printStackTrace();
 			}
 		}
