@@ -25,5 +25,8 @@ public class StartupCommand extends MacroCommand {
 	@Override
 	protected void initializeMacroCommand () {
 		super.initializeMacroCommand();
+		addSubCommand(BootstrapProxyCommand.class);
+		addSubCommand(BootstrapViewCommand.class);
+		addSubCommand(BootstrapCommand.class);
 	}
 }
