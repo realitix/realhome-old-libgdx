@@ -3,6 +3,7 @@ package com.realhome;
 
 import com.realhome.commons.patterns.facade.SimpleFacade;
 import com.realhome.commons.patterns.observer.BaseNotification;
+import com.realhome.controllers.StartupCommand;
 
 /** @author realitix */
 public class RealHomeFacade extends SimpleFacade {
@@ -38,7 +39,7 @@ public class RealHomeFacade extends SimpleFacade {
 	@Override
 	protected void initializeController () {
 		super.initializeController();
-		// registerCommand(STARTUP, StartupCommand.class);
+		registerCommand(STARTUP, StartupCommand.class);
 	}
 
 	@Override
