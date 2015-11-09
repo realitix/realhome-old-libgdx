@@ -2,6 +2,9 @@
 
 Real home allows you to create your beautiful house easily.
 
+## Status
+
+[![Build Status](https://travis-ci.org/realitix/realhome.svg?branch=master)](https://travis-ci.org/realitix/realhome) [![Coverage Status](https://coveralls.io/repos/realitix/realhome/badge.svg?branch=master&service=github)](https://coveralls.io/github/realitix/realhome?branch=master)
 
 ## Planning
 
