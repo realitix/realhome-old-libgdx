@@ -33,7 +33,6 @@ import com.realhome.RealHomeFacade;
 import com.realhome.commons.MsgAPI;
 import com.realhome.views.stage.UIStage;
 import com.realhome.views.stage.UIStageMediator;
-import com.sun.xml.internal.ws.api.pipe.Engine;
 
 public class RealHomeScreen implements Screen, InputProcessor {
 	private static final String TAG = RealHomeScreen.class.getCanonicalName();
@@ -41,7 +40,7 @@ public class RealHomeScreen implements Screen, InputProcessor {
 
 	public UIStage uiStage;
 
-	private Engine engine;
+	// private Engine engine;
 
 	private InputMultiplexer multiplexer;
 	private RealHomeFacade facade;
@@ -221,9 +220,9 @@ public class RealHomeScreen implements Screen, InputProcessor {
 		return false;
 	}
 
-	public void setEngine (Engine engine) {
-		this.engine = engine;
-	}
+	/*
+	 * public void setEngine (Engine engine) { this.engine = engine; }
+	 */
 
 	/*
 	 * public void setBackUI (SandboxBackUI sandboxBackUI) { this.sandboxBackUI = sandboxBackUI; }
