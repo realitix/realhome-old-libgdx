@@ -69,7 +69,7 @@ public class RealHomeScreenMediator extends SimpleMediator<RealHomeScreen> {
 			viewComponent.resume();
 			break;
 		case MsgAPI.RENDER:
-			viewComponent.render((float)notification.getBody());
+			viewComponent.render((Float)notification.getBody());
 			break;
 		case MsgAPI.RESIZE:
 			int[] data = notification.getBody();
