@@ -7,7 +7,7 @@ import com.realhome.commons.patterns.observer.Notification;
 
 /** @author realitix */
 public class RealHomeMenuBarMediator extends SimpleMediator<RealHomeMenuBar> {
-	private static final String TAG = RealHomeMenuBarMediator.class.getCanonicalName();
+	private static final String TAG = "com.realhome.views.menus.RealHomeMenuBarMediator";
 	public static final String NAME = TAG;
 
 	// private ProjectManager projectManager;
@@ -68,14 +68,14 @@ public class RealHomeMenuBarMediator extends SimpleMediator<RealHomeMenuBar> {
 	/*
 	 * private void handleGeneralNotification (Notification notification) { switch (notification.getName()) { case
 	 * ProjectManager.PROJECT_OPENED: onProjectOpened(); break; } }
-	 *
+	 * 
 	 * private void handleEditMenuNotification (Notification notification) { Sandbox sandbox = Sandbox.getInstance(); switch
 	 * (notification.getName()) { case Overlap2DMenuBar.CUT: facade.sendNotification(MsgAPI.ACTION_CUT); break; case
 	 * Overlap2DMenuBar.COPY: facade.sendNotification(MsgAPI.ACTION_COPY); break; case Overlap2DMenuBar.PASTE:
 	 * facade.sendNotification(MsgAPI.ACTION_PASTE); break; case Overlap2DMenuBar.UNDO: CommandManager commandManager =
 	 * facade.retrieveProxy(CommandManager.NAME); commandManager.undoCommand(); break; case Overlap2DMenuBar.REDO: commandManager =
 	 * facade.retrieveProxy(CommandManager.NAME); commandManager.redoCommand(); break; } }
-	 *
+	 * 
 	 * private void handleFileMenuNotification(Notification notification) { Sandbox sandbox = Sandbox.getInstance(); switch
 	 * (notification.getName()) { case Overlap2DMenuBar.NEW_PROJECT: break; case Overlap2DMenuBar.OPEN_PROJECT: showOpenProject();
 	 * break; case Overlap2DMenuBar.SAVE_PROJECT: SceneVO vo = sandbox.sceneVoFromItems(); projectManager.saveCurrentProject(vo);
@@ -85,44 +85,44 @@ public class RealHomeMenuBarMediator extends SimpleMediator<RealHomeMenuBar> {
 	 * facade.sendNotification(MsgAPI.ACTION_EXPORT_PROJECT); break; case Overlap2DMenuBar.EXPORT_SETTINGS:
 	 * //showDialog("showExportDialog"); break; case Overlap2DMenuBar.EXIT: Gdx.app.exit(); break; case Overlap2DMenuBar.NEW_SCENE:
 	 * DialogUtils.showInputDialog(sandbox.getUIStage(), "Create New Scene", "Scene Name : ", new InputDialogListener() {
-	 *
+	 * 
 	 * @Override public void finished(String input) { if (input == null || input.equals("")) { return; } SceneDataManager
 	 * sceneDataManager = facade.retrieveProxy(SceneDataManager.NAME); sceneDataManager.createNewScene(input);
 	 * sandbox.loadScene(input); onScenesChanged(); }
-	 *
+	 * 
 	 * @Override public void canceled() {
-	 *
+	 * 
 	 * } }); break; case Overlap2DMenuBar.SELECT_SCENE: sceneMenuItemClicked(notification.getBody()); break; case
 	 * Overlap2DMenuBar.DELETE_CURRENT_SCENE: DialogUtils.showConfirmDialog(sandbox.getUIStage(), "Delete Scene",
 	 * "Do you realy want to delete '" + projectManager.currentProjectVO.lastOpenScene + "' scene?", new String[]{"Delete",
 	 * "Cancel"}, new Integer[]{0, 1}, result -> { if (result == 0) { SceneDataManager sceneDataManager =
 	 * facade.retrieveProxy(SceneDataManager.NAME); sceneDataManager.deleteCurrentScene(); sandbox.loadScene("MainScene");
 	 * onScenesChanged(); } }); break; } }
-	 *
+	 * 
 	 * private void onScenesChanged () { viewComponent.reInitScenes(projectManager.currentProjectInfoVO.scenes); }
-	 *
+	 * 
 	 * private void onProjectOpened () { viewComponent.reInitScenes(projectManager.currentProjectInfoVO.scenes);
 	 * viewComponent.setProjectOpen(true); }
-	 *
+	 * 
 	 * public void showOpenProject () { Sandbox sandbox = Sandbox.getInstance(); // chooser creation FileChooser fileChooser = new
 	 * FileChooser(FileChooser.Mode.OPEN);
-	 *
+	 * 
 	 * // TODO: does not show folders on Windows // fileChooser.setSelectionMode(FileChooser.SelectionMode.FILES); //
 	 * fileChooser.setFileFilter(new SuffixFileFilter(".pit"));
-	 *
+	 * 
 	 * fileChooser.setMultiselectionEnabled(false); fileChooser.setDirectory(projectManager.getWorkspacePath());
 	 * fileChooser.setListener(new FileChooserAdapter() {
-	 *
+	 * 
 	 * @Override public void selected (FileHandle file) { String path = file.file().getAbsolutePath(); if (path.length() > 0) {
 	 * projectManager.openProjectFromPath(path); } } }); sandbox.getUIStage().addActor(fileChooser.fadeIn()); }
-	 *
+	 * 
 	 * public void recentProjectItemClicked (String path) { PreferencesManager prefs = PreferencesManager.getInstance();
 	 * prefs.buildRecentHistory(); prefs.pushHistory(path); Sandbox sandbox = Sandbox.getInstance();
 	 * projectManager.openProjectFromPath(path); }
-	 *
+	 * 
 	 * public void clearRecents () { PreferencesManager prefs = PreferencesManager.getInstance(); prefs.clearHistory();
 	 * viewComponent.reInitRecent(prefs.getRecentHistory()); }
-	 *
+	 * 
 	 * public void sceneMenuItemClicked (String sceneName) { Sandbox sandbox = Sandbox.getInstance(); sandbox.loadScene(sceneName);
 	 * }
 	 */

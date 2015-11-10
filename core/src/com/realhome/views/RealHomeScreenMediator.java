@@ -25,7 +25,7 @@ import com.realhome.commons.patterns.observer.Notification;
 
 /** Created by sargis on 3/30/15. */
 public class RealHomeScreenMediator extends SimpleMediator<RealHomeScreen> {
-	private static final String TAG = RealHomeScreenMediator.class.getCanonicalName();
+	private static final String TAG = "com.realhome.views.RealHomeScreenMediator";
 	public static final String NAME = TAG;
 
 	public RealHomeScreenMediator () {

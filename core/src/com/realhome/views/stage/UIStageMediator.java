@@ -25,7 +25,7 @@ import com.realhome.commons.patterns.observer.Notification;
 
 /** Created by sargis on 4/20/15. */
 public class UIStageMediator extends SimpleMediator<UIStage> {
-	private static final String TAG = UIStageMediator.class.getCanonicalName();
+	private static final String TAG = "com.realhome.views.stage.UIStageMediator";
 	public static final String NAME = TAG;
 
 	public UIStageMediator () {
@@ -53,12 +53,12 @@ public class UIStageMediator extends SimpleMediator<UIStage> {
 
 			/*
 			 * DialogUtils.showInputDialog(sandbox.getUIStage(), "New Library Item ", "Unique Name", new InputDialogListener() {
-			 * 
+			 *
 			 * @Override public void finished (String input) { Object[] payload = new Object[2]; //payload[0] = item; payload[1] =
 			 * input; facade.sendNotification(MsgAPI.ACTION_ADD_TO_LIBRARY, payload); }
-			 * 
+			 *
 			 * @Override public void canceled () {
-			 * 
+			 *
 			 * } });
 			 */
 			break;

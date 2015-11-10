@@ -35,7 +35,7 @@ import com.realhome.views.stage.UIStage;
 import com.realhome.views.stage.UIStageMediator;
 
 public class RealHomeScreen implements Screen, InputProcessor {
-	private static final String TAG = RealHomeScreen.class.getCanonicalName();
+	private static final String TAG = "com.realhome.views.RealHomeScreen";
 	// public SandboxStage sandboxStage;
 
 	public UIStage uiStage;
