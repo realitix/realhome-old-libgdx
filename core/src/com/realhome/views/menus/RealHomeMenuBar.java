@@ -18,9 +18,6 @@
 
 package com.realhome.views.menus;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.MenuItem;
@@ -32,37 +29,36 @@ import com.realhome.views.ui.widgets.CustomMenuBar;
 
 public class RealHomeMenuBar extends CustomMenuBar {
 
-	public static final String prefix = "com.realhome.views.menus.RealHomeMenuBar";
+	public static final String TAG = "com.realhome.views.menus.RealHomeMenuBar";
 
-	public static final String FILE_MENU = prefix + ".FILE_MENU";
-	public static final String NEW_PROJECT = prefix + ".NEW_PROJECT";
-	public static final String OPEN_PROJECT = prefix + ".OPEN_PROJECT";
-	public static final String SAVE_PROJECT = prefix + ".SAVE_PROJECT";
-	public static final String IMPORT_TO_LIBRARY = prefix + ".IMPORT_TO_LIBRARY";
-	public static final String RECENT_PROJECTS = prefix + ".RECENT_PROJECTS";
-	public static final String CLEAR_RECENTS = prefix + ".CLEAR_RECENTS";
-	public static final String EXPORT = prefix + ".EXPORT";
-	public static final String EXPORT_SETTINGS = prefix + ".EXPORT_SETTINGS";
-	public static final String EXIT = prefix + ".EXIT";
-	public static final String NEW_SCENE = prefix + ".NEW_SCENE";
-	public static final String SELECT_SCENE = prefix + ".SELECT_SCENE";
-	public static final String DELETE_CURRENT_SCENE = prefix + ".DELETE_CURRENT_SCENE";
+	public static final String FILE_MENU = TAG + ".FILE_MENU";
+	public static final String NEW_PROJECT = TAG + ".NEW_PROJECT";
+	public static final String OPEN_PROJECT = TAG + ".OPEN_PROJECT";
+	public static final String SAVE_PROJECT = TAG + ".SAVE_PROJECT";
+	public static final String IMPORT_TO_LIBRARY = TAG + ".IMPORT_TO_LIBRARY";
+	public static final String RECENT_PROJECTS = TAG + ".RECENT_PROJECTS";
+	public static final String CLEAR_RECENTS = TAG + ".CLEAR_RECENTS";
+	public static final String EXPORT = TAG + ".EXPORT";
+	public static final String EXPORT_SETTINGS = TAG + ".EXPORT_SETTINGS";
+	public static final String EXIT = TAG + ".EXIT";
+	public static final String NEW_SCENE = TAG + ".NEW_SCENE";
+	public static final String SELECT_SCENE = TAG + ".SELECT_SCENE";
+	public static final String DELETE_CURRENT_SCENE = TAG + ".DELETE_CURRENT_SCENE";
 	//
-	public static final String EDIT_MENU = prefix + ".EDIT_MENU";
-	public static final String CUT = prefix + ".CUT";
-	public static final String COPY = prefix + ".COPY";
-	public static final String PASTE = prefix + ".PASTE";
-	public static final String UNDO = prefix + ".UNDO";
-	public static final String REDO = prefix + ".REDO";
+	public static final String EDIT_MENU = TAG + ".EDIT_MENU";
+	public static final String CUT = TAG + ".CUT";
+	public static final String COPY = TAG + ".COPY";
+	public static final String PASTE = TAG + ".PASTE";
+	public static final String UNDO = TAG + ".UNDO";
+	public static final String REDO = TAG + ".REDO";
 	//
 
-	public static final String WINDOW_MENU = prefix + ".WINDOW_MENU";
-	public static final String SPRITE_ANIMATIONS_EDITOR_OPEN = prefix + ".SPRITE_ANIMATIONS_EDITOR_OPEN";
-	public static final String CUSTOM_VARIABLES_EDITOR_OPEN = prefix + ".CUSTOM_VARIABLES_EDITOR_OPEN";
+	public static final String WINDOW_MENU = TAG + ".WINDOW_MENU";
+	public static final String SPRITE_ANIMATIONS_EDITOR_OPEN = TAG + ".SPRITE_ANIMATIONS_EDITOR_OPEN";
+	public static final String CUSTOM_VARIABLES_EDITOR_OPEN = TAG + ".CUSTOM_VARIABLES_EDITOR_OPEN";
 
-	public static final String RECENT_LIST_MODIFIED = prefix + ".RECENT_LIST_MODIFIED";
+	public static final String RECENT_LIST_MODIFIED = TAG + ".RECENT_LIST_MODIFIED";
 
-	private static final String TAG = RealHomeMenuBar.class.getCanonicalName();
 	private final FileMenu fileMenu;
 	private final String maskKey;
 	// private final EditMenu editMenu;
@@ -187,34 +183,27 @@ public class RealHomeMenuBar extends CustomMenuBar {
 		 * FILE_MENU))); scenesPopupMenu.addSeparator(); addScenes(scenes); }
 		 */
 
-		public String getFolderNameAndPath (String path) {
-			File path1 = new File(path);
-			File path2 = new File(path1.getParent());
-			return path2.getName() + " - [ " + path + "]";
-		}
+		/*
+		 * public String getFolderNameAndPath (String path) { File path1 = new File(path); File path2 = new File(path1.getParent());
+		 * return path2.getName() + " - [ " + path + "]"; }
+		 */
 
-		public void addRecent (ArrayList<String> paths) {
-			for (String path : paths) {
-				MenuItem menuItem = new MenuItem(getFolderNameAndPath(path), new MenuItemListener(RECENT_PROJECTS, path, FILE_MENU));
-				recentProjectsMenuItems.add(menuItem);
-				recentProjectsPopupMenu.addItem(menuItem);
-			}
-		}
+		/*
+		 * public void addRecent (ArrayList<String> paths) { for (String path : paths) { MenuItem menuItem = new
+		 * MenuItem(getFolderNameAndPath(path), new MenuItemListener(RECENT_PROJECTS, path, FILE_MENU));
+		 * recentProjectsMenuItems.add(menuItem); recentProjectsPopupMenu.addItem(menuItem); } }
+		 */
 
-		public void reInitRecent (ArrayList<String> paths) {
-			recentProjectsMenuItems.clear();
-			recentProjectsPopupMenu.clear();
-
-			addRecent(paths);
-
-			if (paths.size() > 0) {
-				recentProjectsPopupMenu.addSeparator();
-			}
-
-			MenuItem menuItem = new MenuItem("Clear list", new MenuItemListener(CLEAR_RECENTS, null, FILE_MENU));
-			recentProjectsMenuItems.add(menuItem);
-			recentProjectsPopupMenu.addItem(menuItem);
-		}
+		/*
+		 * public void reInitRecent (ArrayList<String> paths) { recentProjectsMenuItems.clear(); recentProjectsPopupMenu.clear();
+		 *
+		 * addRecent(paths);
+		 *
+		 * if (paths.size() > 0) { recentProjectsPopupMenu.addSeparator(); }
+		 *
+		 * MenuItem menuItem = new MenuItem("Clear list", new MenuItemListener(CLEAR_RECENTS, null, FILE_MENU));
+		 * recentProjectsMenuItems.add(menuItem); recentProjectsPopupMenu.addItem(menuItem); }
+		 */
 
 		public void setProjectOpen (boolean open) {
 			saveProject.setDisabled(!open);
