@@ -382,6 +382,7 @@
       "fontColor": "overlap2d-menuitem-grey"
     }
   },
+  /*
   "com.uwsoft.editor.view.ui.box.resourcespanel.draggable.list.ListItemResource$ListItemResourceStyle": {
     "library": {
       "up": "button-resource",
@@ -408,6 +409,7 @@
       }
     }
   },
+  */
   "com.kotcrab.vis.ui.widget.VisImageButton$VisImageButtonStyle": {
     "default": {
       "down": "button-down",
@@ -581,7 +583,7 @@
       "imageCheckedOver": "icon-unlink-active"
     }
   },
-  "com.kotcrab.vis.ui.widget.VisSlider$VisSliderStyle": {
+  "com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle": {
     "default-horizontal": {
       "background": "slider",
       "knob": "slider-knob",
@@ -689,5 +691,8 @@
         "fontColor": "white"
       }
     }
-  }
+  },
+  "com.kotcrab.vis.ui.Sizes": {
+	"default": {scaleFactor: 1, spacingBottom: 8, spacingRight: 6, menuItemIconSize: 22, numberSelectorButtonSize: 12, numberSelectorButtonsWidth: 12, numberSelectorFieldSize: 40 }
+	}
 }
