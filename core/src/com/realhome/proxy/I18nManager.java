@@ -6,7 +6,7 @@ import java.util.Locale;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.realhome.commons.patterns.proxy.BaseProxy;
+import com.realhome.common.pattern.proxy.BaseProxy;
 
 public class I18nManager extends BaseProxy {
 	public static final String NAME = "com.realhome.proxy.I18nManager";

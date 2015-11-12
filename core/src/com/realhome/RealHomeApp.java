@@ -5,8 +5,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.VisUI;
-import com.realhome.commons.MsgAPI;
-import com.realhome.commons.patterns.proxy.Proxy;
+import com.realhome.common.MsgAPI;
+import com.realhome.common.pattern.proxy.Proxy;
 
 public class RealHomeApp extends ApplicationAdapter implements Proxy {
 	public static final String NAME = "RealHomeApp";
