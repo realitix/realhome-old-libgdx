@@ -1,9 +1,9 @@
 
 package com.realhome;
 
-import com.realhome.commons.patterns.facade.SimpleFacade;
-import com.realhome.commons.patterns.observer.BaseNotification;
-import com.realhome.controllers.StartupCommand;
+import com.realhome.common.pattern.facade.SimpleFacade;
+import com.realhome.common.pattern.observer.BaseNotification;
+import com.realhome.controller.StartupCommand;
 
 /** @author realitix */
 public class RealHomeFacade extends SimpleFacade {
