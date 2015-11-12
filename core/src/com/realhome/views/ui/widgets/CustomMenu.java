@@ -17,7 +17,7 @@ public class CustomMenu extends PopupMenu {
 
 	private String title;
 
-	public CustomMenu (String title) {
+	public void load (String title) {
 		this.title = title;
 
 		openButton = new VisTextButton(title, new VisTextButton.VisTextButtonStyle(VisUI.getSkin().get("menu-bar",
