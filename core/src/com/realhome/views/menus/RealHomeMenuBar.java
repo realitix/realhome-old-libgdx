@@ -24,6 +24,7 @@ import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.realhome.RealHomeFacade;
 import com.realhome.events.MenuItemListener;
+import com.realhome.proxy.I18nManager;
 import com.realhome.views.ui.widgets.CustomMenu;
 import com.realhome.views.ui.widgets.CustomMenuBar;
 
@@ -81,33 +82,33 @@ public class RealHomeMenuBar extends CustomMenuBar {
 
 	/*
 	 * public void addScenes (ArrayList<SceneVO> scenes) { fileMenu.addScenes(scenes); }
-	 * 
+	 *
 	 * public void reInitScenes (ArrayList<SceneVO> scenes) { fileMenu.reInitScenes(scenes); }
-	 * 
+	 *
 	 * public void reInitRecent (ArrayList<String> paths) { fileMenu.reInitRecent(paths); }
-	 * 
+	 *
 	 * public void setProjectOpen (boolean open) { fileMenu.setProjectOpen(open); editMenu.setProjectOpen(open);
 	 * windowMenu.setProjectOpen(open); }
 	 */
 
 	/*
 	 * private class WindowMenu extends O2DMenu {
-	 *
+	 * 
 	 * private final MenuItem customVars; private final MenuItem animations;
-	 *
+	 * 
 	 * public WindowMenu () { super("Window"); customVars = new MenuItem("Custom Variables", new
 	 * MenuItemListener(CUSTOM_VARIABLES_EDITOR_OPEN, null, WINDOW_MENU)); animations = new MenuItem("Sprite Animations", new
 	 * MenuItemListener(SPRITE_ANIMATIONS_EDITOR_OPEN, null, WINDOW_MENU)); addItem(customVars); addItem(animations); }
-	 *
+	 * 
 	 * public void setProjectOpen (boolean open) { customVars.setDisabled(!open); animations.setDisabled(!open); }
-	 *
+	 * 
 	 * }
-	 *
+	 * 
 	 * private class EditMenu extends O2DMenu {
-	 *
+	 * 
 	 * private final MenuItem cut; private final MenuItem copy; private final MenuItem paste; private final MenuItem undo; private
 	 * final MenuItem redo;
-	 *
+	 * 
 	 * public EditMenu () { super("Edit"); cut = new MenuItem("Cut", new MenuItemListener(CUT, null,
 	 * EDIT_MENU)).setShortcut(maskKey + " + X"); copy = new MenuItem("Copy", new MenuItemListener(COPY, null,
 	 * EDIT_MENU)).setShortcut(maskKey + " + C"); paste = new MenuItem("Paste", new MenuItemListener(PASTE, null,
@@ -115,14 +116,14 @@ public class RealHomeMenuBar extends CustomMenuBar {
 	 * EDIT_MENU)).setShortcut(maskKey + " + Z"); redo = new MenuItem("Redo", new MenuItemListener(REDO, null,
 	 * EDIT_MENU)).setShortcut(maskKey + " + Shift + Z"); addItem(cut); addItem(copy); addItem(paste); addItem(undo);
 	 * addItem(redo); }
-	 *
+	 * 
 	 * public void setProjectOpen (boolean open) { cut.setDisabled(!open); copy.setDisabled(!open); paste.setDisabled(!open);
 	 * undo.setDisabled(!open); redo.setDisabled(!open); }
-	 *
+	 * 
 	 * }
 	 */
 
-	private class FileMenu extends O2DMenu {
+	private class FileMenu extends RealHomeMenu {
 
 		private final PopupMenu scenesPopupMenu;
 		private final Array<MenuItem> sceneMenuItems;
@@ -137,7 +138,8 @@ public class RealHomeMenuBar extends CustomMenuBar {
 		private final MenuItem recentProjectsMenuItem;
 
 		public FileMenu () {
-			super("File");
+			I18nManager i18n = facade.retrieveProxy(I18nManager.NAME);
+			load(i18n.get("fileMenu"));
 			saveProject = new MenuItem("Save Project", new MenuItemListener(SAVE_PROJECT, null, FILE_MENU));
 			addItem(new MenuItem("New Project", new MenuItemListener(NEW_PROJECT, null, FILE_MENU)));
 			addItem(new MenuItem("Open Project", new MenuItemListener(OPEN_PROJECT, null, FILE_MENU)));
@@ -176,7 +178,7 @@ public class RealHomeMenuBar extends CustomMenuBar {
 		 * public void addScenes (ArrayList<SceneVO> scenes) { for (SceneVO sceneVO : scenes) { MenuItem menuItem = new
 		 * MenuItem(sceneVO.sceneName, new MenuItemListener(SELECT_SCENE, sceneVO.sceneName, FILE_MENU));
 		 * sceneMenuItems.add(menuItem); scenesPopupMenu.addItem(menuItem); } }
-		 *
+		 * 
 		 * public void reInitScenes (ArrayList<SceneVO> scenes) { sceneMenuItems.clear(); scenesPopupMenu.clear();
 		 * scenesPopupMenu.addItem(new MenuItem("Create New Scene", new MenuItemListener(NEW_SCENE, null, FILE_MENU)));
 		 * scenesPopupMenu .addItem(new MenuItem("Delete Current Scene", new MenuItemListener(DELETE_CURRENT_SCENE, null,
@@ -196,11 +198,11 @@ public class RealHomeMenuBar extends CustomMenuBar {
 
 		/*
 		 * public void reInitRecent (ArrayList<String> paths) { recentProjectsMenuItems.clear(); recentProjectsPopupMenu.clear();
-		 *
+		 * 
 		 * addRecent(paths);
-		 *
+		 * 
 		 * if (paths.size() > 0) { recentProjectsPopupMenu.addSeparator(); }
-		 *
+		 * 
 		 * MenuItem menuItem = new MenuItem("Clear list", new MenuItemListener(CLEAR_RECENTS, null, FILE_MENU));
 		 * recentProjectsMenuItems.add(menuItem); recentProjectsPopupMenu.addItem(menuItem); }
 		 */
@@ -228,11 +230,12 @@ public class RealHomeMenuBar extends CustomMenuBar {
 // }
 	}
 
-	class O2DMenu extends CustomMenu {
+	class RealHomeMenu extends CustomMenu {
 
-		public O2DMenu (String title) {
-			super(title);
-			Cell labelCell = openButton.getLabelCell();
+		@Override
+		public void load (String title) {
+			super.load(title);
+			Cell<?> labelCell = openButton.getLabelCell();
 			labelCell.width(openButton.getWidth() + 14);
 		}
 	}
