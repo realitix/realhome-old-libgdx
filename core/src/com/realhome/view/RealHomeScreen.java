@@ -25,45 +25,29 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.realhome.RealHomeFacade;
 import com.realhome.common.MsgAPI;
+import com.realhome.view.canvas.Canvas;
 import com.realhome.view.stage.UIStage;
 import com.realhome.view.stage.UIStageMediator;
 
 public class RealHomeScreen implements Screen, InputProcessor {
-	private static final String TAG = "com.realhome.view.RealHomeScreen";
-	// public SandboxStage sandboxStage;
+	private static final String NAME = "com.realhome.view.RealHomeScreen";
 
 	public UIStage uiStage;
 
-	// private Engine engine;
+	private Array<Canvas> canvas = new Array<Canvas>();
 
 	private InputMultiplexer multiplexer;
 	private RealHomeFacade facade;
-	// private ProjectManager projectManager;
 	private boolean paused = false;
 
-	// private Sandbox sandbox;
-	// private SandboxBackUI sandboxBackUI;
-
-	private Batch batch;
 	private Color bgColor;
-	private Texture bgLogo;
-	private Vector2 screenSize;
-
-	private boolean isDrawingBgLogo;
 
 	public RealHomeScreen () {
 		facade = RealHomeFacade.getInstance();
 		bgColor = new Color(0.094f, 0.094f, 0.094f, 1.0f);
-		isDrawingBgLogo = true;
-		batch = new SpriteBatch();
-		bgLogo = new Texture(Gdx.files.internal("style/bglogo.png"));
-		screenSize = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	@Override
@@ -71,37 +55,17 @@ public class RealHomeScreen implements Screen, InputProcessor {
 		if (paused) {
 			return;
 		}
+
 		GL20 gl = Gdx.gl;
 		gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if (isDrawingBgLogo) {
-			batch.begin();
-			batch.setColor(1, 1, 1, 0.12f);
-			batch.draw(bgLogo, screenSize.x / 2 - bgLogo.getWidth() / 2, screenSize.y / 2 - bgLogo.getHeight() / 2);
-			batch.end();
-		} else {
-			// if (sandboxBackUI != null) sandboxBackUI.render(deltaTime);
-			// engine.update(deltaTime);
+		for (Canvas canvas : canvas) {
+			canvas.render();
 		}
 
 		uiStage.act(deltaTime);
 		uiStage.draw();
-	}
-
-	public void disableDrawingBgLogo () {
-		if (!isDrawingBgLogo) return;
-
-		this.isDrawingBgLogo = false;
-		bgLogo.dispose();
-		batch.dispose();
-		batch = null;
-		bgLogo = null;
-
-	}
-
-	public void setBgColor (Color color) {
-		bgColor = color;
 	}
 
 	@Override
@@ -120,32 +84,12 @@ public class RealHomeScreen implements Screen, InputProcessor {
 
 	@Override
 	public void show () {
-
 		UIStageMediator uiStageMediator = facade.retrieveMediator(UIStageMediator.NAME);
 		uiStage = uiStageMediator.getViewComponent();
-		// sandbox = Sandbox.getInstance();
-		// uiStage = sandbox.getUIStage();
-		// sandboxStage = commands.getSandboxStage();
 
-		// sandboxStage.commands = commands;
-
-		// projectManager = facade.retrieveProxy(ProjectManager.NAME);
-		// check for demo project
-		// File demoDir = new File(projectManager.getRootPath() + File.separator + "examples" + File.separator + "OverlapDemo");
-		// if (demoDir.isDirectory() && demoDir.exists()) {
-		// TODO: temp not opening the demo
-		if (false) {
-			// projectManager.openProjectFromPath(demoDir.getAbsolutePath() + File.separator + "project.pit");
-			// sandbox.loadCurrentProject();
-			// if (sandbox.getViewport() != null) {
-			// sandbox.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			// }
-			// facade.sendNotification(ProjectManager.PROJECT_OPENED);
-		}
 		multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(this);
 		multiplexer.addProcessor(uiStage);
-		// multiplexer.addProcessor(new SandboxInputAdapter());
 		Gdx.input.setInputProcessor(multiplexer);
 	}
 
@@ -157,9 +101,6 @@ public class RealHomeScreen implements Screen, InputProcessor {
 	@Override
 	public void resize (int width, int height) {
 		uiStage.resize(width, height);
-		// if (Sandbox.getInstance().getViewport() != null) {
-		// Sandbox.getInstance().getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		// }
 	}
 
 	@Override
@@ -219,12 +160,4 @@ public class RealHomeScreen implements Screen, InputProcessor {
 	public boolean scrolled (int amount) {
 		return false;
 	}
-
-	/*
-	 * public void setEngine (Engine engine) { this.engine = engine; }
-	 */
-
-	/*
-	 * public void setBackUI (SandboxBackUI sandboxBackUI) { this.sandboxBackUI = sandboxBackUI; }
-	 */
 }
