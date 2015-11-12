@@ -10,12 +10,12 @@ public class Floor {
 		return walls;
 	}
 
-	public House addWall (Wall wall) {
+	public Floor addWall (Wall wall) {
 		walls.add(wall);
 		return this;
 	}
 
-	public House removeWall (Wall wall) {
+	public Floor removeWall (Wall wall) {
 		walls.removeValue(wall, true);
 		return this;
 	}
