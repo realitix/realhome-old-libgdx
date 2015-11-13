@@ -18,7 +18,6 @@
 
 package com.realhome.view.stage;
 
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -37,7 +36,7 @@ public class UIStage extends Stage {
 	public Group midUI;
 
 	public UIStage () {
-		super(new ScreenViewport(), new PolygonSpriteBatch());
+		super(new ScreenViewport());
 
 		facade = RealHomeFacade.getInstance();
 

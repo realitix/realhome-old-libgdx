@@ -5,6 +5,8 @@ import com.realhome.RealHomeFacade;
 import com.realhome.common.pattern.command.SimpleCommand;
 import com.realhome.common.pattern.observer.Notification;
 import com.realhome.view.RealHomeScreenMediator;
+import com.realhome.view.canvas.BackgroundCanvasMediator;
+import com.realhome.view.canvas.DrawCanvasMediator;
 import com.realhome.view.menu.RealHomeMenuBarMediator;
 import com.realhome.view.stage.UIStageMediator;
 
@@ -17,5 +19,7 @@ public class BootstrapViewCommand extends SimpleCommand {
 		facade.registerMediator(new RealHomeScreenMediator());
 		facade.registerMediator(new RealHomeMenuBarMediator());
 		facade.registerMediator(new UIStageMediator());
+		facade.registerMediator(new BackgroundCanvasMediator());
+		facade.registerMediator(new DrawCanvasMediator());
 	}
 }
