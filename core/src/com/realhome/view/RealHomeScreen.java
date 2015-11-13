@@ -23,12 +23,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.RealHomeFacade;
 import com.realhome.common.MsgAPI;
+import com.realhome.view.canvas.BackgroundCanvasMediator;
 import com.realhome.view.canvas.Canvas;
+import com.realhome.view.canvas.DrawCanvasMediator;
 import com.realhome.view.stage.UIStage;
 import com.realhome.view.stage.UIStageMediator;
 
@@ -43,11 +43,8 @@ public class RealHomeScreen implements Screen, InputProcessor {
 	private RealHomeFacade facade;
 	private boolean paused = false;
 
-	private Color bgColor;
-
 	public RealHomeScreen () {
 		facade = RealHomeFacade.getInstance();
-		bgColor = new Color(0.094f, 0.094f, 0.094f, 1.0f);
 	}
 
 	@Override
@@ -56,12 +53,8 @@ public class RealHomeScreen implements Screen, InputProcessor {
 			return;
 		}
 
-		GL20 gl = Gdx.gl;
-		gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
-		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		for (Canvas canvas : canvas) {
-			canvas.render();
+		for (Canvas c : canvas) {
+			c.render();
 		}
 
 		uiStage.act(deltaTime);
@@ -86,6 +79,12 @@ public class RealHomeScreen implements Screen, InputProcessor {
 	public void show () {
 		UIStageMediator uiStageMediator = facade.retrieveMediator(UIStageMediator.NAME);
 		uiStage = uiStageMediator.getViewComponent();
+
+		BackgroundCanvasMediator bgCanvasMediator = facade.retrieveMediator(BackgroundCanvasMediator.NAME);
+		canvas.add(bgCanvasMediator.getViewComponent().setEnabled(true));
+
+		DrawCanvasMediator drawCanvasMediator = facade.retrieveMediator(DrawCanvasMediator.NAME);
+		canvas.add(drawCanvasMediator.getViewComponent().setEnabled(false));
 
 		multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(this);

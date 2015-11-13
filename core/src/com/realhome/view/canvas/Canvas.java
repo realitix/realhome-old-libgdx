@@ -8,5 +8,5 @@ public interface Canvas {
 
 	public void render ();
 
-	public void setEnabled (boolean enabled);
+	public Canvas setEnabled (boolean enabled);
 }
