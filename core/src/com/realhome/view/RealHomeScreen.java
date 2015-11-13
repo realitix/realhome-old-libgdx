@@ -26,9 +26,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.RealHomeFacade;
 import com.realhome.common.MsgAPI;
-import com.realhome.view.canvas.BackgroundCanvasMediator;
 import com.realhome.view.canvas.Canvas;
-import com.realhome.view.canvas.DrawCanvasMediator;
+import com.realhome.view.canvas.background.BackgroundCanvasMediator;
+import com.realhome.view.canvas.draw.DrawCanvasMediator;
 import com.realhome.view.stage.UIStage;
 import com.realhome.view.stage.UIStageMediator;
 

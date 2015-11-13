@@ -5,8 +5,8 @@ import com.realhome.RealHomeFacade;
 import com.realhome.common.pattern.command.SimpleCommand;
 import com.realhome.common.pattern.observer.Notification;
 import com.realhome.view.RealHomeScreenMediator;
-import com.realhome.view.canvas.BackgroundCanvasMediator;
-import com.realhome.view.canvas.DrawCanvasMediator;
+import com.realhome.view.canvas.background.BackgroundCanvasMediator;
+import com.realhome.view.canvas.draw.DrawCanvasMediator;
 import com.realhome.view.menu.RealHomeMenuBarMediator;
 import com.realhome.view.stage.UIStageMediator;
 

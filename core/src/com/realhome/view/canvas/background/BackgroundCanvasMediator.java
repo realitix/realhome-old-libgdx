@@ -1,12 +1,13 @@
 
-package com.realhome.view.canvas;
+package com.realhome.view.canvas.background;
 
 import com.realhome.RealHomeFacade;
 import com.realhome.common.pattern.mediator.SimpleMediator;
 import com.realhome.common.pattern.observer.Notification;
+import com.realhome.view.canvas.draw.DrawCanvasMediator;
 
 public class BackgroundCanvasMediator extends SimpleMediator<BackgroundCanvas> {
-	public static final String NAME = "com.realhome.view.canvas.BackgroundCanvasMediator";
+	public static final String NAME = "com.realhome.view.canvas.background.BackgroundCanvasMediator";
 	public static final String ENABLED = NAME + ".enabled";
 
 	public BackgroundCanvasMediator () {

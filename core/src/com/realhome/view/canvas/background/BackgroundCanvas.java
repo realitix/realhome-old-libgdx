@@ -1,5 +1,5 @@
 
-package com.realhome.view.canvas;
+package com.realhome.view.canvas.background;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -7,9 +7,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Disposable;
+import com.realhome.data.House;
+import com.realhome.view.canvas.Canvas;
 
-public class BackgroundCanvas implements Canvas, Disposable {
+public class BackgroundCanvas implements Canvas {
 	private SpriteBatch batch;
 	private Color color = new Color(1, 1, 1, 0.12f);
 	private Color bgColor = new Color(0.094f, 0.094f, 0.094f, 1.0f);
@@ -55,5 +56,9 @@ public class BackgroundCanvas implements Canvas, Disposable {
 	public BackgroundCanvas setEnabled (boolean enabled) {
 		this.enabled = enabled;
 		return this;
+	}
+
+	@Override
+	public void reload (House house) {
 	}
 }
