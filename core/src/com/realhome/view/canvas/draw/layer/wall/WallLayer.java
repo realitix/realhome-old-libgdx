@@ -1,26 +1,27 @@
 
 package com.realhome.view.canvas.draw.layer.wall;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.realhome.data.House;
+import com.realhome.data.Wall;
+import com.realhome.data.WallLink;
 import com.realhome.view.canvas.draw.layer.Layer;
 
 public class WallLayer implements Layer {
-	ImmediateModeRenderer20 renderer;
-
-	private final String vertexShader = "com.realhome.view.canvas.draw.layer.wall.line_vertex.glsl";
-	private final String fragmentShader = "com.realhome.view.canvas.draw.layer.wall.line_fragment.glsl";
+	private Array<Wall> walls = new Array<Wall>();
+	private Array<WallLink> wallLinks = new Array<WallLink>();
+	/** points contains a list of linked points */
+	private Array<Array<Vector2>> points = new Array<Array<Vector2>>();
 
 	public WallLayer () {
-		String vertex = Gdx.files.classpath(vertexShader).readString();
-		String fragment = Gdx.files.classpath(fragmentShader).readString();
-		ShaderProgram program = new ShaderProgram(vertex, fragment);
-		if (!program.isCompiled()) throw new GdxRuntimeException(program.getLog());
-		renderer = new ImmediateModeRenderer20(5000, true, true, 0, program);
+
+	}
+
+	private void generatePoints () {
+		points.clear();
+
 	}
 
 	@Override

@@ -2,14 +2,12 @@
 package com.realhome.data;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 
 public class Wall {
 	private int type;
 	private float height;
 	private Vector2 point0;
 	private Vector2 point1;
-	private Array<WallLink> links = new Array<WallLink>();
 
 	public int getType () {
 		return type;
@@ -35,20 +33,6 @@ public class Wall {
 
 	public Wall setPoint1 (Vector2 point1) {
 		this.point1 = point1;
-		return this;
-	}
-
-	public Array<WallLink> getLinks () {
-		return links;
-	}
-
-	public Wall addLink (WallLink link) {
-		links.add(link);
-		return this;
-	}
-
-	public Wall removeLink (WallLink link) {
-		links.removeValue(link, true);
 		return this;
 	}
 
