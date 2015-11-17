@@ -26,6 +26,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.RealHomeFacade;
 import com.realhome.common.MsgAPI;
+import com.realhome.data.Floor;
+import com.realhome.data.House;
+import com.realhome.data.Wall;
 import com.realhome.view.canvas.Canvas;
 import com.realhome.view.canvas.background.BackgroundCanvasMediator;
 import com.realhome.view.canvas.draw.DrawCanvasMediator;
@@ -85,6 +88,13 @@ public class RealHomeScreen implements Screen, InputProcessor {
 
 		DrawCanvasMediator drawCanvasMediator = facade.retrieveMediator(DrawCanvasMediator.NAME);
 		canvas.add(drawCanvasMediator.getViewComponent().setEnabled(false));
+
+		// TEST
+		House house = new House();
+		Floor floor = new Floor();
+		house.addFloor(floor);
+		floor.addWall(new Wall().setPoint0(0, 0).setPoint1(0, 100));
+		drawCanvasMediator.getViewComponent().reload(house);
 
 		multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(this);

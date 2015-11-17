@@ -65,6 +65,6 @@ public class DrawCanvas implements Canvas {
 
 	@Override
 	public void reload (House house) {
-
+		wallLayer.reload(house);
 	}
 }
