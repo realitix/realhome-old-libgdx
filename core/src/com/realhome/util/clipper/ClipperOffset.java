@@ -59,7 +59,7 @@ public class ClipperOffset {
 	private final double miterLimit;
 	private final static double TWO_PI = Math.PI * 2;
 
-	private final static double DEFAULT_ARC_TOLERANCE = 0.25;
+	public final static double DEFAULT_ARC_TOLERANCE = 0.25;
 
 	private final static double TOLERANCE = 1.0E-20;
 

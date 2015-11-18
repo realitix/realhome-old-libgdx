@@ -36,28 +36,27 @@ public class Floor {
 
 	private Vector2Path removeDuplicate (Vector2Path path) {
 		int i = 0;
+
 		while (i < path.size) {
-			if (i < path.size && path.get(i).equals(path.get(i + 1))) {
+			if (i < path.size - 1 && path.get(i).equals(path.get(i + 1))) {
 				path.removeIndex(i + 1);
 				i = -1;
 			}
 			i++;
 		}
+
 		return path;
 	}
 
 	private Vector2Path getPathFromGroup (WallGroup group) {
 		Vector2Path path = new Vector2Path();
-		Vector2 startPoint = null;
-		Wall startWall = null;
-		findBorderWallInGroup(group, startWall, startPoint);
+		StartWallResult startWall = findBorderWallInGroup(group);
 		cachedWalls.clear();
-		extractPoints(group, startWall, startPoint, path);
+		extractPoints(group, startWall.wall, startWall.point, path);
 		return path;
 	}
 
 	private void extractPoints (WallGroup group, Wall wall, Vector2 startPoint, Vector2Path path) {
-		if (startPoint == null) throw new GdxRuntimeException("StartPoint can't be null");
 		if (startPoint != wall.getPoint0() && startPoint != wall.getPoint1()) throw new GdxRuntimeException("Impossible!");
 
 		Vector2 endPoint = (wall.getPoint0() == startPoint) ? wall.getPoint1() : wall.getPoint0();
@@ -65,7 +64,8 @@ public class Floor {
 		path.add(endPoint);
 
 		cachedWalls.add(wall);
-		for (Wall w : walls) {
+		for (int i = 0; i < walls.size; i++) {
+			Wall w = walls.get(i);
 			if (cachedWalls.contains(w, true)) continue;
 			if (w.getPoint0().equals(endPoint)) {
 				extractPoints(group, w, w.getPoint0(), path);
@@ -75,7 +75,8 @@ public class Floor {
 		}
 	}
 
-	private void findBorderWallInGroup (WallGroup group, Wall wallOut, Vector2 startPoint) {
+	private StartWallResult findBorderWallInGroup (WallGroup group) {
+		StartWallResult result = new StartWallResult();
 		Array<Vector2> points = new Array<Vector2>();
 
 		for (Wall wall : group) {
@@ -95,17 +96,18 @@ public class Floor {
 			// return the wall which point belongs to
 			if (!duplicate) {
 				Vector2 p = points.get(i);
-				startPoint = p;
+				result.point = p;
 				for (Wall wall : group) {
 					if (wall.getPoint0() == p || wall.getPoint1() == p) {
-						wallOut = wall;
-						return;
+						result.wall = wall;
+						return result;
 					}
 				}
 			}
 		}
-		wallOut = group.get(0);
-		startPoint = wallOut.getPoint0();
+		result.wall = group.get(0);
+		result.point = result.wall.getPoint0();
+		return result;
 	}
 
 	public Array<WallGroup> getWallGroups () {
@@ -125,10 +127,10 @@ public class Floor {
 	private void findWallsInGroup (Wall wall, WallGroup wallGroup) {
 		cachedWalls.add(wall);
 		wallGroup.add(wall);
-		for (Wall w : walls) {
-			if (cachedWalls.contains(w, true)) continue;
-			if (wall.isLinked(w)) {
-				findWallsInGroup(w, wallGroup);
+		for (int i = 0; i < walls.size; i++) {
+			if (cachedWalls.contains(walls.get(i), true)) continue;
+			if (wall.isLinked(walls.get(i))) {
+				findWallsInGroup(walls.get(i), wallGroup);
 			}
 		}
 	}
@@ -137,5 +139,14 @@ public class Floor {
 	}
 
 	public static class Vector2Path extends Array<Vector2> {
+		public boolean isOpen () {
+			if (get(0).equals(get(size - 1))) return false;
+			return true;
+		}
+	}
+
+	public static class StartWallResult {
+		public Wall wall;
+		public Vector2 point;
 	}
 }

@@ -25,13 +25,21 @@ public class DrawCanvas implements Canvas {
 	@Override
 	public void create () {
 		camera = new OrthographicCamera();
+		camera.near = 1;
+		camera.far = 10000;
+		camera.position.set(0, 0, 1000);
+		camera.viewportHeight = 500;
+		camera.viewportWidth = 500;
+		camera.direction.set(0, 0, -1);
+		camera.up.set(0, 1, 0);
+		camera.update();
 		wallLayer = new WallLayer();
 		layers.add(wallLayer);
 	}
 
 	@Override
 	public void resize (int width, int height) {
-		camera.setToOrtho(false, VIRTUAL_HEIGHT * width / height, VIRTUAL_HEIGHT);
+		// camera.setToOrtho(false, VIRTUAL_HEIGHT * width / height, VIRTUAL_HEIGHT);
 		for (Layer layer : layers) {
 			layer.resize(width, height);
 		}
