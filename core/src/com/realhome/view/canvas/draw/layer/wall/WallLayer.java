@@ -1,6 +1,8 @@
 
 package com.realhome.view.canvas.draw.layer.wall;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -16,6 +18,7 @@ import com.realhome.util.clipper.ClipperOffset;
 import com.realhome.util.clipper.Path;
 import com.realhome.util.clipper.Paths;
 import com.realhome.util.clipper.Point.LongPoint;
+import com.realhome.util.renderer.shape.LineRenderer;
 import com.realhome.view.canvas.draw.layer.Layer;
 
 public class WallLayer implements Layer {
@@ -24,22 +27,12 @@ public class WallLayer implements Layer {
 	/** points contains a list of linked points */
 	private Array<Vector2> points = new Array<Vector2>();
 	ShapeRenderer renderer;
+	LineRenderer lineRenderer;
 	Paths paths;
 
 	public WallLayer () {
 		renderer = new ShapeRenderer();
-	}
-
-	private Array<Array<Wall>> groupLinkedWalls () {
-		Array<Array<Wall>> groups = new Array<Array<Wall>>();
-		Array<Wall> cachedWalls = new Array<Wall>();
-
-		for (Wall w : walls) {
-			if (cachedWalls.contains(w, true)) continue;
-
-		}
-
-		return groups;
+		lineRenderer = new LineRenderer(1000);
 	}
 
 	private void generatePoints (Array<Vector2Path> vector2paths) {
@@ -53,6 +46,7 @@ public class WallLayer implements Layer {
 				points.add(p2);
 				path.add(new LongPoint((long)p2.x, (long)p2.y));
 			}
+
 			// End type must be ClosedLine if path closed or Open square if path open
 			EndType endType = EndType.CLOSED_LINE;
 			if (p1.isOpen()) endType = EndType.OPEN_SQUARE;
@@ -60,7 +54,7 @@ public class WallLayer implements Layer {
 		}
 
 		paths = new Paths();
-		co.execute(paths, 5);
+		co.execute(paths, 15);
 
 		for (Path path : paths) {
 			System.out.println("new");
@@ -79,8 +73,7 @@ public class WallLayer implements Layer {
 	private Vector2 tmpV1 = new Vector2();
 	private Vector2 tmpV2 = new Vector2();
 
-	@Override
-	public void render (OrthographicCamera camera) {
+	public void render_old (OrthographicCamera camera) {
 		renderer.setProjectionMatrix(camera.combined);
 		renderer.begin(ShapeType.Line);
 
@@ -103,6 +96,29 @@ public class WallLayer implements Layer {
 		}
 
 		renderer.end();
+	}
+
+	@Override
+	public void render (OrthographicCamera camera) {
+		lineRenderer.begin(camera.combined, GL20.GL_TRIANGLES);
+
+		for (Path path : paths) {
+			for (int i = 0; i < path.size() - 1; i++) {
+				tmpV1.set(path.get(i).getX(), path.get(i).getY());
+				tmpV2.set(path.get(i + 1).getX(), path.get(i + 1).getY());
+				lineRenderer.line(tmpV1, tmpV2, Color.RED);
+			}
+
+			tmpV1.set(path.get(0).getX(), path.get(0).getY());
+			tmpV2.set(path.get(path.size() - 1).getX(), path.get(path.size() - 1).getY());
+			lineRenderer.line(tmpV1, tmpV2, Color.RED);
+		}
+
+		for (int i = 0; i < points.size - 1; i++) {
+			lineRenderer.line(points.get(i), points.get(i + 1), Color.GREEN);
+		}
+
+		lineRenderer.end();
 	}
 
 	@Override

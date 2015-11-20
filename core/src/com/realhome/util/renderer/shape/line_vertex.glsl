@@ -13,7 +13,7 @@ void main() {
 	v_color = a_color;
 	v_normal = a_normal;
 
-	float delta = a_normal * u_lineWidth;
+	vec2 delta = a_normal * u_lineWidth;
 	vec4 pos = u_worldTrans * vec4(a_position, 0.0, 1.0);
 	pos.xy += delta;
 

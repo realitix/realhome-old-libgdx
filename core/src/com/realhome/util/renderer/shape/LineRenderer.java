@@ -14,22 +14,24 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.realhome.util;
+package com.realhome.util.renderer.shape;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 /** @author realitix */
 public class LineRenderer {
-	private static final String vertexShader = "com.realhome.view.canvas.draw.layer.wall.line_vertex.glsl";
-	private static final String fragmentShader = "com.realhome.view.canvas.draw.layer.wall.line_fragment.glsl";
+	private static final String vertexShader = "com/realhome/util/renderer/shape/line_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/util/renderer/shape/line_fragment.glsl";
 
 	private int primitiveType;
 	private int vertexIdx;
@@ -42,8 +44,10 @@ public class LineRenderer {
 	private final int vertexSize;
 	private final int normalOffset;
 	private final int colorOffset;
-	private final Matrix4 projModelView = new Matrix4();
+	private final Matrix4 projViewTrans = new Matrix4();
 	private final float[] vertices;
+	private Matrix4 modelView = new Matrix4();
+	private Vector2 tmpV = new Vector2();
 
 	public LineRenderer (int maxVertices) {
 		this.maxVertices = maxVertices;
@@ -59,13 +63,7 @@ public class LineRenderer {
 		vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
 		vertexSize = mesh.getVertexAttributes().vertexSize / 4;
 		normalOffset = mesh.getVertexAttribute(Usage.Normal).offset / 4;
-		colorOffset = mesh.getVertexAttribute(Usage.ColorPacked).offset / 4;
-	}
-
-	private VertexAttributes buildVertexAttributes () {
-		return new VertexAttributes(new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE), new VertexAttribute(
-			Usage.Normal, 2, ShaderProgram.NORMAL_ATTRIBUTE), new VertexAttribute(Usage.ColorUnpacked, 4,
-			ShaderProgram.COLOR_ATTRIBUTE));
+		colorOffset = mesh.getVertexAttribute(Usage.ColorUnpacked).offset / 4;
 	}
 
 	public void setShader (ShaderProgram shader) {
@@ -74,44 +72,80 @@ public class LineRenderer {
 		ownsShader = false;
 	}
 
-	public void begin (Matrix4 projModelView, int primitiveType) {
-		this.projModelView.set(projModelView);
+	public void begin (Matrix4 projViewTrans, int primitiveType) {
+		this.projViewTrans.set(projViewTrans);
 		this.primitiveType = primitiveType;
+
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	public void color (Color color) {
-		vertices[vertexIdx + colorOffset] = color.toFloatBits();
+		color(color.r, color.g, color.b, color.a);
 	}
 
 	public void color (float r, float g, float b, float a) {
-		vertices[vertexIdx + colorOffset] = Color.toFloatBits(r, g, b, a);
+		final int idx = vertexIdx + colorOffset;
+		vertices[idx] = r;
+		vertices[idx + 1] = g;
+		vertices[idx + 2] = b;
+		vertices[idx + 3] = a;
 	}
 
-	public void color (float colorBits) {
-		vertices[vertexIdx + colorOffset] = colorBits;
-	}
-
-	public void normal (float x, float y, float z) {
+	public void normal (float x, float y) {
 		final int idx = vertexIdx + normalOffset;
 		vertices[idx] = x;
 		vertices[idx + 1] = y;
-		vertices[idx + 2] = z;
 	}
 
-	public void vertex (float x, float y, float z) {
+	public void vertex (float x, float y) {
 		final int idx = vertexIdx;
 		vertices[idx] = x;
 		vertices[idx + 1] = y;
-		vertices[idx + 2] = z;
 
 		vertexIdx += vertexSize;
 		numVertices++;
 	}
 
+	/** Create 4 points Two points stucked with opposed normal */
+	public void line (Vector2 p1, Vector2 p2, Color c) {
+		tmpV.set(p2).sub(p1).nor();
+		Vector2 normal = tmpV.rotate90(-1);
+		Vector2 normalInv = tmpV.cpy().rotate90(1).rotate90(1);
+
+		// First triangle
+		color(c.r, c.g, c.b, c.a);
+		normal(normal.x, normal.y);
+		vertex(p1.x, p1.y);
+
+		color(c.r, c.g, c.b, c.a);
+		normal(normal.x, normal.y);
+		vertex(p2.x, p2.y);
+
+		color(c.r, c.g, c.b, c.a);
+		normal(normalInv.x, normalInv.y);
+		vertex(p1.x, p1.y);
+
+		// Second triangle
+		color(c.r, c.g, c.b, c.a);
+		normal(normalInv.x, normalInv.y);
+		vertex(p1.x, p1.y);
+
+		color(c.r, c.g, c.b, c.a);
+		normal(normal.x, normal.y);
+		vertex(p2.x, p2.y);
+
+		color(c.r, c.g, c.b, c.a);
+		normal(normalInv.x, normalInv.y);
+		vertex(p2.x, p2.y);
+	}
+
 	public void flush () {
 		if (numVertices == 0) return;
 		shader.begin();
-		shader.setUniformMatrix("u_projModelView", projModelView);
+		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
+		shader.setUniformMatrix("u_worldTrans", modelView);
+		shader.setUniformf("u_lineWidth", 2f);
 		mesh.setVertices(vertices, 0, vertexIdx);
 		mesh.render(shader, primitiveType);
 		shader.end();

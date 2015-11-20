@@ -14,7 +14,7 @@ public class DrawCanvas implements Canvas {
 
 	private Array<Layer> layers = new Array<Layer>();
 	private WallLayer wallLayer;
-	private final float VIRTUAL_HEIGHT = 4f;
+	private final float VIRTUAL_HEIGHT = 1000; // centimeters
 	private OrthographicCamera camera;
 	private boolean enabled;
 
@@ -25,24 +25,28 @@ public class DrawCanvas implements Canvas {
 	@Override
 	public void create () {
 		camera = new OrthographicCamera();
-		camera.near = 1;
-		camera.far = 10000;
-		camera.position.set(0, 0, 1000);
-		camera.viewportHeight = 500;
-		camera.viewportWidth = 500;
-		camera.direction.set(0, 0, -1);
-		camera.up.set(0, 1, 0);
-		camera.update();
 		wallLayer = new WallLayer();
 		layers.add(wallLayer);
 	}
 
 	@Override
 	public void resize (int width, int height) {
-		// camera.setToOrtho(false, VIRTUAL_HEIGHT * width / height, VIRTUAL_HEIGHT);
+		updateCamera(VIRTUAL_HEIGHT * width / height, VIRTUAL_HEIGHT);
+		System.out.println(camera);
 		for (Layer layer : layers) {
 			layer.resize(width, height);
 		}
+	}
+
+	private void updateCamera (float viewportWidth, float viewportHeight) {
+		camera.near = 1;
+		camera.far = 100000;
+		camera.position.set(0, 0, 1000);
+		camera.viewportHeight = viewportHeight;
+		camera.viewportWidth = viewportWidth;
+		camera.direction.set(0, 0, -1);
+		camera.up.set(0, 1, 0);
+		camera.update();
 	}
 
 	@Override

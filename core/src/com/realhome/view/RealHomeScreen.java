@@ -93,13 +93,10 @@ public class RealHomeScreen implements Screen, InputProcessor {
 		House house = new House();
 		Floor floor = new Floor();
 		house.addFloor(floor);
-		floor.addWall(new Wall().setPoint0(0, 0).setPoint1(0, 100));
-		floor.addWall(new Wall().setPoint0(0, 100).setPoint1(100, 100));
-		floor.addWall(new Wall().setPoint0(100, 100).setPoint1(0, 00));
+		floor.addWall(new Wall().setPoint0(0, 0).setPoint1(0, 300));
+		floor.addWall(new Wall().setPoint0(0, 300).setPoint1(300, 300));
+		floor.addWall(new Wall().setPoint0(300, 300).setPoint1(0, 00));
 
-		floor.addWall(new Wall().setPoint0(30, 30).setPoint1(20, 120));
-		floor.addWall(new Wall().setPoint0(20, 120).setPoint1(120, 120));
-		floor.addWall(new Wall().setPoint0(120, 120).setPoint1(200, 200));
 		drawCanvasMediator.getViewComponent().reload(house);
 
 		multiplexer = new InputMultiplexer();
@@ -115,6 +112,9 @@ public class RealHomeScreen implements Screen, InputProcessor {
 
 	@Override
 	public void resize (int width, int height) {
+		for (Canvas c : canvas) {
+			c.resize(width, height);
+		}
 		uiStage.resize(width, height);
 	}
 
