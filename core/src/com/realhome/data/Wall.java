@@ -2,15 +2,21 @@
 package com.realhome.data;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public class Wall {
 	private int type;
 	private float height;
+	private int width;
 	private Vector2[] points = new Vector2[2];
+	private ObjectMap<Vector2, Vector2[]> extrusionPoints2D = new ObjectMap<Vector2, Vector2[]>(2);
 
 	public Wall () {
-		points[0] = new Vector2();
-		points[1] = new Vector2();
+		for (int i = 0; i < points.length; i++) {
+			points[i] = new Vector2();
+			extrusionPoints2D.put(points[i], new Vector2[] {new Vector2(), new Vector2()});
+		}
+
 	}
 
 	public int getType () {
@@ -22,8 +28,21 @@ public class Wall {
 		return this;
 	}
 
+	public Wall setWidth (int width) {
+		this.width = width;
+		return this;
+	}
+
+	public int getWidth () {
+		return width;
+	}
+
 	public Vector2[] getPoints () {
 		return points;
+	}
+
+	public Vector2[] getExtrusionPoints2D (Vector2 point) {
+		return extrusionPoints2D.get(point);
 	}
 
 	public Vector2 getPoint0 () {

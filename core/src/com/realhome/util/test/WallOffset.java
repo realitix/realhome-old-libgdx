@@ -4,6 +4,7 @@ package com.realhome.util.test;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.data.Wall;
 
 public class WallOffset {
@@ -45,7 +46,7 @@ public class WallOffset {
 				Vector2 p = w.getPoints()[j];
 
 				if (p.equals(point)) {
-					updateIntersectionExtrusionPoints(wall, w);
+					updateIntersectionExtrusionPoints(wall, w, point);
 					linkedWallFinded = true;
 				}
 			}
@@ -57,7 +58,7 @@ public class WallOffset {
 	}
 
 	/** Recupère les deux points d'intersections entre les murs */
-	private void updateIntersectionExtrusionPoints (Wall wall0, Wall wall1) {
+	private void updateIntersectionExtrusionPoints (Wall wall0, Wall wall1, Vector2 point) {
 		Vector2[] pointsWall0Side0 = getSideExtrusionPoints(wall0, true);
 		Vector2[] pointsWall0Side1 = getSideExtrusionPoints(wall0, false);
 
@@ -67,21 +68,22 @@ public class WallOffset {
 		Segment[] wall0SideSegments = new Segment[2];
 		wall0SideSegments[0] = new Segment();
 		wall0SideSegments[1] = new Segment();
-		
-		Vector2[] wall1SideSegments = new Vector2[2];
 
-		Vector2 wall0Segment = wall0.getPoint1().cpy().sub(wall0.getPoint0());
+		Segment[] wall1SideSegments = new Segment[2];
+		wall1SideSegments[0] = new Segment();
+		wall1SideSegments[1] = new Segment();
 
-		wall0SideSegments.point0.set(pointsWall0Side0[0]);
-		wall0SideSegments.point0.set(pointsWall0Side0[1]);
-		wall0SideSegments[0] = pointsWall0Side0[1].cpy().sub(pointsWall0Side0[0]);
-		wall0SideSegments[1] = pointsWall0Side1[1].cpy().sub(pointsWall0Side1[0]);
+		wall0SideSegments[0].point0.set(pointsWall0Side0[0]);
+		wall0SideSegments[0].point1.set(pointsWall0Side0[1]);
+		wall0SideSegments[1].point0.set(pointsWall0Side1[0]);
+		wall0SideSegments[1].point1.set(pointsWall0Side1[1]);
 
-		Vector2 wall1Segment = wall1.getPoint1().cpy().sub(wall1.getPoint0());
-		wall1SideSegments[0] = pointsWall1Side0[1].cpy().sub(pointsWall1Side0[0]);
-		wall1SideSegments[1] = pointsWall1Side1[1].cpy().sub(pointsWall1Side1[0]);
+		wall1SideSegments[0].point0.set(pointsWall1Side0[0]);
+		wall1SideSegments[0].point1.set(pointsWall1Side0[1]);
+		wall1SideSegments[1].point0.set(pointsWall1Side1[0]);
+		wall1SideSegments[1].point1.set(pointsWall1Side1[1]);
 
-		Vector2[] resultPoints = new Vector2[2];
+		Vector2[] extrusionPoints = wall0.getExtrusionPoints2D(point);
 		for (int i = 0; i < wall0SideSegments.length; i++) {
 			Vector2[] intersectionPoints = new Vector2[2];
 
@@ -89,23 +91,24 @@ public class WallOffset {
 				intersectionPoints[j] = getLineIntersection(wall0SideSegments[i], wall1SideSegments[j]);
 			}
 
-			resultPoints[i] = getNoCrossingIntersection(getFarestPoint(pointsWall0Sides[i], intersectionPoints), intersectionPoints,
-				enlargeSegment(wall1.getPoint1(), wall.getPoint0()));
+			Vector2 result = getNoCrossingIntersection(getFarestPoint(wall0SideSegments[i], intersectionPoints), intersectionPoints,
+				enlargeSegment(wall1.getPoint1(), wall1.getPoint0()));
+			extrusionPoints[i].set(result);
 		}
 	}
 
-	private Vector2 getLineIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4) {
+	private Vector2 getLineIntersection (Segment s0, Segment s1) {
 		Vector2 intersection = new Vector2();
-		Intersector.intersectLines(p1, p2, p3, p4, intersection);
+		Intersector.intersectLines(s0.point0, s0.point1, s1.point0, s1.point1, intersection);
 		return intersection;
 	}
 
 	private Vector2 getNoCrossingIntersection (Vector2 point, Vector2[] intersectionPoints, Vector2[] segmentPoints) {
-		if (!Intersector.intersectSegments(segmentPoints[0], segmentPoints[1], point, intersectionPoints[0]))
+		if (!Intersector.intersectSegments(segmentPoints[0], segmentPoints[1], point, intersectionPoints[0], intersectionPoints[0]))
 			return intersectionPoints[0];
-		if (!Intersector.intersectSegments(segmentPoints[0], segmentPoints[1], point, intersectionPoints[1]))
+		if (!Intersector.intersectSegments(segmentPoints[0], segmentPoints[1], point, intersectionPoints[1], intersectionPoints[1]))
 			return intersectionPoints[1];
-		throw GdxRuntimeException("No intersections");
+		throw new GdxRuntimeException("No intersections");
 	}
 
 	private Vector2[] enlargeSegment (Vector2 point0, Vector2 point1) {
@@ -116,22 +119,22 @@ public class WallOffset {
 		return result;
 	}
 
-	private Vector2 getFarestPoint (Vector2[] sourcePoints, Vector2[] targetPoints) {
+	private Vector2 getFarestPoint (Segment sourcePoints, Vector2[] targetPoints) {
 		Vector2 tmpV0 = new Vector2();
 		Vector2 tmpV1 = new Vector2();
 
-		tmpV0.set(sourcePoints[0]).sub(targetPoints[0]);
-		tmpV1.set(sourcePoints[0]).sub(targetPoints[1]);
+		tmpV0.set(sourcePoints.point0).sub(targetPoints[0]);
+		tmpV1.set(sourcePoints.point0).sub(targetPoints[1]);
 
 		float distance0 = tmpV0.len() + tmpV1.len();
 
-		tmpV0.set(sourcePoints[1]).sub(targetPoints[0]);
-		tmpV1.set(sourcePoints[1]).sub(targetPoints[1]);
+		tmpV0.set(sourcePoints.point1).sub(targetPoints[0]);
+		tmpV1.set(sourcePoints.point1).sub(targetPoints[1]);
 
 		float distance1 = tmpV0.len() + tmpV1.len();
 
-		if (distance0 > distance1) return sourcePoints[0];
-		return sourcePoints[1];
+		if (distance0 > distance1) return sourcePoints.point0;
+		return sourcePoints.point1;
 	}
 
 	/** Recupere les points extrudé du cote en paramètre.
