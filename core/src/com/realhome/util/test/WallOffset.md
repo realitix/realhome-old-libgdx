@@ -100,12 +100,5 @@ RECUPERE_POINTS_EXTRUSION(mur, point):
 	point0 : point0 + largeur * normal
 	point1 : point1 + largeur * normal_oppose
 
-	SI point == mur.point0:
-		point0 : point0 - direstion * largeur
-		point1 : point1 - direstion * largeur
-	SINON:
-		point0 : point0 + direstion * largeur
-		point1 : point1 + direstion * largeur
-
 	RETURN point0, point1
 
