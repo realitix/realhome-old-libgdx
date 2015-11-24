@@ -694,5 +694,17 @@
   },
   "com.kotcrab.vis.ui.Sizes": {
 	"default": {scaleFactor: 1, spacingBottom: 8, spacingRight: 6, menuItemIconSize: 22, numberSelectorButtonSize: 12, numberSelectorButtonsWidth: 12, numberSelectorFieldSize: 40 }
+	},
+	
+	com.kotcrab.vis.ui.widget.PopupMenu$PopupMenuStyle: {
+		noborder: {background: button },
+		default: {background: button, border: border }
+	},
+	com.kotcrab.vis.ui.widget.Menu$MenuStyle: {
+		default: {background: button, border: border, openButtonStyleName: "menu-bar" },
+		noborder: {background: button, openButtonStyleName: "menu-bar" }
+	},
+	com.kotcrab.vis.ui.widget.MenuBar$MenuBarStyle: {
+		default: {background: menu-bg }
 	}
 }
