@@ -1,5 +1,5 @@
 
-package com.realhome.v2.controller;
+package com.realhome.v2.controller.menu;
 
 import com.realhome.v2.common.pattern.command.CommandManager;
 import com.realhome.v2.common.pattern.mvc.Controller;

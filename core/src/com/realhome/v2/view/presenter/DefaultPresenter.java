@@ -27,6 +27,7 @@ public class DefaultPresenter implements Presenter {
 
 		root = new Table();
 		root.setFillParent(true);
+		root.left().top();
 		stage.addActor(root);
 	}
 

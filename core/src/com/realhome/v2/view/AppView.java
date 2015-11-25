@@ -27,6 +27,7 @@ public class AppView extends View implements Disposable {
 	public void update (float delta) {
 		if (dirty) {
 			reloadPresenter();
+			dirty = false;
 		}
 		stage.act(delta);
 	}
@@ -51,6 +52,10 @@ public class AppView extends View implements Disposable {
 		this.presenter = presenter;
 		dirty = true;
 		return this;
+	}
+
+	public Stage getStage() {
+		return stage;
 	}
 
 	@Override
