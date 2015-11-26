@@ -3,7 +3,7 @@ package com.realhome.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.realhome.RealHomeApp;
+import com.realhome.old.RealHomeApp;
 
 public class HtmlLauncher extends GwtApplication {
 
