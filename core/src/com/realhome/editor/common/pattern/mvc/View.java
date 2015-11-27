@@ -3,15 +3,8 @@ package com.realhome.editor.common.pattern.mvc;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class View {
-	protected Actor actor;
+public interface View {
+	public Actor getActor ();
 
-	protected View init (Actor actor) {
-		this.actor = actor;
-		return this;
-	}
-
-	public Actor getActor () {
-		return actor;
-	}
+	public boolean isUpdated ();
 }

@@ -25,12 +25,12 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.realhome.old.util.clipper;
+package com.realhome.editor.util.clipper;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.realhome.old.util.clipper.Point.LongPoint;
+import com.realhome.editor.util.clipper.Point.LongPoint;
 
 /** A pure convenience class to avoid writing List<IntPoint> everywhere.
  *

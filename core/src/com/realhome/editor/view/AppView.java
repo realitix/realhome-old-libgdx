@@ -1,14 +1,16 @@
 
 package com.realhome.editor.view;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.realhome.editor.common.pattern.mvc.View;
 import com.realhome.editor.view.presenter.Presenter;
 
-public class AppView extends View implements Disposable {
+public class AppView implements View, Disposable {
 
 	Presenter presenter;
 	boolean dirty = true;
@@ -22,18 +24,35 @@ public class AppView extends View implements Disposable {
 
 	private void reloadPresenter () {
 		presenter.present(stage, views);
+		stage.setDebugAll(true);
+	}
+
+	private void updateDirty () {
+		for (int i = 0; i < views.size; i++) {
+			if (views.get(i).isUpdated()) dirty = true;
+		}
 	}
 
 	public void update (float delta) {
+		updateDirty();
+
 		if (dirty) {
 			reloadPresenter();
 			dirty = false;
 		}
+
 		stage.act(delta);
 	}
 
 	public void render () {
 		stage.draw();
+	}
+
+	public void resize (int width, int height) {
+		stage.getViewport().update(width, height, true);
+		if (stage.getRoot().hasChildren()) ((Table)stage.getRoot().getChildren().get(0)).invalidateHierarchy();
+		reloadPresenter();
+		// stage.getRoot().setSize(width, height);
 	}
 
 	public AppView addView (View view) {
@@ -54,12 +73,22 @@ public class AppView extends View implements Disposable {
 		return this;
 	}
 
-	public Stage getStage() {
+	public Stage getStage () {
 		return stage;
 	}
 
 	@Override
 	public void dispose () {
 		stage.dispose();
+	}
+
+	@Override
+	public Actor getActor () {
+		return null;
+	}
+
+	@Override
+	public boolean isUpdated () {
+		return false;
 	}
 }

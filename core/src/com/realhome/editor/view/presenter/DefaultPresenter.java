@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.common.pattern.mvc.View;
 import com.realhome.editor.view.menu.MenuBarView;
+import com.realhome.editor.view.plan.PlanView;
 
 public class DefaultPresenter implements Presenter {
 
@@ -17,7 +18,7 @@ public class DefaultPresenter implements Presenter {
 	public <T> Actor get (Class<T> viewClass) {
 		for (int i = 0; i < views.size; i++)
 			if (viewClass.isInstance(views.get(i))) return views.get(i).getActor();
-		throw new GdxRuntimeException("No view for " + viewClass.toString());
+		throw new GdxRuntimeException("View not found");
 	}
 
 	protected void start (Stage stage, Array<View> views) {
@@ -38,11 +39,18 @@ public class DefaultPresenter implements Presenter {
 	@Override
 	public void present (Stage stage, Array<View> views) {
 		start(stage, views);
-		menuBar();
+		menuBarView();
+		mainView();
 		end();
 	}
 
-	private void menuBar () {
+	private void menuBarView () {
 		root.add(get(MenuBarView.class)).fillX().expandX().row();
+	}
+
+	private void mainView () {
+		if (get(PlanView.class).isVisible())
+		// root.add(get(PlanView.class)).fill().expand();
+			root.add(get(PlanView.class)).fill();
 	}
 }

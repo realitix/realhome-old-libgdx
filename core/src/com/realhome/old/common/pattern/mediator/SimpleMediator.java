@@ -7,7 +7,7 @@ import com.realhome.old.common.pattern.observer.Notifier;
 
 /** A base <code>Mediator</code> implementation.
  * 
- * @see com.puremvc.core.View View */
+ * @see com.puremvc.core.BaseView View */
 public class SimpleMediator<V> extends BaseNotifier implements Mediator<V>, Notifier {
 
 	/** The default name of the <code>SimpleMediator</code>. */

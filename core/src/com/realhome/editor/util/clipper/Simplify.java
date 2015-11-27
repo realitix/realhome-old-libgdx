@@ -25,7 +25,7 @@
  *
  */
 
-package com.realhome.old.util.clipper;
+package com.realhome.editor.util.clipper;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;

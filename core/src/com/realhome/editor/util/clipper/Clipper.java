@@ -24,9 +24,9 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.realhome.old.util.clipper;
+package com.realhome.editor.util.clipper;
 
-import com.realhome.old.util.clipper.Point.LongPoint;
+import com.realhome.editor.util.clipper.Point.LongPoint;
 
 public interface Clipper {
 	public enum ClipType {

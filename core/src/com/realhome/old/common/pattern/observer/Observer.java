@@ -31,7 +31,7 @@ package com.realhome.old.common.pattern.observer;
  * object implementing the <code>INotification</code> interface, such as a subclass of <code>Notification</code>.
  * </P>
  * 
- * @see com.puremvc.core.View View
+ * @see com.puremvc.core.BaseView View
  * @see com.puremvc.patterns.observer.Notification Notification */
 public interface Observer {
 

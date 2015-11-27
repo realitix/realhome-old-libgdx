@@ -17,7 +17,7 @@ package com.realhome.old.common.pattern.observer;
  * <LI>Provide a method for notifying the interested object.</LI>
  * </UL>
  * 
- * @see com.puremvc.core.View View
+ * @see com.puremvc.core.BaseView View
  * @see com.puremvc.patterns.observer.Notification Notification */
 public class BaseObserver implements Observer {
 

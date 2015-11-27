@@ -27,7 +27,7 @@ package com.realhome.old.common.pattern.observer;
  * <code>Event</code>, while PureMVC <code>Notification</code>s follow a 'Publish/Subscribe' pattern. PureMVC classes need not be
  * related to each other in a parent/child relationship in order to communicate with one another using <code>Notification</code>s.
  * 
- * @see com.puremvc.core.View View
+ * @see com.puremvc.core.BaseView View
  * @see com.puremvc.patterns.observer.Observer Observer */
 public interface Notification {
 

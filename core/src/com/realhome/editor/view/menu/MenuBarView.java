@@ -3,45 +3,53 @@ package com.realhome.editor.view.menu;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;
-import com.realhome.editor.common.pattern.mvc.View;
+import com.realhome.editor.common.pattern.mvc.BaseView;
+import com.realhome.editor.util._;
 
-public class MenuBarView extends View {
+public class MenuBarView extends BaseView<Table> {
 
 	private MenuBar menuBar;
+	private MenuItem menuOpen;
 
 	public MenuBarView () {
 		menuBar = new MenuBar();
-		Menu file = new Menu("File");
 
-		file.addItem(new MenuItem("Test 1"));
-		file.addItem(new MenuItem("Test 1"));
-		file.addItem(new MenuItem("Test 1"));
+		Menu file = new Menu(_.g("file"));
+		file.addItem(new MenuItem(_.g("new")));
+		file.addItem(menuOpen = new MenuItem(_.g("open")));
+		file.addItem(new MenuItem(_.g("save")));
+		file.addItem(new MenuItem(_.g("save_as")));
+		file.addSeparator();
+		file.addItem(new MenuItem(_.g("exit")));
 
-		Menu file2 = new Menu("TOTO 2");
-		file2.addItem(new MenuItem("mama"));
-		file2.addItem(new MenuItem("mama2"));
-		file2.addItem(new MenuItem("mama3"));
+		Menu edit = new Menu(_.g("edit"));
+		edit.addItem(new MenuItem(_.g("undo")));
+		edit.addItem(new MenuItem(_.g("redo")));
+		edit.addItem(new MenuItem(_.g("preference")));
 
-		Menu file3 = new Menu("TOTO 3");
-		file3.addItem(new MenuItem("tama"));
-		file3.addItem(new MenuItem("tama2"));
-		file3.addItem(new MenuItem("tama3"));
+		Menu share = new Menu(_.g("share"));
+		share.addItem(new MenuItem(_.g("share_external")));
+		share.addItem(new MenuItem(_.g("export")));
 
-		Menu file4 = new Menu("TOTO 4");
-		file4.addItem(new MenuItem("yama"));
-		file4.addItem(new MenuItem("yama2"));
-		file4.addItem(new MenuItem("yama3"));
+		Menu help = new Menu(_.g("help"));
+		help.addItem(new MenuItem(_.g("online_help")));
+		help.addItem(new MenuItem(_.g("about")));
 
 		menuBar.addMenu(file);
-		menuBar.addMenu(file2);
-		menuBar.addMenu(file3);
-		menuBar.addMenu(file4);
+		menuBar.addMenu(edit);
+		menuBar.addMenu(share);
+		menuBar.addMenu(help);
 		init(menuBar.getTable());
 
 		padMenus(20);
+	}
+
+	public void addOpenListener (ChangeListener listener) {
+		menuOpen.addListener(listener);
 	}
 
 	private void padMenus (int pad) {

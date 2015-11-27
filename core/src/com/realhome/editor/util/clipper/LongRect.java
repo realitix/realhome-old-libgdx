@@ -25,7 +25,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.realhome.old.util.clipper;
+package com.realhome.editor.util.clipper;
 
 public class LongRect {
 	public long left;

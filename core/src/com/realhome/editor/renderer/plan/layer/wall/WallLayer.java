@@ -8,18 +8,18 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.realhome.old.data.House;
-import com.realhome.old.data.Wall;
+import com.realhome.editor.model.house.Floor.Vector2Path;
+import com.realhome.editor.model.house.House;
+import com.realhome.editor.model.house.Wall;
+import com.realhome.editor.renderer.plan.layer.Layer;
+import com.realhome.editor.util.clipper.ClipperOffset;
+import com.realhome.editor.util.clipper.Path;
+import com.realhome.editor.util.clipper.Paths;
+import com.realhome.editor.util.clipper.Clipper.EndType;
+import com.realhome.editor.util.clipper.Clipper.JoinType;
+import com.realhome.editor.util.clipper.Point.LongPoint;
+import com.realhome.editor.util.renderer.shape.LineRenderer;
 import com.realhome.old.data.WallLink;
-import com.realhome.old.data.Floor.Vector2Path;
-import com.realhome.old.util.clipper.ClipperOffset;
-import com.realhome.old.util.clipper.Path;
-import com.realhome.old.util.clipper.Paths;
-import com.realhome.old.util.clipper.Clipper.EndType;
-import com.realhome.old.util.clipper.Clipper.JoinType;
-import com.realhome.old.util.clipper.Point.LongPoint;
-import com.realhome.old.util.renderer.shape.LineRenderer;
-import com.realhome.old.view.canvas.draw.layer.Layer;
 
 public class WallLayer implements Layer {
 	private Array<Wall> walls = new Array<Wall>();
@@ -32,7 +32,7 @@ public class WallLayer implements Layer {
 
 	public WallLayer () {
 		renderer = new ShapeRenderer();
-		lineRenderer = new LineRenderer(1000);
+		// lineRenderer = new LineRenderer(1000);
 	}
 
 	private void generatePoints (Array<Vector2Path> vector2paths) {

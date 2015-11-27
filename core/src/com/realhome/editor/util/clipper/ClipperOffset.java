@@ -24,19 +24,19 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.realhome.old.util.clipper;
+package com.realhome.editor.util.clipper;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.realhome.old.util.clipper.Clipper.ClipType;
-import com.realhome.old.util.clipper.Clipper.EndType;
-import com.realhome.old.util.clipper.Clipper.JoinType;
-import com.realhome.old.util.clipper.Clipper.PolyFillType;
-import com.realhome.old.util.clipper.Clipper.PolyType;
-import com.realhome.old.util.clipper.Point.DoublePoint;
-import com.realhome.old.util.clipper.Point.LongPoint;
+import com.realhome.editor.util.clipper.Clipper.ClipType;
+import com.realhome.editor.util.clipper.Clipper.EndType;
+import com.realhome.editor.util.clipper.Clipper.JoinType;
+import com.realhome.editor.util.clipper.Clipper.PolyFillType;
+import com.realhome.editor.util.clipper.Clipper.PolyType;
+import com.realhome.editor.util.clipper.Point.DoublePoint;
+import com.realhome.editor.util.clipper.Point.LongPoint;
 
 public class ClipperOffset {
 	private static boolean nearZero (double val) {

@@ -28,7 +28,7 @@ import com.realhome.old.common.pattern.observer.Notification;
  * <p>
  * <p>
  * 
- * @see com.puremvc.core.Controller Controller
+ * @see com.puremvc.core.BaseController Controller
  * @see com.puremvc.patterns.observer.Notification Notification
  * @see com.puremvc.patterns.command.SimpleCommand SimpleCommand */
 public class MacroCommand extends BaseNotifier implements Command {

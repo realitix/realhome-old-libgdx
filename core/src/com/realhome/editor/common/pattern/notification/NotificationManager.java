@@ -11,6 +11,10 @@ public class NotificationManager {
 		return this;
 	}
 
+	public void sendNotification (String name) {
+		sendNotification(new Notification().setName(name));
+	}
+
 	public void sendNotification (Notification notification) {
 		for (NotificationListener l : listeners) {
 			l.receiveNotification(notification);

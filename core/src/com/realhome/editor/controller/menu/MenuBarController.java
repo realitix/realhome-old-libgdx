@@ -1,16 +1,25 @@
 
 package com.realhome.editor.controller.menu;
 
-import com.realhome.editor.common.pattern.command.CommandManager;
-import com.realhome.editor.common.pattern.mvc.Controller;
-import com.realhome.editor.common.pattern.mvc.Model;
-import com.realhome.editor.common.pattern.mvc.View;
-import com.realhome.editor.common.pattern.notification.NotificationManager;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.realhome.editor.command.LoadCommand;
+import com.realhome.editor.common.Message;
+import com.realhome.editor.common.pattern.mvc.BaseController;
+import com.realhome.editor.view.menu.MenuBarView;
 
-public class MenuBarController extends Controller {
+public class MenuBarController extends BaseController<MenuBarView> {
 
-	public MenuBarController (NotificationManager notificationManager, CommandManager commandManager, Model model, View view) {
-		super(notificationManager, commandManager, model, view);
+	public MenuBarController (MenuBarView view) {
+		super(view);
+		view.addOpenListener(new OpenListener());
 	}
 
+	private class OpenListener extends ChangeListener {
+		@Override
+		public void changed (ChangeEvent event, Actor actor) {
+			commandManager.execute(LoadCommand.class);
+			notificationManager.sendNotification(Message.HOUSE_LOADED);
+		}
+	}
 }

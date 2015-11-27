@@ -25,7 +25,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.realhome.old.util.clipper;
+package com.realhome.editor.util.clipper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,9 +33,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.realhome.old.util.clipper.Path.Join;
-import com.realhome.old.util.clipper.Path.OutRec;
-import com.realhome.old.util.clipper.Point.LongPoint;
+import com.realhome.editor.util.clipper.Path.Join;
+import com.realhome.editor.util.clipper.Path.OutRec;
+import com.realhome.editor.util.clipper.Point.LongPoint;
 
 public class DefaultClipper extends ClipperBase {
 

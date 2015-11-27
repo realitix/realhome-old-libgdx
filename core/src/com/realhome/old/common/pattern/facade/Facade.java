@@ -19,8 +19,8 @@ import com.realhome.old.common.pattern.proxy.Proxy;
  * </P>
  * 
  * @see com.puremvc.core.Model Model
- * @see com.puremvc.core.View View
- * @see com.puremvc.core.Controller Controller
+ * @see com.puremvc.core.BaseView View
+ * @see com.puremvc.core.BaseController Controller
  * @see com.puremvc.patterns.command.Command Command
  * @see com.puremvc.patterns.observer.Notification Notification */
 public interface Facade extends Notifier {

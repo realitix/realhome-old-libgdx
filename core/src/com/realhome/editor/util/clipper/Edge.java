@@ -24,15 +24,15 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.realhome.old.util.clipper;
+package com.realhome.editor.util.clipper;
 
 import java.util.logging.Logger;
 
-import com.realhome.old.util.clipper.Clipper.ClipType;
-import com.realhome.old.util.clipper.Clipper.Direction;
-import com.realhome.old.util.clipper.Clipper.PolyFillType;
-import com.realhome.old.util.clipper.Clipper.PolyType;
-import com.realhome.old.util.clipper.Point.LongPoint;
+import com.realhome.editor.util.clipper.Clipper.ClipType;
+import com.realhome.editor.util.clipper.Clipper.Direction;
+import com.realhome.editor.util.clipper.Clipper.PolyFillType;
+import com.realhome.editor.util.clipper.Clipper.PolyType;
+import com.realhome.editor.util.clipper.Point.LongPoint;
 
 class Edge {
 	static enum Side {

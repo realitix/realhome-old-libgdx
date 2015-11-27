@@ -5,10 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Array;
+import com.realhome.editor.model.house.House;
 import com.realhome.editor.renderer.Renderer;
-import com.realhome.old.data.House;
-import com.realhome.old.view.canvas.draw.layer.Layer;
-import com.realhome.old.view.canvas.draw.layer.wall.WallLayer;
+import com.realhome.editor.renderer.plan.layer.Layer;
+import com.realhome.editor.renderer.plan.layer.wall.WallLayer;
 
 public class PlanRenderer implements Renderer {
 

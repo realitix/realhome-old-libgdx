@@ -5,21 +5,25 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 import com.realhome.editor.common.pattern.command.CommandManager;
-import com.realhome.editor.common.pattern.mvc.View;
+import com.realhome.editor.common.pattern.mvc.Controller;
 import com.realhome.editor.common.pattern.notification.NotificationManager;
 import com.realhome.editor.controller.AppController;
+import com.realhome.editor.controller.PlanController;
 import com.realhome.editor.controller.menu.MenuBarController;
 import com.realhome.editor.model.AppModel;
 import com.realhome.editor.view.AppView;
 import com.realhome.editor.view.menu.MenuBarView;
+import com.realhome.editor.view.plan.PlanView;
 import com.realhome.editor.view.presenter.DefaultPresenter;
 
 public class RealHomeApp extends ApplicationAdapter {
 	public static final String NAME = "RealHomeApp";
 
 	private AppView appView;
+	private Array<Controller> controllers = new Array<Controller>();
 
 	@Override
 	public void create () {
@@ -35,17 +39,28 @@ public class RealHomeApp extends ApplicationAdapter {
 
 		// Create views
 		appView = new AppView(new DefaultPresenter());
-		View menuBar = new MenuBarView();
+		MenuBarView menuBarView = new MenuBarView();
+		PlanView planView = new PlanView();
 
 		// Insert views in app view
-		appView.addView(menuBar);
+		appView.addView(menuBarView);
+		appView.addView(planView);
 
 		// Create controllers
 		// Controllers exist threw notification and view (listen event)
-		new AppController(notificationManager, commandManager, appModel, appView);
-		new MenuBarController(notificationManager, commandManager, appModel, appView);
+		controllers.add(new AppController(appView));
+		controllers.add(new MenuBarController(menuBarView));
+		controllers.add(new PlanController(planView));
+
+		initControllers(notificationManager, commandManager, appModel);
 
 		Gdx.input.setInputProcessor(appView.getStage());
+	}
+
+	private void initControllers (NotificationManager nm, CommandManager cm, AppModel m) {
+		for (int i = 0; i < controllers.size; i++) {
+			controllers.get(i).setNotificationManager(nm).setCommandManager(cm).setModel(m);
+		}
 	}
 
 	@Override
@@ -59,7 +74,7 @@ public class RealHomeApp extends ApplicationAdapter {
 
 	@Override
 	public void resize (int width, int height) {
-
+		appView.resize(width, height);
 	}
 
 	@Override

@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.realhome.old.util.renderer.shape;
+package com.realhome.editor.util.renderer.shape;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;

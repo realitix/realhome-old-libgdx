@@ -2,7 +2,7 @@
 package com.realhome.editor.renderer;
 
 import com.badlogic.gdx.utils.Disposable;
-import com.realhome.old.data.House;
+import com.realhome.editor.model.house.House;
 
 public interface Renderer extends Disposable {
 	public void create ();
