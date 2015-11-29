@@ -56,8 +56,8 @@ public class PlanWidget extends Widget {
 		super.draw(batch, parentAlpha);
 		if (isVisible()) {
 			beginDraw();
+			renderer.render();
 			endDraw();
-			// renderer.render();
 		}
 	}
 
@@ -84,11 +84,16 @@ public class PlanWidget extends Widget {
 	public void layout () {
 		super.layout();
 
-		localToStageCoordinates(position.set(getX(), getY()));
-
-		getStage().stageToScreenCoordinates(position);
-		System.out.println(position.y);
+		// Dimension
 		dimension.set(getWidth(), getHeight());
+
+		// Position
+		localToStageCoordinates(position.set(getX(), getY()));
+		getStage().stageToScreenCoordinates(position);
+		position.y = Gdx.graphics.getHeight() - position.y;
+		if (position.y < 0) position.y = 0;
+
+		// Resize renderer
 		renderer.resize((int)dimension.x, (int)dimension.y);
 	}
 

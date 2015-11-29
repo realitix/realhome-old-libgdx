@@ -12,6 +12,4 @@ public interface Renderer extends Disposable {
 	public void render ();
 
 	public void reload (House house);
-
-	public Renderer setEnabled (boolean enabled);
 }

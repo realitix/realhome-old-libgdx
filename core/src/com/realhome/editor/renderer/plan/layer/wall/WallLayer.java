@@ -12,11 +12,11 @@ import com.realhome.editor.model.house.Floor.Vector2Path;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.renderer.plan.layer.Layer;
+import com.realhome.editor.util.clipper.Clipper.EndType;
+import com.realhome.editor.util.clipper.Clipper.JoinType;
 import com.realhome.editor.util.clipper.ClipperOffset;
 import com.realhome.editor.util.clipper.Path;
 import com.realhome.editor.util.clipper.Paths;
-import com.realhome.editor.util.clipper.Clipper.EndType;
-import com.realhome.editor.util.clipper.Clipper.JoinType;
 import com.realhome.editor.util.clipper.Point.LongPoint;
 import com.realhome.editor.util.renderer.shape.LineRenderer;
 import com.realhome.old.data.WallLink;
@@ -32,7 +32,7 @@ public class WallLayer implements Layer {
 
 	public WallLayer () {
 		renderer = new ShapeRenderer();
-		// lineRenderer = new LineRenderer(1000);
+		lineRenderer = new LineRenderer(1000);
 	}
 
 	private void generatePoints (Array<Vector2Path> vector2paths) {
@@ -98,7 +98,6 @@ public class WallLayer implements Layer {
 		renderer.end();
 	}
 
-	@Override
 	public void render (OrthographicCamera camera) {
 		lineRenderer.begin(camera.combined, GL20.GL_TRIANGLES);
 

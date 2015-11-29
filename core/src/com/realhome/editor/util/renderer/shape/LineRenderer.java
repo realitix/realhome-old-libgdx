@@ -30,8 +30,8 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 /** @author realitix */
 public class LineRenderer {
-	private static final String vertexShader = "com/realhome/util/renderer/shape/line_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/util/renderer/shape/line_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/util/renderer/shape/line_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/util/renderer/shape/line_fragment.glsl";
 
 	private int primitiveType;
 	private int vertexIdx;

@@ -1,8 +1,6 @@
 
 package com.realhome.editor.renderer.plan;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.House;
@@ -16,7 +14,6 @@ public class PlanRenderer implements Renderer {
 	private WallLayer wallLayer;
 	private final float VIRTUAL_HEIGHT = 1000; // centimeters
 	private OrthographicCamera camera;
-	private boolean enabled;
 
 	public PlanRenderer () {
 		create();
@@ -50,12 +47,6 @@ public class PlanRenderer implements Renderer {
 
 	@Override
 	public void render () {
-		if (!enabled) return;
-
-		GL20 gl = Gdx.gl;
-		gl.glClearColor(1, 1, 1, 1);
-		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		for (Layer layer : layers) {
 			layer.render(camera);
 		}
@@ -66,12 +57,6 @@ public class PlanRenderer implements Renderer {
 		for (Layer layer : layers) {
 			layer.dispose();
 		}
-	}
-
-	@Override
-	public PlanRenderer setEnabled (boolean enabled) {
-		this.enabled = enabled;
-		return this;
 	}
 
 	@Override
