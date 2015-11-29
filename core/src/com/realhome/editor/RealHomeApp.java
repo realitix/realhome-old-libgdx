@@ -16,8 +16,8 @@ import com.realhome.editor.controller.menu.MenuBarController;
 import com.realhome.editor.model.AppModel;
 import com.realhome.editor.view.AppView;
 import com.realhome.editor.view.menu.MenuBarView;
-import com.realhome.editor.view.plan.PlanView;
 import com.realhome.editor.view.presenter.DefaultPresenter;
+import com.realhome.editor.view.renderer.plan.PlanView;
 
 public class RealHomeApp extends ApplicationAdapter {
 	public static final String NAME = "RealHomeApp";
@@ -40,7 +40,7 @@ public class RealHomeApp extends ApplicationAdapter {
 		// Create views
 		appView = new AppView(new DefaultPresenter());
 		MenuBarView menuBarView = new MenuBarView();
-		PlanView planView = new PlanView();
+		PlanView planView = new PlanView().disable();
 
 		// Insert views in app view
 		appView.addView(menuBarView);

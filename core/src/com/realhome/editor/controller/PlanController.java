@@ -4,7 +4,7 @@ package com.realhome.editor.controller;
 import com.realhome.editor.common.Message;
 import com.realhome.editor.common.pattern.mvc.BaseController;
 import com.realhome.editor.common.pattern.notification.Notification;
-import com.realhome.editor.view.plan.PlanView;
+import com.realhome.editor.view.renderer.plan.PlanView;
 
 public class PlanController extends BaseController<PlanView> {
 

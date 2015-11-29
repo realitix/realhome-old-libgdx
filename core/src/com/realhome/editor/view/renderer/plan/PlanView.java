@@ -1,5 +1,5 @@
 
-package com.realhome.editor.view.plan;
+package com.realhome.editor.view.renderer.plan;
 
 import com.realhome.editor.common.pattern.mvc.BaseView;
 import com.realhome.editor.model.house.House;
@@ -8,19 +8,25 @@ public class PlanView extends BaseView<PlanWidget> {
 	boolean updated;
 
 	public PlanView () {
-		init(new PlanWidget());
+		PlanWidget widget = new PlanWidget();
+		widget.init();
+		init(widget);
 	}
 
 	public void reloadHouse (House house) {
 		actor.reloadHouse(house);
 	}
 
-	public void enable () {
+	public PlanView enable () {
 		actor.setVisible(true);
+		updated = true;
+		return this;
 	}
 
-	public void disable () {
+	public PlanView disable () {
 		actor.setVisible(false);
+		updated = true;
+		return this;
 	}
 
 	@Override

@@ -1,25 +1,20 @@
 
-package com.realhome.editor.view.plan;
+package com.realhome.editor.view.renderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
-import com.realhome.editor.model.house.House;
 import com.realhome.editor.renderer.Renderer;
-import com.realhome.editor.renderer.plan.PlanRenderer;
 
-public class PlanWidget extends Widget {
+public abstract class RendererWidget extends Widget {
 
-	private Renderer renderer;
-	private Vector2 tmpV = new Vector2();
+	protected Renderer renderer;
 	private Vector2 dimension = new Vector2();
 	private Vector2 position = new Vector2();
 
-	public PlanWidget () {
-		renderer = new PlanRenderer();
-	}
+	public abstract void init ();
 
 	@Override
 	public float getMinWidth () {
@@ -58,13 +53,15 @@ public class PlanWidget extends Widget {
 			beginDraw();
 			renderer.render();
 			endDraw();
+
+			// When renderer draws, it binds shader, so we have to reenable stage shader
+			batch.getShader().begin();
 		}
 	}
 
 	protected void beginDraw () {
 		int x = (int)position.x;
 		int y = (int)position.y;
-		y = 0;
 		int w = (int)dimension.x;
 		int h = (int)dimension.y;
 
@@ -95,9 +92,5 @@ public class PlanWidget extends Widget {
 
 		// Resize renderer
 		renderer.resize((int)dimension.x, (int)dimension.y);
-	}
-
-	public void reloadHouse (House house) {
-		renderer.reload(house);
 	}
 }
