@@ -8,9 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.realhome.editor.renderer.Renderer;
 
-public abstract class RendererWidget extends Widget {
+public abstract class RendererWidget<T extends Renderer> extends Widget {
 
-	protected Renderer renderer;
+	protected T renderer;
 	private Vector2 dimension = new Vector2();
 	private Vector2 position = new Vector2();
 
@@ -50,6 +50,8 @@ public abstract class RendererWidget extends Widget {
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if (isVisible()) {
+			batch.getShader().end();
+
 			beginDraw();
 			renderer.render();
 			endDraw();

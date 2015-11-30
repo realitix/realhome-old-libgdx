@@ -1,6 +1,7 @@
 
 package com.realhome.editor.view.renderer.plan;
 
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.realhome.editor.common.pattern.mvc.BaseView;
 import com.realhome.editor.model.house.House;
 
@@ -34,5 +35,17 @@ public class PlanView extends BaseView<PlanWidget> {
 		boolean result = updated;
 		updated = false;
 		return result;
+	}
+
+	public void addListener (EventListener listener) {
+		actor.addListener(listener);
+	}
+
+	public void moveCamera(float x, float y) {
+		actor.moveCamera(x, y);
+	}
+
+	public void zoomCamera(float z) {
+		actor.zoomCamera(z);
 	}
 }
