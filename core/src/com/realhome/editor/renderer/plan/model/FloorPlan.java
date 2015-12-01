@@ -19,4 +19,8 @@ public class FloorPlan {
 		walls.removeValue(wall, true);
 		return this;
 	}
+
+	public void reset () {
+		walls.clear();
+	}
 }

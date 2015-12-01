@@ -16,6 +16,8 @@ public class PlanRenderer implements Renderer {
 	private Array<Layer> layers = new Array<Layer>();
 	private final float VIRTUAL_HEIGHT = 1000; // centimeters
 	private OrthographicCamera camera;
+	private HousePlan housePlan;
+	private ModelPlanConverter converter;
 
 	public PlanRenderer () {
 		create();
@@ -32,6 +34,9 @@ public class PlanRenderer implements Renderer {
 		camera.position.set(0, 0, 10);
 		camera.direction.set(0, 0, -1);
 		camera.up.set(0, 1, 0);
+
+		housePlan = new HousePlan();
+		converter = new ModelPlanConverter();
 	}
 
 	@Override
@@ -64,22 +69,21 @@ public class PlanRenderer implements Renderer {
 
 	@Override
 	public void reload (House house) {
-		HousePlan housePlan = new HousePlan();
-		ModelPlanConverter converter = new ModelPlanConverter();
 		converter.convertHouse(house, housePlan);
-		for(int i = 0; i < layers.size; i++) {
+
+		for (int i = 0; i < layers.size; i++) {
 			layers.get(i).reload(housePlan);
 		}
 	}
 
-	public void moveCamera(float x, float y) {
+	public void moveCamera (float x, float y) {
 		float sensibility = camera.zoom * 1.5f;
 		camera.position.x = camera.position.x + x * sensibility;
 		camera.position.y = camera.position.y + y * sensibility;
 		camera.update();
 	}
 
-	public void zoomCamera(float z) {
+	public void zoomCamera (float z) {
 		camera.zoom += z;
 		camera.update();
 	}

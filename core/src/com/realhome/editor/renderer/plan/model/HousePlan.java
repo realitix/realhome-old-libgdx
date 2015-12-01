@@ -19,4 +19,12 @@ public class HousePlan {
 		this.floors.removeValue(floor, true);
 		return this;
 	}
+
+	public void reset () {
+		for (int i = 0; i < floors.size; i++) {
+			floors.get(i).reset();
+		}
+		
+		floors
+	}
 }
