@@ -13,8 +13,8 @@ public class PlanController extends BaseController<PlanView> {
 
 	public PlanController (PlanView view) {
 		super(view);
-		view.addListener(new PlanListener1());
-		view.addListener(new PlanListener2());
+		view.addListener(new PlanListener());
+		view.addListener(new PlanZoomListener());
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class PlanController extends BaseController<PlanView> {
 		}
 	}
 
-	private class PlanListener1 extends ActorGestureListener {
+	private class PlanListener extends ActorGestureListener {
 		@Override
 		public void pan (InputEvent event, float x, float y, float deltaX, float deltaY) {
 			view.moveCamera(-deltaX, -deltaY);
@@ -38,12 +38,12 @@ public class PlanController extends BaseController<PlanView> {
 		}
 	}
 
-	private class PlanListener2 extends InputListener {
+	private class PlanZoomListener extends InputListener {
+
 		@Override
-		public boolean scrolled (InputEvent event, float x, float y, int amount) {
-			System.out.println("toto");
-			view.zoomCamera(amount);
-			return false;
+		public boolean scrolled(InputEvent event, float x, float y, int amount) {
+			view.zoomCamera(amount*0.2f);
+			return true;
 		}
 	}
 }

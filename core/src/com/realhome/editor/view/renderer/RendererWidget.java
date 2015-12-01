@@ -83,6 +83,8 @@ public abstract class RendererWidget<T extends Renderer> extends Widget {
 	public void layout () {
 		super.layout();
 
+		getStage().setScrollFocus(this);
+
 		// Dimension
 		dimension.set(getWidth(), getHeight());
 

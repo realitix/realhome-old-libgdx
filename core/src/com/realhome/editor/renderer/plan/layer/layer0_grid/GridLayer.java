@@ -1,9 +1,9 @@
 
-package com.realhome.editor.renderer.plan.layer.grid;
+package com.realhome.editor.renderer.plan.layer.layer0_grid;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.realhome.editor.model.house.House;
 import com.realhome.editor.renderer.plan.layer.Layer;
+import com.realhome.editor.renderer.plan.model.HousePlan;
 
 public class GridLayer implements Layer {
 	private GridRenderer renderer;
@@ -31,6 +31,6 @@ public class GridLayer implements Layer {
 	}
 
 	@Override
-	public void reload (House house) {
+	public void reload (HousePlan house) {
 	}
 }

@@ -145,7 +145,7 @@ public class LineRenderer {
 		shader.begin();
 		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
 		shader.setUniformMatrix("u_worldTrans", modelView);
-		shader.setUniformf("u_lineWidth", 2f);
+		shader.setUniformf("u_lineWidth", 0.01f);
 		mesh.setVertices(vertices, 0, vertexIdx);
 		mesh.render(shader, primitiveType);
 		shader.end();

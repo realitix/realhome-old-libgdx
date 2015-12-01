@@ -9,11 +9,13 @@ void main() {
 	float distance = length(v_normal);
 	float alpha = 1.0;
 
-	//if(distance >= feather) {
-	//	alpha = (distance + feather) * feather;
-	//}
+	if( distance >= feather ) {
+		alpha = 1.0 - smoothstep(0.0, 1.0, clamp((distance - feather) / feather, 0.0, 1.0));
+	}
 	
+	//float distanceFromFeather = clamp((distance - feather) / feather, 0.0, 1.0);
+
 	vec4 color = v_color;
-	color.a = 1.0 - distance;
+	color.a =  alpha;
 	gl_FragColor = color;
 }

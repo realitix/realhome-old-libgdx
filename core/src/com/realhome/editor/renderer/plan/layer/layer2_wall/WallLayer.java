@@ -1,5 +1,5 @@
 
-package com.realhome.editor.renderer.plan.layer.wall;
+package com.realhome.editor.renderer.plan.layer.layer2_wall;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,9 +9,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Floor.Vector2Path;
-import com.realhome.editor.model.house.House;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.renderer.plan.layer.Layer;
+import com.realhome.editor.renderer.plan.model.HousePlan;
 import com.realhome.editor.util.clipper.Clipper.EndType;
 import com.realhome.editor.util.clipper.Clipper.JoinType;
 import com.realhome.editor.util.clipper.ClipperOffset;
@@ -98,6 +98,7 @@ public class WallLayer implements Layer {
 		renderer.end();
 	}
 
+	@Override
 	public void render (OrthographicCamera camera) {
 		lineRenderer.begin(camera.combined, GL20.GL_TRIANGLES);
 
@@ -127,7 +128,7 @@ public class WallLayer implements Layer {
 	}
 
 	@Override
-	public void reload (House house) {
-		generatePoints(house.getFloors().get(0).getPaths());
+	public void reload (HousePlan house) {
+		//generatePoints(house.getFloors().get(0).getPaths());
 	}
 }

@@ -1,4 +1,4 @@
-package com.realhome.editor.renderer.plan.layer.grid;
+package com.realhome.editor.renderer.plan.layer.layer1_mask;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -12,39 +12,30 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-public class GridRenderer {
+public class MaskRenderer {
 	private int width;
 	private int height;
 	private int tileSize;
 	private Mesh mesh;
-	private Color color = new Color(0, 0, 0, 0.2f);
+	static private final float GREY = 0.5f;
+	private Color color = new Color(GREY, GREY, GREY, GREY);
 
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/util/renderer/shape/line_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/util/renderer/shape/line_fragment.glsl";
-	private Matrix4 worldTrans = new Matrix4();
+	private static final String vertexShader = "com/realhome/editor/renderer/plan/layer/grid/grid_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/renderer/plan/layer/grid/grid_fragment.glsl";
 
 	// Used for mesh creation
 	private int vertexIdx;
 	private int vertexSize;
-	private int normalOffset;
-	private int colorOffset;
 	private float[] vertices;
 
 	// Used for computation
 	private Vector2 point0 = new Vector2();
 	private Vector2 point1 = new Vector2();
-	private Vector2 direction = new Vector2();
-	private Vector2 normal = new Vector2();
-	private Vector2 normalInv = new Vector2();
 
-	public GridRenderer(int width, int height, int tileSize) {
-		this.width = width;
-		this.height = height;
-		this.tileSize = tileSize;
-
+	public MaskRenderer() {
 		initShader();
 		initMesh();
 	}
@@ -61,20 +52,16 @@ public class GridRenderer {
 		int nbLinesWidth = width / tileSize;
 		int nbLinesHeight = height / tileSize;
 		int nbLines = nbLinesWidth + nbLinesHeight;
-		int maxVertices = nbLines * 6; // 6 points by line ( 2 triangles)
+		int maxVertices = nbLines * 2; // 6 points by line ( 2 triangles)
 
 		// Create mesh
 		VertexAttributes attributes = new VertexAttributes(
-			new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
-			new VertexAttribute(Usage.Normal, 2, ShaderProgram.NORMAL_ATTRIBUTE),
-			new VertexAttribute(Usage.ColorUnpacked, 4, ShaderProgram.COLOR_ATTRIBUTE));
+			new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE));
 		mesh = new Mesh(true, maxVertices, 0, attributes);
 
 		// Compute vertices
 		vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
 		vertexSize = mesh.getVertexAttributes().vertexSize / 4;
-		normalOffset = mesh.getVertexAttribute(Usage.Normal).offset / 4;
-		colorOffset = mesh.getVertexAttribute(Usage.ColorUnpacked).offset / 4;
 
 		// Width lines
 		int xMin = -width/2, xMax = width/2;
@@ -93,14 +80,10 @@ public class GridRenderer {
 	}
 
 	public void render(Matrix4 projViewTrans) {
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
 		shader.begin();
 		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
-		shader.setUniformMatrix("u_worldTrans", worldTrans);
-		shader.setUniformf("u_lineWidth", 2f);
-		mesh.render(shader, GL20.GL_TRIANGLES);
+		shader.setUniformf("u_color", color);
+		mesh.render(shader, GL20.GL_LINES);
 		shader.end();
 	}
 
@@ -117,36 +100,12 @@ public class GridRenderer {
 	}
 
 	private void line(Vector2 point0, Vector2 point1) {
-		// Compute direction
-		direction.set(point1).sub(point0).nor();
-
-		// Compute normals
-		normal.set(direction).rotate90(-1);
-		normalInv.set(normal).rotate90(1).rotate90(1);
-
-		// First triangle
-		vertex(point0.x, point0.y, normal.x, normal.y);
-		vertex(point1.x, point1.y, normal.x, normal.y);
-		vertex(point0.x, point0.y, normalInv.x, normalInv.y);
-
-		// Second triangle
-		vertex(point0.x, point0.y, normalInv.x, normalInv.y);
-		vertex(point1.x, point1.y, normal.x, normal.y);
-		vertex(point1.x, point1.y, normalInv.x, normalInv.y);
+		vertex(point0.x, point0.y);
+		vertex(point1.x, point1.y);
 	}
 
-	private void vertex (float x, float y, float normalX, float normalY) {
-		int idx = vertexIdx + colorOffset;
-		vertices[idx] = color.r;
-		vertices[idx + 1] = color.g;
-		vertices[idx + 2] = color.b;
-		vertices[idx + 3] = color.a;
-
-		idx = vertexIdx + normalOffset;
-		vertices[idx] = normalX;
-		vertices[idx + 1] = normalY;
-
-		idx = vertexIdx;
+	private void vertex (float x, float y) {
+		int idx = vertexIdx;
 		vertices[idx] = x;
 		vertices[idx + 1] = y;
 		vertexIdx += vertexSize;
