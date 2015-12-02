@@ -5,65 +5,97 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.realhome.old.data.Wall;
+import com.realhome.editor.model.house.House;
+import com.realhome.editor.model.house.Wall;
+import com.realhome.editor.renderer.plan.model.HousePlan;
+import com.realhome.editor.renderer.plan.model.WallPlan;
 
-public class WallPlanConverter {
-
-	private Array<Wall> walls;
+public class WallPlanConverter implements PlanConverter {
 
 	static private class Segment {
 		public Vector2 point0 = new Vector2();
 		public Vector2 point1 = new Vector2();
 	}
 
-	/** Met à jour les points de tous les murs */
-	public void updateWalls (Array<Wall> walls) {
-		this.walls = walls;
-		for (int i = 0; i < walls.size; i++) {
-			updateWall(walls.get(i));
+	private Array<WallPlan> outWalls;
+	private Array<Wall> inWalls;
+
+	private Wall currentInWall;
+	private WallPlan currentOutWall;
+	private Vector2 currentInPoint;
+	private Vector2[] currentOutPoints;
+
+	@Override
+	public void convert(House houseIn, HousePlan houseOut) {
+		outWalls = houseOut.getWalls();
+		outWalls.clear();
+		inWalls = houseIn.getFloor(houseOut.getFloor()).getWalls();
+
+		convertWalls();
+
+		outWalls = null;
+		inWalls = null;
+		currentInWall = null;
+		currentOutWall = null;
+		currentInPoint = null;
+		currentOutPoints = null;
+	}
+
+	private void convertWalls() {
+		for(int i = 0; i < inWalls.size; i++) {
+			currentInWall = inWalls.get(i);
+			currentOutWall = new WallPlan();
+			outWalls.add(currentOutWall);
+
+			convertWall();
 		}
 	}
 
-	/** Met à jour les points d'un mur */
-	public void updateWall (Wall wall) {
-		for (int i = 0; i < wall.getPoints().length; i++) {
-			updatePoint(wall, wall.getPoints()[i]);
+	private void convertWall() {
+		for(int i = 0; i < currentInWall.getPoints().length; i++) {
+			currentInPoint = currentInWall.getPoints()[i];
+			Vector2[] points2D = currentOutWall.getPoints();
+			currentOutPoints = new Vector2[] {points2D[i*2], points2D[i*2+1]};
+
+			convertPoint();
 		}
 	}
 
 	/** Met à jour un point sur les deux du mur */
-	private void updatePoint (Wall wall, Vector2 point) {
+	private void convertPoint () {
 		boolean linkedWallFinded = false;
+		Vector2[] result;
 
-		for (int i = 0; i < walls.size; i++) {
+		// tested walls
+		for (int i = 0; i < inWalls.size; i++) {
 			// w is the current tested wall
-			Wall w = walls.get(i);
-			if (wall == w) continue;
+			Wall w = inWalls.get(i);
+			if (currentInWall == w) continue;
 
 			// for each points in tested wall
 			for (int j = 0; j < w.getPoints().length; j++) {
 				// p is the current tested point
 				Vector2 p = w.getPoints()[j];
 
-				if (p.equals(point)) {
-					updateIntersectionExtrusionPoints(wall, w, point);
+				if (p.equals(currentInPoint)) {
+					updateIntersectionExtrusionPoints(w);
 					linkedWallFinded = true;
 				}
 			}
 		}
 
 		if (!linkedWallFinded) {
-			updateSimpleExtrusionPoints(wall, point);
+			updateSimpleExtrusionPoints();
 		}
 	}
 
 	/** Recupère les deux points d'intersections entre les murs */
-	private void updateIntersectionExtrusionPoints (Wall wall0, Wall wall1, Vector2 point) {
-		Vector2[] pointsWall0Side0 = getSideExtrusionPoints(wall0, true);
-		Vector2[] pointsWall0Side1 = getSideExtrusionPoints(wall0, false);
+	private void updateIntersectionExtrusionPoints (Wall wallTest) {
+		Vector2[] pointsWall0Side0 = getSideExtrusionPoints(currentInWall, true);
+		Vector2[] pointsWall0Side1 = getSideExtrusionPoints(currentInWall, false);
 
-		Vector2[] pointsWall1Side0 = getSideExtrusionPoints(wall1, true);
-		Vector2[] pointsWall1Side1 = getSideExtrusionPoints(wall1, false);
+		Vector2[] pointsWall1Side0 = getSideExtrusionPoints(wallTest, true);
+		Vector2[] pointsWall1Side1 = getSideExtrusionPoints(wallTest, false);
 
 		Segment[] wall0SideSegments = new Segment[2];
 		wall0SideSegments[0] = new Segment();
@@ -83,7 +115,6 @@ public class WallPlanConverter {
 		wall1SideSegments[1].point0.set(pointsWall1Side1[0]);
 		wall1SideSegments[1].point1.set(pointsWall1Side1[1]);
 
-		Vector2[] extrusionPoints = wall0.getExtrusionPoints2D(point);
 		for (int i = 0; i < wall0SideSegments.length; i++) {
 			Vector2[] intersectionPoints = new Vector2[2];
 
@@ -91,9 +122,11 @@ public class WallPlanConverter {
 				intersectionPoints[j] = getLineIntersection(wall0SideSegments[i], wall1SideSegments[j]);
 			}
 
-			Vector2 result = getNoCrossingIntersection(getFarestPoint(wall0SideSegments[i], intersectionPoints), intersectionPoints,
-				enlargeSegment(wall1.getPoint1(), wall1.getPoint0()));
-			extrusionPoints[i].set(result);
+			Vector2 result = getNoCrossingIntersection(
+				getFarestPoint(wall0SideSegments[i], intersectionPoints),
+				intersectionPoints,
+				enlargeSegment(wallTest.getPoint1(), wallTest.getPoint0()));
+			currentOutPoints[i].set(result);
 		}
 	}
 
@@ -158,11 +191,11 @@ public class WallPlanConverter {
 	}
 
 	/** Recupere les points extrudé du point en paramètre. */
-	private void updateSimpleExtrusionPoints (Wall wall, Vector2 point) {
-		Vector2 direction = new Vector2().set(wall.getPoint1());
-		direction.sub(wall.getPoint0()).nor();
+	private void updateSimpleExtrusionPoints () {
+		Vector2 direction = new Vector2().set(currentInWall.getPoint1());
+		direction.sub(currentInWall.getPoint0()).nor();
 
-		int width = wall.getWidth() / 2;
+		int width = currentInWall.getWidth() / 2;
 
 		Vector2 normal = direction.cpy().rotate90(1);
 		Vector2 normal2 = normal.cpy().rotate90(1).rotate90(1);
@@ -170,15 +203,13 @@ public class WallPlanConverter {
 		normal.scl(width);
 		normal2.scl(width);
 
-		Vector2 point0 = point.cpy();
-		Vector2 point1 = point.cpy();
+		Vector2 point0 = currentInPoint.cpy();
+		Vector2 point1 = currentInPoint.cpy();
 
 		point0.add(normal);
 		point1.add(normal2);
 
-		// Update 2D extrusion points
-		Vector2[] extrusionPoints = wall.getExtrusionPoints2D(point);
-		extrusionPoints[0].set(point0);
-		extrusionPoints[1].set(point1);
+		currentOutPoints[0].set(point0);
+		currentOutPoints[1].set(point1);
 	}
 }

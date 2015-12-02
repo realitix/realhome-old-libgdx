@@ -13,18 +13,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class MaskRenderer {
-	private int width;
-	private int height;
-	private int tileSize;
 	private Mesh mesh;
-	static private final float GREY = 0.5f;
-	private Color color = new Color(GREY, GREY, GREY, GREY);
-
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/renderer/plan/layer/grid/grid_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/renderer/plan/layer/grid/grid_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/renderer/plan/layer/layer1_mask/mask_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/renderer/plan/layer/layer1_mask/mask_fragment.glsl";
 
 	// Used for mesh creation
 	private int vertexIdx;
@@ -48,11 +42,7 @@ public class MaskRenderer {
 	}
 
 	private void initMesh() {
-		// Compute informations
-		int nbLinesWidth = width / tileSize;
-		int nbLinesHeight = height / tileSize;
-		int nbLines = nbLinesWidth + nbLinesHeight;
-		int maxVertices = nbLines * 2; // 6 points by line ( 2 triangles)
+		int maxVertices = 5000;
 
 		// Create mesh
 		VertexAttributes attributes = new VertexAttributes(
@@ -62,18 +52,6 @@ public class MaskRenderer {
 		// Compute vertices
 		vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
 		vertexSize = mesh.getVertexAttributes().vertexSize / 4;
-
-		// Width lines
-		int xMin = -width/2, xMax = width/2;
-		for(int x = xMin; x < xMax; x += tileSize) {
-			heightLine(x);
-		}
-
-		// Height lines
-		int yMin = -height/2, yMax = height/2;
-		for(int y = yMin; y < yMax; y += tileSize) {
-			widthLine(y);
-		}
 
 		// Finalize mesh
 		mesh.setVertices(vertices);

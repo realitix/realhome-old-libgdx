@@ -4,27 +4,34 @@ package com.realhome.editor.renderer.plan.model;
 import com.badlogic.gdx.utils.Array;
 
 public class HousePlan {
-	private Array<FloorPlan> floors = new Array<FloorPlan>();
+	private int floor;
+	private Array<WallPlan> walls = new Array<WallPlan>();
 
-	public Array<FloorPlan> getFloors () {
-		return floors;
+	public Array<WallPlan> getWalls () {
+		return walls;
 	}
 
-	public HousePlan addFloor (FloorPlan floor) {
-		this.floors.add(floor);
+	public HousePlan addWall (WallPlan wall) {
+		walls.add(wall);
 		return this;
 	}
 
-	public HousePlan removeFloor (FloorPlan floor) {
-		this.floors.removeValue(floor, true);
+	public HousePlan removeWall (WallPlan wall) {
+		walls.removeValue(wall, true);
 		return this;
+	}
+
+	public HousePlan setFloor(int floor) {
+		this.floor = floor;
+		return this;
+	}
+
+	public int getFloor() {
+		return floor;
 	}
 
 	public void reset () {
-		for (int i = 0; i < floors.size; i++) {
-			floors.get(i).reset();
-		}
-		
-		floors
+		walls.clear();
+		floor = -1;
 	}
 }

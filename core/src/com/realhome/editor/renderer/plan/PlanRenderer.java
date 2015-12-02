@@ -69,7 +69,7 @@ public class PlanRenderer implements Renderer {
 
 	@Override
 	public void reload (House house) {
-		converter.convertHouse(house, housePlan);
+		//converter.convert(house, housePlan, 0);
 
 		for (int i = 0; i < layers.size; i++) {
 			layers.get(i).reload(housePlan);
@@ -85,6 +85,8 @@ public class PlanRenderer implements Renderer {
 
 	public void zoomCamera (float z) {
 		camera.zoom += z;
+		if( camera.zoom < 0.2f ) camera.zoom = 0.2f;
+		if( camera.zoom > 6 ) camera.zoom = 6;
 		camera.update();
 	}
 }

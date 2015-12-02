@@ -7,8 +7,8 @@ import com.realhome.editor.renderer.plan.model.HousePlan;
 
 public class GridLayer implements Layer {
 	private GridRenderer renderer;
-	private final int MAX_WIDTH = 10000;
-	private final int MAX_HEIGHT = 10000;
+	private final int MAX_WIDTH = 5000;
+	private final int MAX_HEIGHT = 5000;
 	private final int TILE_SIZE = 50;
 
 	public GridLayer () {

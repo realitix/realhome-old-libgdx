@@ -56,7 +56,7 @@ public class GridRenderer {
 		int nbLinesWidth = width / tileSize;
 		int nbLinesHeight = height / tileSize;
 		int nbLines = nbLinesWidth + nbLinesHeight;
-		int maxVertices = nbLines * 2; // 6 points by line ( 2 triangles)
+		int maxVertices = nbLines * 2 + 4; // 2 points per line
 
 		// Create mesh
 		VertexAttributes attributes = new VertexAttributes(
@@ -69,13 +69,13 @@ public class GridRenderer {
 
 		// Width lines
 		int xMin = -width/2, xMax = width/2;
-		for(int x = xMin; x < xMax; x += tileSize) {
+		for(int x = xMin; x <= xMax; x += tileSize) {
 			heightLine(x);
 		}
 
 		// Height lines
 		int yMin = -height/2, yMax = height/2;
-		for(int y = yMin; y < yMax; y += tileSize) {
+		for(int y = yMin; y <= yMax; y += tileSize) {
 			widthLine(y);
 		}
 

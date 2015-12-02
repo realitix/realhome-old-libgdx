@@ -27,8 +27,7 @@ public class WallPlan {
 		return this;
 	}
 
-	public WallPlan setPoint(int i, Vector2 point) {
-		points[i].set(point);
-		return this;
+	public Vector2[] getPoints() {
+		return points;
 	}
 }

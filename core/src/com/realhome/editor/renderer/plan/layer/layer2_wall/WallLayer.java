@@ -1,8 +1,6 @@
 
 package com.realhome.editor.renderer.plan.layer.layer2_wall;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -100,7 +98,7 @@ public class WallLayer implements Layer {
 
 	@Override
 	public void render (OrthographicCamera camera) {
-		lineRenderer.begin(camera.combined, GL20.GL_TRIANGLES);
+		/*lineRenderer.begin(camera.combined, GL20.GL_TRIANGLES);
 
 		for (Path path : paths) {
 			for (int i = 0; i < path.size() - 1; i++) {
@@ -118,7 +116,7 @@ public class WallLayer implements Layer {
 			lineRenderer.line(points.get(i), points.get(i + 1), Color.GREEN);
 		}
 
-		lineRenderer.end();
+		lineRenderer.end();*/
 	}
 
 	@Override

@@ -10,6 +10,10 @@ public class House {
 		return floors;
 	}
 
+	public Floor getFloor (int i) {
+		return floors.get(i);
+	}
+
 	public House addFloor (Floor floor) {
 		this.floors.add(floor);
 		return this;
