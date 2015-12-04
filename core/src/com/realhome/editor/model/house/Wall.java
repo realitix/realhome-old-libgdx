@@ -5,9 +5,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class Wall {
+	private static final int DEFAULT_WIDTH = 50;
+
 	private int type;
 	private float height;
-	private int width;
+	private int width = DEFAULT_WIDTH;
 	private Vector2[] points = new Vector2[2];
 	private ObjectMap<Vector2, Vector2[]> extrusionPoints2D = new ObjectMap<Vector2, Vector2[]>(2);
 

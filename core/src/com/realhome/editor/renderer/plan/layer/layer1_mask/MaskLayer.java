@@ -29,5 +29,6 @@ public class MaskLayer implements Layer {
 
 	@Override
 	public void reload (HousePlan house) {
+		renderer.reload(house.getOutlinePoints());
 	}
 }

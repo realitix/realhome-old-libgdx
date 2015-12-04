@@ -8,6 +8,7 @@ import com.realhome.editor.renderer.Renderer;
 import com.realhome.editor.renderer.plan.converter.ModelPlanConverter;
 import com.realhome.editor.renderer.plan.layer.Layer;
 import com.realhome.editor.renderer.plan.layer.layer0_grid.GridLayer;
+import com.realhome.editor.renderer.plan.layer.layer1_mask.MaskLayer;
 import com.realhome.editor.renderer.plan.layer.layer2_wall.WallLayer;
 import com.realhome.editor.renderer.plan.model.HousePlan;
 
@@ -26,6 +27,7 @@ public class PlanRenderer implements Renderer {
 	@Override
 	public void create () {
 		layers.add(new GridLayer());
+		layers.add(new MaskLayer());
 		layers.add(new WallLayer());
 
 		camera = new OrthographicCamera();
@@ -69,7 +71,7 @@ public class PlanRenderer implements Renderer {
 
 	@Override
 	public void reload (House house) {
-		//converter.convert(house, housePlan, 0);
+		converter.convert(house, housePlan, 0);
 
 		for (int i = 0; i < layers.size; i++) {
 			layers.get(i).reload(housePlan);

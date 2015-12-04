@@ -5,14 +5,18 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
-import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.DelaunayTriangulator;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ShortArray;
 
-public class MaskRenderer {
+public class MaskRenderer implements Disposable {
 	private Mesh mesh;
 
 	// Shader
@@ -20,14 +24,9 @@ public class MaskRenderer {
 	private static final String vertexShader = "com/realhome/editor/renderer/plan/layer/layer1_mask/mask_vertex.glsl";
 	private static final String fragmentShader = "com/realhome/editor/renderer/plan/layer/layer1_mask/mask_fragment.glsl";
 
-	// Used for mesh creation
-	private int vertexIdx;
-	private int vertexSize;
-	private float[] vertices;
+	private DelaunayTriangulator triangulator = new DelaunayTriangulator();
 
-	// Used for computation
-	private Vector2 point0 = new Vector2();
-	private Vector2 point1 = new Vector2();
+	private Color color = new Color(1, 1, 1, 1);
 
 	public MaskRenderer() {
 		initShader();
@@ -43,17 +42,45 @@ public class MaskRenderer {
 
 	private void initMesh() {
 		int maxVertices = 5000;
+		mesh = new Mesh(true, maxVertices, 0, new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE));
+	}
 
-		// Create mesh
-		VertexAttributes attributes = new VertexAttributes(
-			new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE));
-		mesh = new Mesh(true, maxVertices, 0, attributes);
+	public void reload(Array<Vector2> points) {
+		// Create variables for triangulation
+		FloatArray floatPoints = new FloatArray();
+		ShortArray triangles = null;
+
+		// Add points in FloatArray
+		for(int i = 0; i < points.size; i++) {
+			floatPoints.add(points.get(i).x);
+			floatPoints.add(points.get(i).y);
+		}
+
+		// Triangulate
+		triangles = triangulator.computeTriangles(floatPoints, false);
+
+		// Create vertices (One triangle = 3 points)
+		int maxVertices = triangles.size * 3;
+		float[] vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
 
 		// Compute vertices
-		vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
-		vertexSize = mesh.getVertexAttributes().vertexSize / 4;
+		for (int i = 0; i < triangles.size; i += 3) {
+			int p1 = triangles.get(i) * 2;
+			int p2 = triangles.get(i + 1) * 2;
+			int p3 = triangles.get(i + 2) * 2;
 
-		// Finalize mesh
+			int id = i*2;
+			vertices[id] = floatPoints.get(p1);
+			vertices[id+1] = floatPoints.get(p1 + 1);
+
+			vertices[id+2] = floatPoints.get(p2);
+			vertices[id+3] = floatPoints.get(p2 + 1);
+
+			vertices[id+4] = floatPoints.get(p3);
+			vertices[id+5] = floatPoints.get(p3 + 1);
+		}
+
+		// Set vertices in mesh
 		mesh.setVertices(vertices);
 	}
 
@@ -61,34 +88,11 @@ public class MaskRenderer {
 		shader.begin();
 		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
 		shader.setUniformf("u_color", color);
-		mesh.render(shader, GL20.GL_LINES);
+		mesh.render(shader, GL20.GL_TRIANGLES);
 		shader.end();
 	}
 
-	private void heightLine(int x) {
-		point0.set(x, -height/2);
-		point1.set(x, height/2);
-		line(point0, point1);
-	}
-
-	private void widthLine(int y) {
-		point0.set(-width/2, y);
-		point1.set(width/2, y);
-		line(point0, point1);
-	}
-
-	private void line(Vector2 point0, Vector2 point1) {
-		vertex(point0.x, point0.y);
-		vertex(point1.x, point1.y);
-	}
-
-	private void vertex (float x, float y) {
-		int idx = vertexIdx;
-		vertices[idx] = x;
-		vertices[idx + 1] = y;
-		vertexIdx += vertexSize;
-	}
-
+	@Override
 	public void dispose () {
 		shader.dispose();
 		mesh.dispose();
