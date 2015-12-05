@@ -1,3 +1,4 @@
+
 package com.realhome.editor.renderer.plan.layer.layer2_wall;
 
 import com.badlogic.gdx.Gdx;
@@ -22,67 +23,62 @@ public class WallRenderer implements Disposable {
 	private ShaderProgram shader;
 	private static final String vertexShader = "com/realhome/editor/renderer/plan/layer/layer2_wall/wall_vertex.glsl";
 	private static final String fragmentShader = "com/realhome/editor/renderer/plan/layer/layer2_wall/wall_fragment.glsl";
-
+	private int id = 0;
 	private Color color = new Color(1, 0, 0, 1);
 
-	public WallRenderer() {
+	public WallRenderer () {
 		initShader();
 		initMesh();
 	}
 
-	private void initShader() {
+	private void initShader () {
 		String vertex = Gdx.files.classpath(vertexShader).readString();
 		String fragment = Gdx.files.classpath(fragmentShader).readString();
 		shader = new ShaderProgram(vertex, fragment);
 		if (!shader.isCompiled()) throw new GdxRuntimeException(shader.getLog());
 	}
 
-	private void initMesh() {
+	private void initMesh () {
 		int maxVertices = 5000;
-		VertexAttributes a = new VertexAttributes(
-			new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
-			new VertexAttribute(Usage.Generic, 2, "a_uv")
-			);
+		VertexAttributes a = new VertexAttributes(new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
+			new VertexAttribute(Usage.Generic, 2, "a_uv"));
 		mesh = new Mesh(true, maxVertices, 0, a);
 	}
 
-	public void reload(Array<WallPlan> walls) {
+	public void reload (Array<WallPlan> walls) {
 		// 6 points for each wall (2 triangles)
 		int maxVertices = walls.size * 6;
 		float[] vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
 
 		// Compute vertices
-		for (int i = 0; i < walls.size; i ++) {
+		id = 0;
+		for (int i = 0; i < walls.size; i++) {
 			Vector2[] points = walls.get(i).getPoints();
 
-			int id = i*12;
-
 			// First triangle
-			vertices[id+0] = points[0].x;
-			vertices[id+1] = points[0].y;
-
-			vertices[id+2] = points[1].x;
-			vertices[id+3] = points[1].y;
-
-			vertices[id+4] = points[2].x;
-			vertices[id+5] = points[2].y;
+			vertice(vertices, points[0]);
+			vertice(vertices, points[1]);
+			vertice(vertices, points[2]);
 
 			// Second triangle
-			vertices[id+6] = points[2].x;
-			vertices[id+7] = points[2].y;
-
-			vertices[id+8] = points[1].x;
-			vertices[id+9] = points[1].y;
-
-			vertices[id+10] = points[3].x;
-			vertices[id+11] = points[3].y;
+			vertice(vertices, points[2]);
+			vertice(vertices, points[1]);
+			vertice(vertices, points[3]);
 		}
 
 		// Set vertices in mesh
 		mesh.setVertices(vertices);
 	}
 
-	public void render(Matrix4 projViewTrans) {
+	private void vertice (float[] vertices, Vector2 point) {
+		vertices[id + 0] = point.x;
+		vertices[id + 1] = point.y;
+		vertices[id + 2] = 0;
+		vertices[id + 3] = 0;
+		id += 4;
+	}
+
+	public void render (Matrix4 projViewTrans) {
 		shader.begin();
 		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
 		shader.setUniformf("u_color", color);
