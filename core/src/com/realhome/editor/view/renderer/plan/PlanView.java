@@ -6,12 +6,15 @@ import com.realhome.editor.common.pattern.mvc.BaseView;
 import com.realhome.editor.model.house.House;
 
 public class PlanView extends BaseView<PlanWidget> {
-	boolean updated;
+
+	public final static String NAME = "view.renderer.plan.PlanView";
+
+	private boolean updated;
 
 	public PlanView () {
 		PlanWidget widget = new PlanWidget();
 		widget.init();
-		init(widget);
+		init(widget, NAME);
 	}
 
 	public void reloadHouse (House house) {

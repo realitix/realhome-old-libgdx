@@ -11,6 +11,7 @@ import com.realhome.editor.common.pattern.mvc.BaseView;
 import com.realhome.editor.util._;
 
 public class MenuBarView extends BaseView<Table> {
+	public final static String NAME = "view.menu.MenuBarView";
 
 	private MenuBar menuBar;
 	private MenuItem menuOpen;
@@ -43,7 +44,8 @@ public class MenuBarView extends BaseView<Table> {
 		menuBar.addMenu(edit);
 		menuBar.addMenu(share);
 		menuBar.addMenu(help);
-		init(menuBar.getTable());
+
+		init(menuBar.getTable(), NAME);
 
 		padMenus(20);
 	}

@@ -7,4 +7,6 @@ public interface View {
 	public Actor getActor ();
 
 	public boolean isUpdated ();
+
+	public String getName();
 }

@@ -11,6 +11,7 @@ import com.realhome.editor.common.pattern.mvc.View;
 import com.realhome.editor.view.presenter.Presenter;
 
 public class AppView implements View, Disposable {
+	public static final String NAME = "AppView";
 
 	Presenter presenter;
 	boolean dirty = true;
@@ -90,5 +91,10 @@ public class AppView implements View, Disposable {
 	@Override
 	public boolean isUpdated () {
 		return false;
+	}
+
+	@Override
+	public String getName () {
+		return NAME;
 	}
 }

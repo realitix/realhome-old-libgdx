@@ -15,9 +15,9 @@ public class DefaultPresenter implements Presenter {
 	private Array<View> views;
 	private Table root;
 
-	public <T> Actor get (Class<T> viewClass) {
+	public Actor get (String name) {
 		for (int i = 0; i < views.size; i++)
-			if (viewClass.isInstance(views.get(i))) return views.get(i).getActor();
+			if (views.get(i).getName() == name) return views.get(i).getActor();
 		throw new GdxRuntimeException("View not found");
 	}
 
@@ -45,12 +45,11 @@ public class DefaultPresenter implements Presenter {
 	}
 
 	private void menuBarView () {
-		root.add(get(MenuBarView.class)).fillX().expandX().row();
+		root.add(get(MenuBarView.NAME)).fillX().expandX().row();
 	}
 
 	private void mainView () {
-		if (get(PlanView.class).isVisible())
-		// root.add(get(PlanView.class)).fill().expand();
-			root.add(get(PlanView.class)).fill();
+		if (get(PlanView.NAME).isVisible())
+			root.add(get(PlanView.NAME)).fill();
 	}
 }
