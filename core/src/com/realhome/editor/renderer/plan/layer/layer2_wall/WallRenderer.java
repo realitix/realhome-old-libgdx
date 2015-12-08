@@ -25,6 +25,14 @@ public class WallRenderer implements Disposable {
 	private static final String fragmentShader = "com/realhome/editor/renderer/plan/layer/layer2_wall/wall_fragment.glsl";
 	private int id = 0;
 	private Color color = new Color(1, 0, 0, 1);
+	private Vector2 min = new Vector2();
+	private Vector2 max = new Vector2();
+	private Vector2 size = new Vector2();
+
+	private Color backgroundColor = new Color(0.15f, 0.15f, 0.15f, 1);
+	private Color lineColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+	private float lineWidth = 0.05f;
+	private Vector2 tile = new Vector2(0.1f, 0.1f);
 
 	public WallRenderer () {
 		initShader();
@@ -46,6 +54,8 @@ public class WallRenderer implements Disposable {
 	}
 
 	public void reload (Array<WallPlan> walls) {
+		initUv(walls);
+
 		// 6 points for each wall (2 triangles)
 		int maxVertices = walls.size * 6;
 		float[] vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
@@ -73,15 +83,45 @@ public class WallRenderer implements Disposable {
 	private void vertice (float[] vertices, Vector2 point) {
 		vertices[id + 0] = point.x;
 		vertices[id + 1] = point.y;
-		vertices[id + 2] = 0;
-		vertices[id + 3] = 0;
+		vertices[id + 2] = uvX(point.x);
+		vertices[id + 3] = uvY(point.y);
 		id += 4;
+	}
+
+	private void initUv(Array<WallPlan> walls) {
+		float mi = -9999999, ma = 9999999;
+		min.set(ma, ma);
+		max.set(mi, mi);
+
+		for (int i = 0; i < walls.size; i++) {
+			Vector2[] points = walls.get(i).getPoints();
+			for(int j = 0; j < points.length; j++) {
+				Vector2 p = points[j];
+				if(p.x < min.x) min.x = p.x;
+				if(p.x > max.x) max.x = p.x;
+				if(p.y < min.y) min.y = p.y;
+				if(p.y > max.y) max.y = p.y;
+			}
+		}
+
+		size.set(max.x - min.x, max.y - min.y);
+	}
+
+	private float uvX(float x) {
+		return (x - min.x) / size.x;
+	}
+
+	private float uvY(float y) {
+		return (y - min.y) / size.y;
 	}
 
 	public void render (Matrix4 projViewTrans) {
 		shader.begin();
 		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
-		shader.setUniformf("u_color", color);
+		shader.setUniformf("u_tile", tile.x, tile.y);
+		shader.setUniformf("u_colorFront", lineColor.r, lineColor.g, lineColor.b, lineColor.a);
+		shader.setUniformf("u_colorBack", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+		shader.setUniformf("u_lineWidth", lineWidth);
 		mesh.render(shader, GL20.GL_TRIANGLES);
 		shader.end();
 	}
