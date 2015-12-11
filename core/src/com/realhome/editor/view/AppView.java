@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.realhome.editor.common.pattern.mvc.View;
-import com.realhome.editor.view.presenter.Presenter;
+import com.realhome.editor.presenter.Presenter;
 
 public class AppView implements View, Disposable {
 	public static final String NAME = "AppView";

@@ -11,13 +11,13 @@ import com.realhome.editor.common.pattern.command.CommandManager;
 import com.realhome.editor.common.pattern.mvc.Controller;
 import com.realhome.editor.common.pattern.notification.NotificationManager;
 import com.realhome.editor.controller.AppController;
+import com.realhome.editor.controller.MenuBarController;
 import com.realhome.editor.controller.PlanController;
-import com.realhome.editor.controller.menu.MenuBarController;
 import com.realhome.editor.model.AppModel;
+import com.realhome.editor.presenter.DefaultPresenter;
 import com.realhome.editor.view.AppView;
-import com.realhome.editor.view.menu.MenuBarView;
-import com.realhome.editor.view.presenter.DefaultPresenter;
-import com.realhome.editor.view.renderer.plan.PlanView;
+import com.realhome.editor.view.MenuBarView;
+import com.realhome.editor.view.PlanView;
 
 public class RealHomeApp extends ApplicationAdapter {
 	public static final String NAME = "RealHomeApp";
