@@ -45,13 +45,18 @@ float getDistanceFromCenter(vec2 point, vec2 a, vec2 b) {
 
 void main() {
 	vec4 color = vec4(0.0);
-		
+	float distanceP1 = distance(v_pos, u_p1);
+	float distanceP2 = distance(v_pos, u_p2);
+	
 	// Circle
-	if(distance(v_pos, u_p1) <= u_circleSize || distance(v_pos, u_p2) <= u_circleSize) {
+	if( distanceP1 <= u_circleSize) {
+		color = u_circleColor;
+	}
+	else if( distanceP2 <= u_circleSize ) {
 		color = u_circleColor;
 	}
 	// Line
-	else if(inLine()){
+	else if( inLine() ){
 		if(getDistanceFromCenter(v_pos, u_p1, u_p2) <= u_lineSize) {
 			color = u_lineColor;
 		}

@@ -29,7 +29,7 @@ float getDistanceFromCenter(vec2 point) {
 }
 
 void main() {
-	const float distanceCenterToCoin = distance(vec2(0.5, 0.5), vec2(0.0, 1.0));
+	const float distanceCenterToCoin = 0.70711;
 	
 	vec2 phase = fract(v_uv / u_tile);
 	float distanceFromCenter = getDistanceFromCenter(phase);
