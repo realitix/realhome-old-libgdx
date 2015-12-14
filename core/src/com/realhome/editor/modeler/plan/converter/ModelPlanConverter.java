@@ -19,7 +19,5 @@ public class ModelPlanConverter {
 		for(int i = 0; i < converters.size; i++) {
 			converters.get(i).convert(houseIn, houseOut);
 		}
-
-		System.out.println(houseOut.toString());
 	}
 }

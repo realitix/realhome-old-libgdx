@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.realhome.editor.model.Point;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class WallRenderer implements Disposable {
@@ -62,7 +63,7 @@ public class WallRenderer implements Disposable {
 		// Compute vertices
 		id = 0;
 		for (int i = 0; i < walls.size; i++) {
-			Vector2[] points = walls.get(i).getPoints();
+			Point[] points = walls.get(i).getPoints();
 
 			// First triangle
 			vertice(vertices, points[0]);
@@ -79,7 +80,7 @@ public class WallRenderer implements Disposable {
 		mesh.setVertices(vertices);
 	}
 
-	private void vertice (float[] vertices, Vector2 point) {
+	private void vertice (float[] vertices, Point point) {
 		vertices[id + 0] = point.x;
 		vertices[id + 1] = point.y;
 		vertices[id + 2] = uvX(point.x);
@@ -93,9 +94,9 @@ public class WallRenderer implements Disposable {
 		max.set(mi, mi);
 
 		for (int i = 0; i < walls.size; i++) {
-			Vector2[] points = walls.get(i).getPoints();
+			Point[] points = walls.get(i).getPoints();
 			for (int j = 0; j < points.length; j++) {
-				Vector2 p = points[j];
+				Point p = points[j];
 				if (p.x < min.x) min.x = p.x;
 				if (p.x > max.x) max.x = p.x;
 				if (p.y < min.y) min.y = p.y;

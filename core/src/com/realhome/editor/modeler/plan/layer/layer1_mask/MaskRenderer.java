@@ -9,12 +9,12 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.DelaunayTriangulator;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ShortArray;
+import com.realhome.editor.model.Point;
 
 public class MaskRenderer implements Disposable {
 	private Mesh mesh;
@@ -45,7 +45,7 @@ public class MaskRenderer implements Disposable {
 		mesh = new Mesh(true, maxVertices, 0, new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE));
 	}
 
-	public void reload(Array<Vector2> points) {
+	public void reload(Array<Point> points) {
 		// Create variables for triangulation
 		FloatArray floatPoints = new FloatArray();
 		ShortArray triangles = null;

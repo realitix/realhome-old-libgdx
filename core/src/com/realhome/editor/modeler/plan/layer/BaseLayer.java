@@ -1,7 +1,6 @@
 package com.realhome.editor.modeler.plan.layer;
 
-import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.modeler.plan.actioner.Action;
+import com.badlogic.gdx.utils.IntArray;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 
 public abstract class BaseLayer implements Layer {
@@ -14,7 +13,7 @@ public abstract class BaseLayer implements Layer {
 	}
 
 	@Override
-	public void action (HousePlan house, Array<Action> actions) {
+	public void action (HousePlan house, IntArray actions) {
 	}
 
 	@Override

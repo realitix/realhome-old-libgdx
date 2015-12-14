@@ -1,8 +1,8 @@
 
 package com.realhome.editor.model.house;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.realhome.editor.model.Point;
 
 public class Wall {
 	private static final int DEFAULT_WIDTH = 50;
@@ -10,15 +10,14 @@ public class Wall {
 	private int type;
 	private float height;
 	private int width = DEFAULT_WIDTH;
-	private Vector2[] points = new Vector2[2];
-	private ObjectMap<Vector2, Vector2[]> extrusionPoints2D = new ObjectMap<Vector2, Vector2[]>(2);
+	private Point[] points = new Point[2];
+	private ObjectMap<Point, Point[]> extrusionPoints2D = new ObjectMap<Point, Point[]>(2);
 
 	public Wall () {
 		for (int i = 0; i < points.length; i++) {
-			points[i] = new Vector2();
-			extrusionPoints2D.put(points[i], new Vector2[] {new Vector2(), new Vector2()});
+			points[i] = new Point();
+			extrusionPoints2D.put(points[i], new Point[] {new Point(), new Point()});
 		}
-
 	}
 
 	public int getType () {
@@ -39,38 +38,38 @@ public class Wall {
 		return width;
 	}
 
-	public Vector2[] getPoints () {
+	public Point[] getPoints () {
 		return points;
 	}
 
-	public Vector2[] getExtrusionPoints2D (Vector2 point) {
+	public Point[] getExtrusionPoints2D (Point point) {
 		return extrusionPoints2D.get(point);
 	}
 
-	public Vector2 getPoint0 () {
+	public Point getPoint0 () {
 		return points[0];
 	}
 
-	public Wall setPoint0 (Vector2 point0) {
+	public Wall setPoint0 (Point point0) {
 		this.points[0].set(point0);
 		return this;
 	}
 
-	public Wall setPoint0 (float x, float y) {
+	public Wall setPoint0 (int x, int y) {
 		this.points[0].set(x, y);
 		return this;
 	}
 
-	public Vector2 getPoint1 () {
+	public Point getPoint1 () {
 		return points[1];
 	}
 
-	public Wall setPoint1 (Vector2 point1) {
+	public Wall setPoint1 (Point point1) {
 		this.points[1].set(point1);
 		return this;
 	}
 
-	public Wall setPoint1 (float x, float y) {
+	public Wall setPoint1 (int x, int y) {
 		this.points[1].set(x, y);
 		return this;
 	}
@@ -88,5 +87,13 @@ public class Wall {
 		if (other.points[0].equals(points[0]) || other.points[0].equals(points[1]) || other.points[1].equals(points[0])
 			|| other.points[1].equals(points[1])) return true;
 		return false;
+	}
+
+	public Point getLinkedPoint (Wall other) {
+		if (other.points[0].equals(points[0]) || other.points[0].equals(points[1]))
+			return  other.points[0];
+		if (other.points[1].equals(points[0]) || other.points[1].equals(points[1]))
+			return other.points[1];
+		return null;
 	}
 }

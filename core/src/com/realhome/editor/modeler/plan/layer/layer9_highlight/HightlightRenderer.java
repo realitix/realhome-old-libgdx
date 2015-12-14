@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.realhome.editor.model.Point;
 import com.realhome.editor.modeler.plan.model.HighlightWallPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
@@ -61,7 +62,7 @@ public class HightlightRenderer implements Disposable {
 
 		// Compute vertices
 		id = 0;
-		Vector2[] points = hWall.getPoints();
+		Point[] points = hWall.getPoints();
 
 		// First triangle
 		vertice(points[0]);
@@ -78,7 +79,7 @@ public class HightlightRenderer implements Disposable {
 	}
 
 	private void computeLimit () {
-		Vector2[] points = wall.getOrigin().getPoints();
+		Point[] points = wall.getOrigin().getPoints();
 		float m1 = 99999999, m2 = -99999999;
 
 		min.set(m1, m1);
@@ -92,7 +93,7 @@ public class HightlightRenderer implements Disposable {
 		}
 	}
 
-	private void vertice (Vector2 point) {
+	private void vertice (Point point) {
 		vertices[id + 0] = point.x;
 		vertices[id + 1] = point.y;
 		id += 2;
@@ -102,7 +103,7 @@ public class HightlightRenderer implements Disposable {
 		if (wall != null) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 
-			Vector2[] points = wall.getOrigin().getPoints();
+			Point[] points = wall.getOrigin().getPoints();
 			shader.begin();
 			shader.setUniformMatrix("u_projViewTrans", projViewTrans);
 			shader.setUniformf("u_p1", points[0].x, points[0].y);
