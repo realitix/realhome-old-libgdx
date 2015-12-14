@@ -1,7 +1,7 @@
 
 package com.realhome.editor.modeler.plan.model;
 
-import com.badlogic.gdx.math.Vector2;
+import com.realhome.editor.model.Point;
 import com.realhome.editor.model.house.Wall;
 
 public class WallPlan {
@@ -12,13 +12,13 @@ public class WallPlan {
 	 * Length: p0-p2, p1,p3
 	 * Width: p0-p1, p2-p3
 	 */
-	private Vector2[] points = new Vector2[4];
+	private Point[] points = new Point[4];
 	private int type;
 	private Wall origin;
 
 	public WallPlan () {
 		for (int i = 0; i < points.length; i++) {
-			points[i] = new Vector2();
+			points[i] = new Point();
 		}
 	}
 
@@ -40,7 +40,7 @@ public class WallPlan {
 		return this;
 	}
 
-	public Vector2[] getPoints() {
+	public Point[] getPoints() {
 		return points;
 	}
 

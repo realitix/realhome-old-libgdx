@@ -1,14 +1,24 @@
 
 package com.realhome.editor.modeler.plan.model;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.realhome.editor.model.Point;
 
 public class HousePlan {
 	private int floor;
 	private Array<WallPlan> walls = new Array<WallPlan>();
-	private Array<Vector2> outlinePoints = new Array<Vector2>();
+	private Array<Point> outlinePoints = new Array<Point>();
 	private HighlightWallPlan highlightWall = new HighlightWallPlan();
+	private WallPlan selectedWall;
+
+	public HousePlan setSelectedWall(WallPlan wall) {
+		this.selectedWall = wall;
+		return this;
+	}
+
+	public WallPlan getSelectedWall() {
+		return selectedWall;
+	}
 
 	public HousePlan setHighlightWall(WallPlan wall) {
 		this.highlightWall.setWall(wall);
@@ -33,7 +43,7 @@ public class HousePlan {
 		return this;
 	}
 
-	public Array<Vector2> getOutlinePoints () {
+	public Array<Point> getOutlinePoints () {
 		return outlinePoints;
 	}
 

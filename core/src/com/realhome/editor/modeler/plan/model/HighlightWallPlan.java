@@ -1,16 +1,17 @@
 package com.realhome.editor.modeler.plan.model;
 
 import com.badlogic.gdx.math.Vector2;
+import com.realhome.editor.model.Point;
 import com.realhome.editor.model.house.Wall;
 
 public class HighlightWallPlan {
 
 	private WallPlan origin;
-	private Vector2[] points = new Vector2[4];
+	private Point[] points = new Point[4];
 
 	public HighlightWallPlan() {
 		for(int i = 0; i < points.length; i++) {
-			points[i] = new Vector2();
+			points[i] = new Point();
 		}
 	}
 
@@ -23,7 +24,7 @@ public class HighlightWallPlan {
 		return origin;
 	}
 
-	public Vector2[] getPoints() {
+	public Point[] getPoints() {
 		return points;
 	}
 
@@ -49,7 +50,7 @@ public class HighlightWallPlan {
 		direction.scl(width);
 
 		for(int i = 0; i < wall.getPoints().length; i++) {
-			Vector2 p = wall.getPoints()[i];
+			Point p = wall.getPoints()[i];
 			points[i*2].set(p).add(normal).sub(direction);
 			points[i*2+1].set(p).add(normal2).sub(direction);
 
@@ -58,8 +59,6 @@ public class HighlightWallPlan {
 	}
 
 	private Vector2 getWallDirection(Wall wall) {
-		Vector2 direction = new Vector2();
-		direction.set(wall.getPoint1()).sub(wall.getPoint0()).nor();
-		return direction;
+		return wall.getPoint1().dir(wall.getPoint0(), new Vector2());
 	}
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.realhome.editor.model.Point;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.model.HousePlan;
@@ -13,17 +14,17 @@ import com.realhome.editor.modeler.plan.model.WallPlan;
 public class WallPlanConverter implements PlanConverter {
 
 	static private class Segment {
-		public Vector2 point0 = new Vector2();
-		public Vector2 point1 = new Vector2();
+		public Point point0 = new Point();
+		public Point point1 = new Point();
 
 		public Segment() {}
 
-		public Segment(Vector2 point0, Vector2 point1) {
+		public Segment(Point point0, Point point1) {
 			this.point0.set(point0);
 			this.point1.set(point1);
 		}
 
-		public Vector2 getOtherPoint(Vector2 point) {
+		public Point getOtherPoint(Point point) {
 			if(point0.equals(point))
 				return point1;
 			return point0;
@@ -35,8 +36,8 @@ public class WallPlanConverter implements PlanConverter {
 
 	private Wall currentInWall;
 	private WallPlan currentOutWall;
-	private Vector2 currentInPoint;
-	private Vector2[] currentOutPoints;
+	private Point currentInPoint;
+	private Point[] currentOutPoints;
 
 	@Override
 	public void convert(House houseIn, HousePlan houseOut) {
@@ -77,8 +78,8 @@ public class WallPlanConverter implements PlanConverter {
 	private void convertWall() {
 		for(int i = 0; i < currentInWall.getPoints().length; i++) {
 			currentInPoint = currentInWall.getPoints()[i];
-			Vector2[] points2D = currentOutWall.getPoints();
-			currentOutPoints = new Vector2[] {points2D[i*2], points2D[i*2+1]};
+			Point[] points2D = currentOutWall.getPoints();
+			currentOutPoints = new Point[] {points2D[i*2], points2D[i*2+1]};
 
 			convertPoint();
 		}
@@ -103,7 +104,7 @@ public class WallPlanConverter implements PlanConverter {
 			// for each points in tested wall
 			for (int j = 0; j < w.getPoints().length; j++) {
 				// p is the current tested point
-				Vector2 p = w.getPoints()[j];
+				Point p = w.getPoints()[j];
 
 				// Wall must not be aligned
 				if (p.equals(currentInPoint) && !wallsAligned(w, currentInWall)) {
@@ -120,10 +121,11 @@ public class WallPlanConverter implements PlanConverter {
 
 	/**
 	 * Return true if the two walls have the same direction
-	*/
+	 */
 	private boolean wallsAligned(Wall wall0, Wall wall1) {
-		Vector2 direction0 = new Vector2().set(wall0.getPoints()[1]).sub(wall0.getPoints()[0]);
-		Vector2 direction1 = new Vector2().set(wall1.getPoints()[1]).sub(wall1.getPoints()[0]);
+		Vector2 direction0 = wall0.getPoints()[1].dir(wall0.getPoints()[0], new Vector2());
+		Vector2 direction1 = wall1.getPoints()[1].dir(wall1.getPoints()[0], new Vector2());
+
 		int angle = Math.round(direction0.angle(direction1));
 		if( angle == 0 || angle == 180) return true;
 		return false;
@@ -145,47 +147,53 @@ public class WallPlanConverter implements PlanConverter {
 		wallTestSegments[1] = getSideSegment(wallTest, false);
 
 		for (int i = 0; i < currentInWallSegments.length; i++) {
-			Vector2[] intersectionPoints = new Vector2[2];
+			Point[] intersectionPoints = new Point[2];
 
 			for (int j = 0; j < wallTestSegments.length; j++) {
 				intersectionPoints[j] = getLineIntersection(currentInWallSegments[i], wallTestSegments[j]);
 			}
 
-			Vector2 currentInWallFarestPoint = getFarestPoint(currentInWallSegments[i], intersectionPoints);
+			Point currentInWallFarestPoint = getFarestPoint(currentInWallSegments[i], intersectionPoints);
 			Segment segmentTest0 = new Segment(currentInWallFarestPoint, intersectionPoints[0]);
 			Segment segmentTest1 = new Segment(currentInWallFarestPoint, intersectionPoints[1]);
 			Segment wallTestOriginSegment = enlargeSegment(wallTest.getPoint1(), wallTest.getPoint0());
 
 			Segment segmentTestValid = getValidSegment(segmentTest0, segmentTest1, wallTestOriginSegment, i==0);
-			Vector2 intersectionPoint = segmentTestValid.getOtherPoint(currentInWallFarestPoint);
-			
+			Point intersectionPoint = segmentTestValid.getOtherPoint(currentInWallFarestPoint);
+
 			currentOutPoints[i].set(intersectionPoint);
 		}
 	}
 
 	/**
 	 * Return intersection point between two segments
-	*/
-	private Vector2 getLineIntersection (Segment s0, Segment s1) {
+	 */
+	private Point getLineIntersection (Segment s0, Segment s1) {
 		Vector2 intersection = new Vector2();
-		Intersector.intersectLines(s0.point0, s0.point1, s1.point0, s1.point1, intersection);
-		return round(intersection);
+		Intersector.intersectLines(
+			s0.point0.x, s0.point0.y,
+			s0.point1.x, s0.point1.y,
+			s1.point0.x, s1.point0.y,
+			s1.point1.x, s1.point1.y,
+			intersection);
+		return new Point(intersection);
 	}
 
 	/**
 	 * Depending on the angle between two walls,
 	 * we return wether segmentTest0 or segmentTest1
-	*/
+	 */
 	private Segment getValidSegment (Segment segmentTest0, Segment segmentTest1, Segment segmentTarget, boolean first) {
-		Vector2 direction0 = new Vector2().set(segmentTest0.point1).sub(segmentTest0.point0).nor();
-		Vector2 direction1 = new Vector2().set(segmentTarget.point1).sub(segmentTarget.point0).nor();
+		Vector2 direction0 = segmentTest0.point1.dir(segmentTest0.point0, new Vector2());
+		Vector2 direction1 = segmentTarget.point1.dir(segmentTarget.point0, new Vector2());
+
 		float angle = direction0.angle(direction1);
 
 		if(angle > 0 && first) return getCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
 		if(angle > 0 && !first) return getNoCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
 		if(angle < 0 && first) return getNoCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
 		if(angle < 0 && !first) return getCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
-	
+
 		return null;
 	}
 
@@ -207,13 +215,15 @@ public class WallPlanConverter implements PlanConverter {
 
 	private boolean intersectSegments(Segment segmentTest0, Segment segmentTest1) {
 		return Intersector.intersectSegments(
-				segmentTest0.point0, segmentTest0.point1,
-				segmentTest1.point0, segmentTest1.point1,
-				null);
+			segmentTest0.point0.x, segmentTest0.point0.y,
+			segmentTest0.point1.x, segmentTest0.point1.y,
+			segmentTest1.point0.x, segmentTest1.point0.y,
+			segmentTest1.point1.x, segmentTest1.point1.y,
+			null);
 	}
 
-	private Segment enlargeSegment (Vector2 point0, Vector2 point1) {
-		Vector2 direction = point1.cpy().sub(point0);
+	private Segment enlargeSegment (Point point0, Point point1) {
+		Vector2 direction = new Vector2(point1.x, point1.y).sub(point0.x, point0.y);
 		Segment result = new Segment();
 		result.point0.set(point0).sub(direction);
 		result.point1.set(point1).add(direction);
@@ -223,18 +233,18 @@ public class WallPlanConverter implements PlanConverter {
 	/**
 	 * Return the point in sourcePoints segment which is the farest
 	 * of targetPoints
-	*/
-	private Vector2 getFarestPoint (Segment sourcePoints, Vector2[] targetPoints) {
+	 */
+	private Point getFarestPoint (Segment sourcePoints, Point[] targetPoints) {
 		Vector2 tmpV0 = new Vector2();
 		Vector2 tmpV1 = new Vector2();
 
-		tmpV0.set(sourcePoints.point0).sub(targetPoints[0]);
-		tmpV1.set(sourcePoints.point0).sub(targetPoints[1]);
+		tmpV0.set(sourcePoints.point0.x, sourcePoints.point0.y).sub(targetPoints[0].x, targetPoints[0].y);
+		tmpV1.set(sourcePoints.point0.x, sourcePoints.point0.y).sub(targetPoints[1].x, targetPoints[1].y);
 
 		float distance0 = tmpV0.len() + tmpV1.len();
 
-		tmpV0.set(sourcePoints.point1).sub(targetPoints[0]);
-		tmpV1.set(sourcePoints.point1).sub(targetPoints[1]);
+		tmpV0.set(sourcePoints.point1.x, sourcePoints.point1.y).sub(targetPoints[0].x, targetPoints[0].y);
+		tmpV1.set(sourcePoints.point1.x, sourcePoints.point1.y).sub(targetPoints[1].x, targetPoints[1].y);
 
 		float distance1 = tmpV0.len() + tmpV1.len();
 
@@ -274,8 +284,8 @@ public class WallPlanConverter implements PlanConverter {
 		normal.scl(width);
 		normal2.scl(width);
 
-		Vector2 point0 = currentInPoint.cpy();
-		Vector2 point1 = currentInPoint.cpy();
+		Point point0 = currentInPoint.cpy();
+		Point point1 = currentInPoint.cpy();
 
 		point0.add(normal);
 		point1.add(normal2);
@@ -285,13 +295,6 @@ public class WallPlanConverter implements PlanConverter {
 	}
 
 	private Vector2 getWallDirection(Wall wall) {
-		Vector2 direction = new Vector2();
-		direction.set(wall.getPoint1()).sub(wall.getPoint0()).nor();
-		return direction;
-	}
-
-	private Vector2 round(Vector2 v) {
-		v.set(Math.round(v.x), Math.round(v.y));
-		return v;
+		return wall.getPoint1().dir(wall.getPoint0(), new Vector2());
 	}
 }

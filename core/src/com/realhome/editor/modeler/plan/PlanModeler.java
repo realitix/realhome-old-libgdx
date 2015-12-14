@@ -4,11 +4,13 @@ package com.realhome.editor.modeler.plan;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntArray;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.Modeler;
 import com.realhome.editor.modeler.plan.actioner.Action;
 import com.realhome.editor.modeler.plan.actioner.Actioner;
-import com.realhome.editor.modeler.plan.actioner.WallActioner;
+import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
+import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
 import com.realhome.editor.modeler.plan.converter.ModelPlanConverter;
 import com.realhome.editor.modeler.plan.layer.Layer;
 import com.realhome.editor.modeler.plan.layer.layer0_grid.GridLayer;
@@ -25,9 +27,10 @@ public class PlanModeler implements Modeler {
 	private final float VIRTUAL_HEIGHT = 1000; // centimeters
 	private OrthographicCamera camera;
 	private HousePlan housePlan;
+	private House house;
 	private ModelPlanConverter converter;
 	private Array<Actioner> actioners = new Array<Actioner>();
-	private Array<Action> actions = new Array<Action>();
+	private IntArray actions = new IntArray();
 	private PointMapper pointMapper;
 	private CameraController cameraController;
 
@@ -62,7 +65,12 @@ public class PlanModeler implements Modeler {
 	}
 
 	private void initActioners() {
-		actioners.add(new WallActioner().init(housePlan));
+		actioners.add(new WallOverActioner());
+		actioners.add(new WallMovingActioner());
+
+		for(Actioner actioner : actioners) {
+			actioner.init(housePlan);
+		}
 	}
 
 	@Override
@@ -96,6 +104,7 @@ public class PlanModeler implements Modeler {
 
 	@Override
 	public void reload (House house) {
+		this.house = house;
 		converter.convert(house, housePlan, 0);
 
 		for (int i = 0; i < layers.size; i++) {
@@ -105,10 +114,6 @@ public class PlanModeler implements Modeler {
 
 	public void moveCamera (float x, float y) {
 		cameraController.move(x, y);
-		/*float sensibility = camera.zoom * 1.5f;
-		camera.position.x = camera.position.x + x * sensibility;
-		camera.position.y = camera.position.y + y * sensibility;
-		camera.update();*/
 	}
 
 	public void zoomCamera (float z) {
@@ -122,8 +127,12 @@ public class PlanModeler implements Modeler {
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
 		for (Actioner actioner : actioners) {
-			Action action = actioner.move((int) c.x, (int)c.y);
-			if(action != null) actions.add(action);
+			int action = actioner.move((int) c.x, (int)c.y);
+			if(action != Action.TYPE_EMPTY) actions.add(action);
+		}
+
+		if(actions.contains(Action.TYPE_MOVE_WALL)) {
+			reload(house);
 		}
 
 		if(actions.size > 0) sendActionsLayers();
@@ -134,8 +143,8 @@ public class PlanModeler implements Modeler {
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
 		for (Actioner actioner : actioners) {
-			Action action = actioner.click((int) c.x, (int)c.y);
-			if(action != null) actions.add(action);
+			int action = actioner.click((int) c.x, (int)c.y);
+			if(action != Action.TYPE_EMPTY) actions.add(action);
 		}
 
 		if(actions.size > 0) sendActionsLayers();
@@ -146,8 +155,8 @@ public class PlanModeler implements Modeler {
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
 		for (Actioner actioner : actioners) {
-			Action action = actioner.unclick((int) c.x, (int)c.y);
-			if(action != null) actions.add(action);
+			int action = actioner.unclick((int) c.x, (int)c.y);
+			if(action != Action.TYPE_EMPTY) actions.add(action);
 		}
 
 		if(actions.size > 0) sendActionsLayers();

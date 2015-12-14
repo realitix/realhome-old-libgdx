@@ -4,8 +4,8 @@ import java.util.Comparator;
 import java.util.Stack;
 import java.util.TreeSet;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.realhome.editor.model.Point;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
@@ -20,20 +20,20 @@ public class OutlinePlanConverter implements PlanConverter {
 	 */
 	@Override
 	public void convert (House houseIn, HousePlan houseOut) {
-		Array<Vector2> points = getWallsPoints(houseOut.getWalls());
-		Array<Vector2> outlinePoints = houseOut.getOutlinePoints();
-		Array<Vector2> newOutlinePoints = GrahamScan.getConvexHull(points);
-		
+		Array<Point> points = getWallsPoints(houseOut.getWalls());
+		Array<Point> outlinePoints = houseOut.getOutlinePoints();
+		Array<Point> newOutlinePoints = GrahamScan.getConvexHull(points);
+
 		outlinePoints.clear();
 		outlinePoints.addAll(newOutlinePoints);
 	}
 
-	private Array<Vector2> getWallsPoints(Array<WallPlan> walls) {
-		Array<Vector2> points = new Array<Vector2>();
+	private Array<Point> getWallsPoints(Array<WallPlan> walls) {
+		Array<Point> points = new Array<Point>();
 		for(int i = 0; i < walls.size; i++) {
 			WallPlan w = walls.get(i);
 			for(int j = 0; j < w.getPoints().length; j++) {
-				points.add(new Vector2(w.getPoints()[j]));
+				points.add(new Point(w.getPoints()[j]));
 			}
 		}
 
@@ -41,48 +41,28 @@ public class OutlinePlanConverter implements PlanConverter {
 	}
 
 	private static class GrahamScan {
-
 		private static enum Turn { CLOCKWISE, COUNTER_CLOCKWISE, COLLINEAR }
 
-		private static boolean areAllCollinear(Array<Vector2> points) {
-
+		private static boolean areAllCollinear(Array<Point> points) {
 			if(points.size < 2) {
 				return true;
 			}
 
-			final Vector2 a = points.get(0);
-			final Vector2 b = points.get(1);
+			final Point a = points.get(0);
+			final Point b = points.get(1);
 
 			for(int i = 2; i < points.size; i++) {
-
-				Vector2 c = points.get(i);
+				Point c = points.get(i);
 
 				if(getTurn(a, b, c) != Turn.COLLINEAR) {
 					return false;
 				}
 			}
-
 			return true;
 		}
 
-		public static Array<Vector2> getConvexHull(int[] xs, int[] ys) throws IllegalArgumentException {
-
-			if(xs.length != ys.length) {
-				throw new IllegalArgumentException("xs and ys don't have the same size");
-			}
-
-			Array<Vector2> points = new Array<Vector2>();
-
-			for(int i = 0; i < xs.length; i++) {
-				points.add(new Vector2(xs[i], ys[i]));
-			}
-
-			return getConvexHull(points);
-		}
-
-		public static Array<Vector2> getConvexHull(Array<Vector2> points) throws IllegalArgumentException {
-
-			Array<Vector2> sorted = new Array<Vector2>(getSortedPointSet(points));
+		public static Array<Point> getConvexHull(Array<Point> points) throws IllegalArgumentException {
+			Array<Point> sorted = new Array<Point>(getSortedPointSet(points));
 
 			if(sorted.size < 3) {
 				throw new IllegalArgumentException("can only create a convex hull of 3 or more unique points");
@@ -92,15 +72,14 @@ public class OutlinePlanConverter implements PlanConverter {
 				throw new IllegalArgumentException("cannot create a convex hull from collinear points");
 			}
 
-			Stack<Vector2> stack = new Stack<Vector2>();
+			Stack<Point> stack = new Stack<Point>();
 			stack.push(sorted.get(0));
 			stack.push(sorted.get(1));
 
 			for (int i = 2; i < sorted.size; i++) {
-
-				Vector2 head = sorted.get(i);
-				Vector2 middle = stack.pop();
-				Vector2 tail = stack.peek();
+				Point head = sorted.get(i);
+				Point middle = stack.pop();
+				Point tail = stack.peek();
 
 				Turn turn = getTurn(tail, middle, head);
 
@@ -121,37 +100,32 @@ public class OutlinePlanConverter implements PlanConverter {
 			// close the hull
 			stack.push(sorted.get(0));
 
-			Array<Vector2> result = new Array<Vector2>();
-			for(Vector2 point : stack) {
+			Array<Point> result = new Array<Point>();
+			for(Point point : stack) {
 				result.add(point);
 			}
 
 			return result;
 		}
 
-		private static Vector2 getLowestPoint(Array<Vector2> points) {
-
-			Vector2 lowest = points.get(0);
+		private static Point getLowestPoint(Array<Point> points) {
+			Point lowest = points.get(0);
 
 			for(int i = 1; i < points.size; i++) {
-
-				Vector2 temp = points.get(i);
-
+				Point temp = points.get(i);
 				if(temp.y < lowest.y || (temp.y == lowest.y && temp.x < lowest.x)) {
 					lowest = temp;
 				}
 			}
-
 			return lowest;
 		}
 
-		private static Array<Vector2> getSortedPointSet(Array<Vector2> points) {
+		private static Array<Point> getSortedPointSet(Array<Point> points) {
+			final Point lowest = getLowestPoint(points);
 
-			final Vector2 lowest = getLowestPoint(points);
-
-			TreeSet<Vector2> set = new TreeSet<Vector2>(new Comparator<Vector2>() {
+			TreeSet<Point> set = new TreeSet<Point>(new Comparator<Point>() {
 				@Override
-				public int compare(Vector2 a, Vector2 b) {
+				public int compare(Point a, Point b) {
 
 					if(a == b || a.equals(b)) {
 						return 0;
@@ -190,15 +164,14 @@ public class OutlinePlanConverter implements PlanConverter {
 				set.add(points.get(i));
 			}
 
-			Array<Vector2> result = new Array<Vector2>();
-			for(Vector2 point : set) {
+			Array<Point> result = new Array<Point>();
+			for(Point point : set) {
 				result.add(point);
 			}
-
 			return result;
 		}
 
-		private static Turn getTurn(Vector2 a, Vector2 b, Vector2 c) {
+		private static Turn getTurn(Point a, Point b, Point c) {
 
 			// use longs to guard against int-over/underflow
 			long bax = (long)b.x - (long)a.x;
