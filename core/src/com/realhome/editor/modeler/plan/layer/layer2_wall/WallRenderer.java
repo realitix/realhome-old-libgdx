@@ -28,10 +28,10 @@ public class WallRenderer implements Disposable {
 	private Vector2 max = new Vector2();
 	private Vector2 size = new Vector2();
 
-	private Color backgroundColor = new Color(0.15f, 0.15f, 0.15f, 1);
-	private Color lineColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
-	private float lineWidth = 0.05f;
-	private Vector2 tile = new Vector2(0.1f, 0.1f);
+	private Color backgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
+	private Color lineColor = new Color(0.39f, 0.39f, 0.39f, 1f);
+	private float lineWidth = 0.08f;
+	private Vector2 tile = new Vector2(0.05f, 0.05f);
 
 	public WallRenderer () {
 		initShader();
@@ -87,30 +87,30 @@ public class WallRenderer implements Disposable {
 		id += 4;
 	}
 
-	private void initUv(Array<WallPlan> walls) {
+	private void initUv (Array<WallPlan> walls) {
 		float mi = -9999999, ma = 9999999;
 		min.set(ma, ma);
 		max.set(mi, mi);
 
 		for (int i = 0; i < walls.size; i++) {
 			Vector2[] points = walls.get(i).getPoints();
-			for(int j = 0; j < points.length; j++) {
+			for (int j = 0; j < points.length; j++) {
 				Vector2 p = points[j];
-				if(p.x < min.x) min.x = p.x;
-				if(p.x > max.x) max.x = p.x;
-				if(p.y < min.y) min.y = p.y;
-				if(p.y > max.y) max.y = p.y;
+				if (p.x < min.x) min.x = p.x;
+				if (p.x > max.x) max.x = p.x;
+				if (p.y < min.y) min.y = p.y;
+				if (p.y > max.y) max.y = p.y;
 			}
 		}
 
 		size.set(max.x - min.x, max.y - min.y);
 	}
 
-	private float uvX(float x) {
+	private float uvX (float x) {
 		return (x - min.x) / size.x;
 	}
 
-	private float uvY(float y) {
+	private float uvY (float y) {
 		return (y - min.y) / size.y;
 	}
 

@@ -28,11 +28,11 @@ public class HightlightRenderer implements Disposable {
 	private Vector2 min = new Vector2();
 	private Vector2 max = new Vector2();
 
-	private int circleSize = 14;
-	private int lineSize = 5;
+	private int circleSize = 7;
+	private int lineSize = 3;
 
-	private Color circleColor = new Color(1, 0, 0, 1);
-	private Color lineColor = new Color(0, 1, 0, 1);
+	private Color circleColor = new Color(0.53f, 0.72f, 0.03f, 1);
+	private Color lineColor = new Color(0.53f, 0.72f, 0.03f, 1);
 
 	public HightlightRenderer () {
 		initShader();
@@ -48,14 +48,13 @@ public class HightlightRenderer implements Disposable {
 
 	private void initMesh () {
 		int maxVertices = 6;
-		mesh = new Mesh(false, maxVertices, 0,
-			new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE));
+		mesh = new Mesh(false, maxVertices, 0, new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE));
 		vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
 	}
 
 	public void update (HighlightWallPlan hWall) {
 		wall = hWall.getWall();
-		if(wall == null) return;
+		if (wall == null) return;
 
 		// Compute limit
 		computeLimit();
@@ -78,21 +77,20 @@ public class HightlightRenderer implements Disposable {
 		mesh.setVertices(vertices);
 	}
 
-	private void computeLimit() {
+	private void computeLimit () {
 		Vector2[] points = wall.getOrigin().getPoints();
 		float m1 = 99999999, m2 = -99999999;
 
 		min.set(m1, m1);
 		max.set(m2, m2);
 
-		for(int i = 0; i < points.length; i++) {
-			if(points[i].x > max.x) max.x = points[i].x;
-			if(points[i].x < min.x) min.x = points[i].x;
-			if(points[i].y > max.y) max.y = points[i].y;
-			if(points[i].y < min.y) min.y = points[i].y;
+		for (int i = 0; i < points.length; i++) {
+			if (points[i].x > max.x) max.x = points[i].x;
+			if (points[i].x < min.x) min.x = points[i].x;
+			if (points[i].y > max.y) max.y = points[i].y;
+			if (points[i].y < min.y) min.y = points[i].y;
 		}
 	}
-
 
 	private void vertice (Vector2 point) {
 		vertices[id + 0] = point.x;
@@ -101,7 +99,7 @@ public class HightlightRenderer implements Disposable {
 	}
 
 	public void render (Matrix4 projViewTrans) {
-		if(wall != null) {
+		if (wall != null) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 
 			Vector2[] points = wall.getOrigin().getPoints();
