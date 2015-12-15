@@ -189,10 +189,10 @@ public class WallPlanConverter implements PlanConverter {
 
 		float angle = direction0.angle(direction1);
 
-		if(angle > 0 && first) return getCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
-		if(angle > 0 && !first) return getNoCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
-		if(angle < 0 && first) return getNoCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
-		if(angle < 0 && !first) return getCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
+		if(first && angle > 0) return getCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
+		if(first && angle < 0) return getNoCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
+		if(!first && angle > 0) return getNoCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
+		if(!first && angle < 0) return getCrossingSegment(segmentTest0, segmentTest1, segmentTarget);
 
 		return null;
 	}
@@ -223,7 +223,9 @@ public class WallPlanConverter implements PlanConverter {
 	}
 
 	private Segment enlargeSegment (Point point0, Point point1) {
-		Vector2 direction = new Vector2(point1.x, point1.y).sub(point0.x, point0.y);
+		Vector2 direction = new Vector2(point1.x, point1.y)
+			.sub(point0.x, point0.y)
+			.scl(9999);
 		Segment result = new Segment();
 		result.point0.set(point0).sub(direction);
 		result.point1.set(point1).add(direction);

@@ -38,28 +38,23 @@ public class WallMovingActioner implements Actioner {
 	 * Loop through all walls to find adjacent walls
 	 */
 	private void moveWallDelta(int x, int y) {
+		Wall ws = house.getSelectedWall().getOrigin();
 		tmpPoints.clear();
-		tmpPoints.addAll(house.getSelectedWall().getOrigin().getPoints());
+		tmpPoints.addAll(ws.getPoints());
 
 		for(int i = 0; i < house.getWalls().size; i++) {
-			Wall w1 = house.getWalls().get(i).getOrigin();
-			Wall w2 = house.getSelectedWall().getOrigin();
-			
-			if (w1 != w2) {
-				System.out.println(w1);
-				Point contactPoint = w1.getLinkedPoint(w2);
+			Wall wc = house.getWalls().get(i).getOrigin();
+
+			if (wc != ws) {
+				Point contactPoint = ws.getLinkedPoint(wc);
 				if(contactPoint != null) {
 					tmpPoints.add(contactPoint);
 				}
 			}
 		}
 
-		System.out.println("++++++++");
 		for(Point p : tmpPoints) {
-			//System.out.println(p);
 			p.add(x, y);
-			//System.out.println(p);
-			//System.out.println("-------");
 		}
 	}
 
