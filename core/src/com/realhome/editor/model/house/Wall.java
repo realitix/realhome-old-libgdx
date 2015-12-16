@@ -1,7 +1,6 @@
 
 package com.realhome.editor.model.house;
 
-import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.model.Point;
 
 public class Wall {
@@ -11,13 +10,26 @@ public class Wall {
 	private float height;
 	private int width = DEFAULT_WIDTH;
 	private Point[] points = new Point[2];
-	private ObjectMap<Point, Point[]> extrusionPoints2D = new ObjectMap<Point, Point[]>(2);
 
 	public Wall () {
 		for (int i = 0; i < points.length; i++) {
 			points[i] = new Point();
-			extrusionPoints2D.put(points[i], new Point[] {new Point(), new Point()});
 		}
+	}
+
+	public Wall(Wall wall) {
+		this();
+		this.set(wall);
+	}
+
+	public Wall set(Wall wall) {
+		type = wall.type;
+		height = wall.height;
+		width = wall.width;
+		points[0].set(wall.points[0]);
+		points[1].set(wall.points[1]);
+
+		return this;
 	}
 
 	public int getType () {
@@ -40,10 +52,6 @@ public class Wall {
 
 	public Point[] getPoints () {
 		return points;
-	}
-
-	public Point[] getExtrusionPoints2D (Point point) {
-		return extrusionPoints2D.get(point);
 	}
 
 	public Point getPoint0 () {
