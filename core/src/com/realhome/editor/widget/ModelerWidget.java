@@ -10,7 +10,7 @@ import com.realhome.editor.modeler.Modeler;
 
 public abstract class ModelerWidget<T extends Modeler> extends Widget {
 
-	protected T renderer;
+	protected T modeler;
 	private Vector2 dimension = new Vector2();
 	private Vector2 position = new Vector2();
 
@@ -53,7 +53,7 @@ public abstract class ModelerWidget<T extends Modeler> extends Widget {
 			batch.getShader().end();
 
 			beginDraw();
-			renderer.render();
+			modeler.render();
 			endDraw();
 
 			// When renderer draws, it binds shader, so we have to reenable stage shader
@@ -95,6 +95,6 @@ public abstract class ModelerWidget<T extends Modeler> extends Widget {
 		if (position.y < 0) position.y = 0;
 
 		// Resize renderer
-		renderer.resize((int)dimension.x, (int)dimension.y);
+		modeler.resize((int)dimension.x, (int)dimension.y);
 	}
 }
