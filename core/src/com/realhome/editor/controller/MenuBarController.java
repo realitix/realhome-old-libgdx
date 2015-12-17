@@ -18,7 +18,7 @@ public class MenuBarController extends BaseController<MenuBarView> {
 	private class OpenListener extends ChangeListener {
 		@Override
 		public void changed (ChangeEvent event, Actor actor) {
-			commandManager.execute(LoadCommand.class);
+			commandManager.execute(LoadCommand.class, appModel);
 			notificationManager.sendNotification(Message.HOUSE_LOADED);
 		}
 	}

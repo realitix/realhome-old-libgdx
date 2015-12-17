@@ -35,7 +35,7 @@ public class RealHomeApp extends ApplicationAdapter {
 
 		// Create managers
 		NotificationManager notificationManager = new NotificationManager();
-		CommandManager commandManager = new CommandManager(appModel);
+		CommandManager commandManager = new CommandManager();
 
 		// Create views
 		appView = new AppView(new DefaultPresenter());

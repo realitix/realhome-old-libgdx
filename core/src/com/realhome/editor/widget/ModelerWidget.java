@@ -46,6 +46,10 @@ public abstract class ModelerWidget<T extends Modeler> extends Widget {
 		return 1000000;
 	}
 
+	public T getModeler() {
+		return modeler;
+	}
+
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);

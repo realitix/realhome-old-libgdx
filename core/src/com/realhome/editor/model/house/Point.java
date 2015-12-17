@@ -1,4 +1,4 @@
-package com.realhome.editor.model;
+package com.realhome.editor.model.house;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -69,6 +69,7 @@ public class Point {
 		return false;
 	}
 
+	@Override
 	public String toString () {
 		return "(" + x + "," + y + ")";
 	}

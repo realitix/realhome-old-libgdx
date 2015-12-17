@@ -1,7 +1,7 @@
 package com.realhome.editor.modeler.plan.actioner;
 
 import com.badlogic.gdx.math.Intersector;
-import com.realhome.editor.model.Point;
+import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
@@ -18,7 +18,7 @@ public class WallOverActioner implements Actioner {
 
 	@Override
 	public int move(int x, int y) {
-		if(dragging) return Action.TYPE_EMPTY;
+		if(dragging) return Action.EMPTY;
 
 		tmp.set(x, y);
 		boolean onWall = false;
@@ -28,17 +28,17 @@ public class WallOverActioner implements Actioner {
 				onWall = true;
 				if(house.getHighlightWall().getWall() != wall) {
 					house.setHighlightWall(wall);
-					return Action.TYPE_HIGHLIGHT;
+					return Action.HIGHLIGHT;
 				}
 			}
 		}
 
 		if(!onWall && house.getHighlightWall() != null) {
 			house.removeHighlightWall();
-			return Action.TYPE_HIGHLIGHT;
+			return Action.HIGHLIGHT;
 		}
 
-		return Action.TYPE_EMPTY;
+		return Action.EMPTY;
 	}
 
 	private boolean pointInWall(WallPlan wall, Point point) {
@@ -61,12 +61,12 @@ public class WallOverActioner implements Actioner {
 	@Override
 	public int click(int x, int y) {
 		dragging = true;
-		return Action.TYPE_EMPTY;
+		return Action.EMPTY;
 	}
 
 	@Override
 	public int unclick(int x, int y) {
 		dragging = false;
-		return Action.TYPE_EMPTY;
+		return Action.EMPTY;
 	}
 }

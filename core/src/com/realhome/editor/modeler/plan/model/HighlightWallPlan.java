@@ -1,7 +1,7 @@
 package com.realhome.editor.modeler.plan.model;
 
 import com.badlogic.gdx.math.Vector2;
-import com.realhome.editor.model.Point;
+import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 
 public class HighlightWallPlan {

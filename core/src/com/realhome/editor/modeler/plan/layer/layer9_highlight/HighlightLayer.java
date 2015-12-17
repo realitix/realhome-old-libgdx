@@ -27,7 +27,7 @@ public class HighlightLayer extends BaseLayer {
 	@Override
 	public void action (HousePlan house, IntArray actions) {
 		for(int i = 0; i < actions.size; i++) {
-			if(actions.get(i) == Action.TYPE_HIGHLIGHT) {
+			if(actions.get(i) == Action.HIGHLIGHT) {
 				renderer.update(house.getHighlightWall());
 			}
 		}
