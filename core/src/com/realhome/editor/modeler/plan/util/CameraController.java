@@ -17,6 +17,13 @@ public class CameraController {
 		tmpCamera.set(camera.position.x, camera.position.y);
 	}
 
+	public void zoom (float z) {
+		camera.zoom += z;
+		if( camera.zoom < 0.2f ) camera.zoom = 0.2f;
+		if( camera.zoom > 6 ) camera.zoom = 6;
+		camera.update();
+	}
+
 	// x, y in world coordinate
 	public void move(float x, float y) {
 		float dx = tmpScreen.x - x;

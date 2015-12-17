@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ShortArray;
-import com.realhome.editor.model.Point;
+import com.realhome.editor.model.house.Point;
 
 public class MaskRenderer implements Disposable {
 	private Mesh mesh;

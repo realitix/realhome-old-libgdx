@@ -4,6 +4,7 @@ package com.realhome.editor.view;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.realhome.editor.common.pattern.mvc.BaseView;
 import com.realhome.editor.model.house.House;
+import com.realhome.editor.modeler.plan.PlanModeler;
 import com.realhome.editor.widget.PlanWidget;
 
 public class PlanView extends BaseView<PlanWidget> {
@@ -45,19 +46,23 @@ public class PlanView extends BaseView<PlanWidget> {
 		actor.addListener(listener);
 	}
 
+	public PlanModeler getModeler() {
+		return actor.getModeler();
+	}
+
 	public void zoomCamera(float z) {
 		actor.zoomCamera(z);
 	}
 
-	public void moveMouse(float x, float y, boolean drag) {
-		actor.moveMouse(x, y, drag);
+	public int move(float x, float y, boolean drag) {
+		return actor.move(x, y, drag);
 	}
 
-	public void click(float x, float y) {
-		actor.click(x, y);
+	public int click(float x, float y) {
+		return actor.click(x, y);
 	}
 
-	public void unclick(float x, float y) {
-		actor.unclick(x, y);
+	public int unclick(float x, float y) {
+		return actor.unclick(x, y);
 	}
 }

@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.realhome.editor.model.Point;
+import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.model.HighlightWallPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 

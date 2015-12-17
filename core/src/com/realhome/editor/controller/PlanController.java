@@ -3,13 +3,17 @@ package com.realhome.editor.controller;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.realhome.editor.common.Message;
 import com.realhome.editor.common.pattern.mvc.BaseController;
 import com.realhome.editor.common.pattern.notification.Notification;
 import com.realhome.editor.view.PlanView;
 
 public class PlanController extends BaseController<PlanView> {
+
+	public class Action {
+		public static final int EMPTY = 0;
+		public static final int HOUSE_UPDATED = 1;
+	}
 
 	public PlanController (PlanView view) {
 		super(view);
@@ -35,7 +39,7 @@ public class PlanController extends BaseController<PlanView> {
 
 		@Override
 		public boolean mouseMoved (InputEvent event, float x, float y) {
-			view.moveMouse(x, y, false);
+			view.move(x, y, false);
 			return true;
 		}
 
@@ -52,7 +56,7 @@ public class PlanController extends BaseController<PlanView> {
 
 		@Override
 		public void touchDragged(InputEvent event, float x, float y, int pointer) {
-			view.moveMouse(x, y, true);
+			view.move(x, y, true);
 		}
 	}
 }

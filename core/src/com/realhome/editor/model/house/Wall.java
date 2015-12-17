@@ -1,9 +1,10 @@
 
 package com.realhome.editor.model.house;
 
-import com.realhome.editor.model.Point;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
-public class Wall {
+
+public class Wall extends BaseModel {
 	private static final int DEFAULT_WIDTH = 50;
 
 	private int type;
@@ -17,17 +18,24 @@ public class Wall {
 		}
 	}
 
-	public Wall(Wall wall) {
+	public Wall(Wall wall, int id) {
 		this();
-		this.set(wall);
+		this.id = id;
+		this.sync(wall);
 	}
 
-	public Wall set(Wall wall) {
-		type = wall.type;
-		height = wall.height;
-		width = wall.width;
-		points[0].set(wall.points[0]);
-		points[1].set(wall.points[1]);
+	public Wall cpy() {
+		return new Wall(this, this.id);
+	}
+
+	public Wall sync(Wall target) {
+		if(target.id != this.id) throw new GdxRuntimeException("Walls have not the same id");
+
+		type = target.type;
+		height = target.height;
+		width = target.width;
+		points[0].set(target.points[0]);
+		points[1].set(target.points[1]);
 
 		return this;
 	}

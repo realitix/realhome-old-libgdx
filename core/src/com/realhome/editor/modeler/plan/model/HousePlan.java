@@ -2,7 +2,7 @@
 package com.realhome.editor.modeler.plan.model;
 
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.model.Point;
+import com.realhome.editor.model.house.Point;
 
 public class HousePlan {
 	private int floor;

@@ -5,8 +5,8 @@ import java.util.Stack;
 import java.util.TreeSet;
 
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.model.Point;
 import com.realhome.editor.model.house.House;
+import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 

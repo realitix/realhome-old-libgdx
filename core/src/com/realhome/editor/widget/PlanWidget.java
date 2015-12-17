@@ -21,21 +21,21 @@ public class PlanWidget extends ModelerWidget<PlanModeler> {
 		modeler.zoomCamera(z);
 	}
 
-	public void moveMouse(float x, float y, boolean drag) {
+	public int move(float x, float y, boolean drag) {
 		tmpV2.set(x, y);
 		this.getStage().stageToScreenCoordinates(tmpV2);
-		modeler.moveMouse(tmpV2.x, tmpV2.y, drag);
+		return modeler.move(tmpV2.x, tmpV2.y, drag);
 	}
 
-	public void click(float x, float y) {
+	public int click(float x, float y) {
 		tmpV2.set(x, y);
 		this.getStage().stageToScreenCoordinates(tmpV2);
-		modeler.click(tmpV2.x, tmpV2.y);
+		return modeler.click(tmpV2.x, tmpV2.y);
 	}
 
-	public void unclick(float x, float y) {
+	public int unclick(float x, float y) {
 		tmpV2.set(x, y);
 		this.getStage().stageToScreenCoordinates(tmpV2);
-		modeler.unclick(tmpV2.x, tmpV2.y);
+		return modeler.unclick(tmpV2.x, tmpV2.y);
 	}
 }

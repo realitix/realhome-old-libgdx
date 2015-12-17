@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
+import com.realhome.editor.controller.PlanController;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.Modeler;
 import com.realhome.editor.modeler.plan.actioner.Action;
@@ -50,6 +51,7 @@ public class PlanModeler implements Modeler {
 		pointMapper = new PointMapper(camera);
 		cameraController = new CameraController(camera);
 
+		house = new House();
 		housePlan = new HousePlan();
 		converter = new ModelPlanConverter();
 
@@ -104,8 +106,8 @@ public class PlanModeler implements Modeler {
 
 	@Override
 	public void reload (House house) {
-		this.house = house;
-		converter.convert(house, housePlan, 0);
+		this.house.sync(house);
+		converter.convert(this.house, housePlan, 0);
 
 		for (int i = 0; i < layers.size; i++) {
 			layers.get(i).reload(housePlan);
@@ -117,49 +119,52 @@ public class PlanModeler implements Modeler {
 	}
 
 	public void zoomCamera (float z) {
-		camera.zoom += z;
-		if( camera.zoom < 0.2f ) camera.zoom = 0.2f;
-		if( camera.zoom > 6 ) camera.zoom = 6;
-		camera.update();
+		cameraController.zoom(z);
 	}
 
-	public void moveMouse(float x, float y, boolean drag) {
+	public int move(float x, float y, boolean drag) {
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
 		for (Actioner actioner : actioners) {
 			int action = actioner.move((int) c.x, (int)c.y);
-			if(action != Action.TYPE_EMPTY) actions.add(action);
+			if(action != Action.EMPTY) actions.add(action);
 		}
 
-		if(actions.contains(Action.TYPE_MOVE_WALL)) {
+		if(actions.contains(Action.MOVE_WALL)) {
 			reload(house);
 		}
 
 		if(actions.size > 0) sendActionsLayers();
 		else if (drag) moveCamera(x, y);
+
+		return PlanController.Action.EMPTY;
 	}
 
-	public void click(float x, float y) {
+	public int click(float x, float y) {
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
 		for (Actioner actioner : actioners) {
 			int action = actioner.click((int) c.x, (int)c.y);
-			if(action != Action.TYPE_EMPTY) actions.add(action);
+			if(action != Action.EMPTY) actions.add(action);
 		}
 
 		if(actions.size > 0) sendActionsLayers();
 		cameraController.init(x, y);
+
+		return PlanController.Action.EMPTY;
 	}
 
-	public void unclick(float x, float y) {
+	public int unclick(float x, float y) {
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
 		for (Actioner actioner : actioners) {
 			int action = actioner.unclick((int) c.x, (int)c.y);
-			if(action != Action.TYPE_EMPTY) actions.add(action);
+			if(action != Action.EMPTY) actions.add(action);
 		}
 
 		if(actions.size > 0) sendActionsLayers();
+
+		return PlanController.Action.EMPTY;
 	}
 
 	private void sendActionsLayers() {

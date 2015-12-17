@@ -3,7 +3,7 @@ package com.realhome.editor.modeler.plan.actioner;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.model.Point;
+import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
@@ -23,14 +23,14 @@ public class WallMovingActioner implements Actioner {
 	@Override
 	public int move (int x, int y) {
 		if(house.getSelectedWall() == null)
-			return Action.TYPE_EMPTY;
+			return Action.EMPTY;
 
 		int dx = (int)lastLocation.x - x;
 		int dy = (int)lastLocation.y - y;
 		moveWallDelta(-dx, -dy);
 		lastLocation.set(x, y);
 
-		return Action.TYPE_MOVE_WALL;
+		return Action.MOVE_WALL;
 	}
 
 	/**
@@ -66,11 +66,11 @@ public class WallMovingActioner implements Actioner {
 		for(WallPlan wall : house.getWalls()) {
 			if(pointInWall(wall, tmp)){
 				house.setSelectedWall(wall);
-				return Action.TYPE_SELECT_WALL;
+				return Action.SELECT_WALL;
 			}
 		}
 
-		return Action.TYPE_EMPTY;
+		return Action.EMPTY;
 	}
 
 	private boolean pointInWall(WallPlan wall, Point point) {
@@ -94,9 +94,9 @@ public class WallMovingActioner implements Actioner {
 	public int unclick (int x, int y) {
 		if(house.getSelectedWall() != null) {
 			house.setSelectedWall(null);
-			return Action.TYPE_UNSELECT_WALL;
+			return Action.UNSELECT_WALL;
 		}
 
-		return Action.TYPE_EMPTY;
+		return Action.EMPTY;
 	}
 }
