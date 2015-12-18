@@ -114,6 +114,11 @@ public class PlanModeler implements Modeler {
 		}
 	}
 
+	@Override
+	public House getHouse () {
+		return house;
+	}
+
 	public void moveCamera (float x, float y) {
 		cameraController.move(x, y);
 	}
@@ -162,9 +167,19 @@ public class PlanModeler implements Modeler {
 			if(action != Action.EMPTY) actions.add(action);
 		}
 
-		if(actions.size > 0) sendActionsLayers();
+		if(actions.size > 0) {
+			if(actions.contains(Action.UNSELECT_WALL)) {
+				return PlanController.Action.HOUSE_UPDATED;
+			}
+			
+			sendActionsLayers();
+		}
 
 		return PlanController.Action.EMPTY;
+	}
+
+	private void postAction() {
+		
 	}
 
 	private void sendActionsLayers() {

@@ -12,4 +12,6 @@ public interface Modeler extends Disposable {
 	public void render ();
 
 	public void reload (House house);
+
+	public House getHouse();
 }

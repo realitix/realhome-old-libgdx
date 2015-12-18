@@ -22,6 +22,16 @@ public class WallPlan {
 		}
 	}
 
+	public WallPlan set(WallPlan other) {
+		for(int i = 0; i < points.length; i++) {
+			points[i].set(other.points[i]);
+		}
+
+		type = other.type;
+		origin = other.origin;
+		return this;
+	}
+
 	public int getType () {
 		return type;
 	}
