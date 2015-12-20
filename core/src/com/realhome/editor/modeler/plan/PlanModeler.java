@@ -11,7 +11,7 @@ import com.realhome.editor.modeler.Modeler;
 import com.realhome.editor.modeler.plan.actioner.Action;
 import com.realhome.editor.modeler.plan.actioner.Actioner;
 import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
-import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
+import com.realhome.editor.modeler.plan.actioner.OverActioner;
 import com.realhome.editor.modeler.plan.converter.ModelPlanConverter;
 import com.realhome.editor.modeler.plan.layer.Layer;
 import com.realhome.editor.modeler.plan.layer.layer0_grid.GridLayer;
@@ -67,7 +67,7 @@ public class PlanModeler implements Modeler {
 	}
 
 	private void initActioners() {
-		actioners.add(new WallOverActioner());
+		actioners.add(new OverActioner());
 		actioners.add(new WallMovingActioner());
 
 		for(Actioner actioner : actioners) {

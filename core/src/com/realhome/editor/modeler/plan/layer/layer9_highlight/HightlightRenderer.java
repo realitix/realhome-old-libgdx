@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.model.house.Point;
-import com.realhome.editor.modeler.plan.model.HighlightWallPlan;
+import com.realhome.editor.modeler.plan.model.OverWallPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class HightlightRenderer implements Disposable {
@@ -55,7 +55,7 @@ public class HightlightRenderer implements Disposable {
 		vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
 	}
 
-	public void update (HighlightWallPlan hWall) {
+	public void update (OverWallPlan hWall) {
 		WallPlan wall = hWall.getWall();
 		hasWall = true;
 		if (wall == null ) {

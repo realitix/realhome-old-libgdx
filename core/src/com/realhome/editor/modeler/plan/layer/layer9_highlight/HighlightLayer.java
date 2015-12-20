@@ -26,10 +26,21 @@ public class HighlightLayer extends BaseLayer {
 
 	@Override
 	public void action (HousePlan house, IntArray actions) {
+		if(actionListened(actions)) {
+			renderer.update(house.getOverWall());
+		}
+	}
+	
+	private boolean actionListened(IntArray actions) {
 		for(int i = 0; i < actions.size; i++) {
-			if(actions.get(i) == Action.HIGHLIGHT) {
-				renderer.update(house.getHighlightWall());
+			switch(actions.get(i)) {
+				case Action.OVER_WALL:
+				case Action.OVER_OUT:
+				case Action.OVER_POINT:
+					return true;
 			}
 		}
+		
+		return false;
 	}
 }

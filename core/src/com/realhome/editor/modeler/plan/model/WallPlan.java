@@ -1,6 +1,7 @@
 
 package com.realhome.editor.modeler.plan.model;
 
+import com.badlogic.gdx.math.Intersector;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 
@@ -12,7 +13,7 @@ public class WallPlan {
 	 * Length: p0-p2, p1,p3
 	 * Width: p0-p1, p2-p3
 	 */
-	private Point[] points = new Point[4];
+	private final Point[] points = new Point[4];
 	private int type;
 	private Wall origin;
 
@@ -52,6 +53,22 @@ public class WallPlan {
 
 	public Point[] getPoints() {
 		return points;
+	}
+	
+	public boolean pointInside(int x, int y) {
+		if(Intersector.isPointInTriangle(
+			x, y,
+			points[0].x, points[0].y,
+			points[1].x, points[1].y,
+			points[2].x, points[2].y))
+			return true;
+		if(Intersector.isPointInTriangle(
+			x, y,
+			points[2].x, points[2].y,
+			points[1].x, points[1].y,
+			points[3].x, points[3].y))
+			return true;
+		return false;
 	}
 
 	@Override
