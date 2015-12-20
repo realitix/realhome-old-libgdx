@@ -3,6 +3,7 @@ package com.realhome.editor.controller;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.realhome.editor.command.SyncHouseCommand;
 import com.realhome.editor.common.Message;
 import com.realhome.editor.common.pattern.mvc.BaseController;
 import com.realhome.editor.common.pattern.notification.Notification;
@@ -20,12 +21,19 @@ public class PlanController extends BaseController<PlanView> {
 		view.addListener(new PlanListener());
 	}
 
+	private void syncHouses() {
+		commandManager.execute(
+			SyncHouseCommand.class,
+			appModel.getHouse(),
+			view.getModeler().getHouse());
+	}
+
 	@Override
 	public void receiveNotification (Notification notification) {
 		switch (notification.getName()) {
-		case Message.HOUSE_LOADED:
-			view.reloadHouse(appModel.getHouse());
-			view.enable();
+			case Message.HOUSE_LOADED:
+				view.reloadHouse(appModel.getHouse());
+				view.enable();
 		}
 	}
 
@@ -51,7 +59,11 @@ public class PlanController extends BaseController<PlanView> {
 
 		@Override
 		public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-			view.unclick(x, y);
+			int action = view.unclick(x, y);
+
+			if( action == Action.HOUSE_UPDATED ) {
+				syncHouses();
+			}
 		}
 
 		@Override

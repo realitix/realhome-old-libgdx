@@ -23,7 +23,6 @@ public class HightlightRenderer implements Disposable {
 	private ShaderProgram shader;
 	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/layer9_highlight/highlight_vertex.glsl";
 	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/layer9_highlight/highlight_fragment.glsl";
-	private WallPlan wall;
 	private float[] vertices;
 	private int id;
 	private Vector2 min = new Vector2();
@@ -34,6 +33,9 @@ public class HightlightRenderer implements Disposable {
 
 	private Color circleColor = new Color(0.53f, 0.72f, 0.03f, 1);
 	private Color lineColor = new Color(0.53f, 0.72f, 0.03f, 1);
+
+	private WallPlan cachedWall = new WallPlan();
+	private boolean hasWall;
 
 	public HightlightRenderer () {
 		initShader();
@@ -54,8 +56,16 @@ public class HightlightRenderer implements Disposable {
 	}
 
 	public void update (HighlightWallPlan hWall) {
-		wall = hWall.getWall();
-		if (wall == null) return;
+		WallPlan wall = hWall.getWall();
+		hasWall = true;
+		if (wall == null ) {
+			hasWall = false;
+			return;
+		}
+
+		if(cachedWall.equals(wall)) return;
+
+		cachedWall.set(wall);
 
 		// Compute limit
 		computeLimit();
@@ -79,7 +89,7 @@ public class HightlightRenderer implements Disposable {
 	}
 
 	private void computeLimit () {
-		Point[] points = wall.getOrigin().getPoints();
+		Point[] points = cachedWall.getOrigin().getPoints();
 		float m1 = 99999999, m2 = -99999999;
 
 		min.set(m1, m1);
@@ -100,10 +110,10 @@ public class HightlightRenderer implements Disposable {
 	}
 
 	public void render (Matrix4 projViewTrans) {
-		if (wall != null) {
+		if (hasWall) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 
-			Point[] points = wall.getOrigin().getPoints();
+			Point[] points = cachedWall.getOrigin().getPoints();
 			shader.begin();
 			shader.setUniformMatrix("u_projViewTrans", projViewTrans);
 			shader.setUniformf("u_p1", points[0].x, points[0].y);

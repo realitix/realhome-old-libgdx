@@ -1,6 +1,7 @@
 
 package com.realhome.editor.model.house;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 
@@ -28,9 +29,20 @@ public class Wall extends BaseModel {
 		return new Wall(this, this.id);
 	}
 
+	public Vector2 dir(Vector2 out) {
+		return dir(out, true);
+	}
+
+	public Vector2 dir(Vector2 out, boolean normalized) {
+		return getPoint1().dir(getPoint0(), out, normalized);
+	}
+
 	public Wall sync(Wall target) {
 		if(target.id != this.id) throw new GdxRuntimeException("Walls have not the same id");
+		return set(target);
+	}
 
+	public Wall set(Wall target) {
 		type = target.type;
 		height = target.height;
 		width = target.width;
@@ -111,5 +123,16 @@ public class Wall extends BaseModel {
 		if (other.points[1].equals(points[0]) || other.points[1].equals(points[1]))
 			return other.points[1];
 		return null;
+	}
+
+	public boolean equals(Wall other) {
+		if( other == this ) return true;
+		if( other.points[0].equals(points[0]) &&
+			other.points[1].equals(points[1]) &&
+			other.type == type &&
+			other.height == height &&
+			other.width == width)
+			return true;
+		return false;
 	}
 }

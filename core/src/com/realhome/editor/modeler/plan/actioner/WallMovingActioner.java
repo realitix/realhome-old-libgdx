@@ -12,6 +12,7 @@ public class WallMovingActioner implements Actioner {
 	private HousePlan house;
 	private Point tmp = new Point();
 	private Vector2 lastLocation = new Vector2();
+	private Vector2 delta = new Vector2();
 	private Array<Point> tmpPoints = new Array<Point>();
 
 	@Override
@@ -25,12 +26,99 @@ public class WallMovingActioner implements Actioner {
 		if(house.getSelectedWall() == null)
 			return Action.EMPTY;
 
-		int dx = (int)lastLocation.x - x;
+		delta.set(lastLocation.x - x, lastLocation.y - y).scl(-1);
+
+		movePointsDelta((int) -(lastLocation.x - x), (int) -(lastLocation.y - y));
+
+		/*Wall wallSource = house.getSelectedWall().getOrigin();
+		boolean linkedPoint = false;
+
+		for(Point pointSource : wallSource.getPoints()) {
+			linkedPoint = false;
+			for(WallPlan wallPlanTarget :house.getWalls()) {
+				Wall wallTarget = wallPlanTarget.getOrigin();
+				if (wallSource == wallTarget) continue;
+
+				for(Point pointTarget : wallTarget.getPoints()) {
+					if(!pointSource.equals(pointTarget)) continue;
+
+					Vector2 realDelta = getRealDelta(x, y, wallTarget);
+					pointSource.add((int)realDelta.x, (int)realDelta.y);
+					pointTarget.add((int)realDelta.x, (int)realDelta.y);
+					linkedPoint = true;
+				}
+			}
+
+			if(!linkedPoint) {
+				pointSource.add((int)delta.x, (int)delta.y);
+			}
+		}
+
+
+		/*int dx = (int)lastLocation.x - x;
 		int dy = (int)lastLocation.y - y;
-		moveWallDelta(-dx, -dy);
+
+		Vector2 realDelta = findRealDelta(x, y);
+
+		moveWallDelta(-dx, -dy);*/
 		lastLocation.set(x, y);
 
 		return Action.MOVE_WALL;
+	}
+
+	/**
+	 * Algo:
+	 * On créé deux points de tests associé au mur sélectionné
+	 * On déplace ces points en ajoutant le delta
+	 * Pour chaque mur (targetWall) qui a un point en commun avec le mur sélectionné
+	 * On stocke une référence vers le point de targetWall et une référence vers le mur sélectionné
+	 * On cherche le croisement entre targetWall et la ligne formé par les deux premiers points
+	 * On set les points de targetWall et sourceWall à ce point
+	 *
+	 */
+	private void movePointsDelta(int x, int y) {
+		// Init virtual points
+		Wall wallSource = house.getSelectedWall().getOrigin();
+		Point[] virtualPoints = {
+			new Point(wallSource.getPoints()[0]),
+			new Point(wallSource.getPoints()[1])};
+
+		// Move virtual points
+		for(Point p : virtualPoints) p.add(x, y);
+
+		// Find linked walls
+		for(Point sourcePoint : wallSource.getPoints()) {
+			for(WallPlan w : house.getWalls()) {
+				Wall wallTarget = w.getOrigin();
+				if ( wallTarget == wallSource ) continue;
+
+				for(Point targetPoint : wallTarget.getPoints()) {
+					if(sourcePoint.equals(targetPoint)) {
+						Vector2 intersection = new Vector2();
+						Intersector.intersectLines(
+							virtualPoints[0].x, virtualPoints[0].y,
+							virtualPoints[1].x, virtualPoints[1].y,
+							wallTarget.getPoints()[0].x, wallTarget.getPoints()[0].y,
+							wallTarget.getPoints()[1].x, wallTarget.getPoints()[1].y,
+							intersection);
+						sourcePoint.set((int)intersection.x, (int)intersection.y);
+						targetPoint.set(sourcePoint);
+					}
+				}
+			}
+		}
+
+	}
+
+	private Vector2 getRealDelta(int x, int y, Wall wallTarget) {
+		Vector2 out = new Vector2();
+		Vector2 result = new Vector2();
+		return proj(delta, wallTarget.dir(out, false), result);
+	}
+
+	private Vector2 proj(Vector2 a, Vector2 b, Vector2 out) {
+		float d = out.set(a).dot(b) / b.len();
+		return out.set(b).nor().scl(d);
 	}
 
 	/**
@@ -43,10 +131,10 @@ public class WallMovingActioner implements Actioner {
 		tmpPoints.addAll(ws.getPoints());
 
 		for(int i = 0; i < house.getWalls().size; i++) {
-			Wall wc = house.getWalls().get(i).getOrigin();
+			Wall wt = house.getWalls().get(i).getOrigin();
 
-			if (wc != ws) {
-				Point contactPoint = ws.getLinkedPoint(wc);
+			if (wt != ws) {
+				Point contactPoint = ws.getLinkedPoint(wt);
 				if(contactPoint != null) {
 					tmpPoints.add(contactPoint);
 				}

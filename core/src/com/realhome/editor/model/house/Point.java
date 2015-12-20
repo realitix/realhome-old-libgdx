@@ -43,7 +43,12 @@ public class Point {
 	 * Point p to Point this
 	 */
 	public Vector2 dir(Point p, Vector2 out) {
-		out.set(x, y).sub(p.x, p.y).nor();
+		return dir(p , out, true);
+	}
+
+	public Vector2 dir(Point p, Vector2 out, boolean normalized) {
+		out.set(x, y).sub(p.x, p.y);
+		if(normalized) out.nor();
 		return out;
 	}
 

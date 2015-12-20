@@ -18,7 +18,7 @@ public class WallOverActioner implements Actioner {
 
 	@Override
 	public int move(int x, int y) {
-		if(dragging) return Action.EMPTY;
+		if(dragging && house.getSelectedWall() == null) return Action.EMPTY;
 
 		tmp.set(x, y);
 		boolean onWall = false;
@@ -26,10 +26,9 @@ public class WallOverActioner implements Actioner {
 		for(WallPlan wall : house.getWalls()) {
 			if(pointInWall(wall, tmp)){
 				onWall = true;
-				if(house.getHighlightWall().getWall() != wall) {
+				if(house.getHighlightWall().getWall() != wall)
 					house.setHighlightWall(wall);
-					return Action.HIGHLIGHT;
-				}
+				return Action.HIGHLIGHT;
 			}
 		}
 
