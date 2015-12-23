@@ -6,10 +6,12 @@ import com.realhome.editor.model.house.Point;
 
 public class HousePlan {
 	private int floor;
-	private Array<WallPlan> walls = new Array<WallPlan>();
-	private Array<Point> outlinePoints = new Array<Point>();
-	private HighlightWallPlan highlightWall = new HighlightWallPlan();
+	private final Array<WallPlan> walls = new Array<WallPlan>();
+	private final Array<Point> outlinePoints = new Array<Point>();
+	private final OverWallPlan overWall = new OverWallPlan();
+	private final OverPointPlan overPoint = new OverPointPlan();
 	private WallPlan selectedWall;
+	private Point selectedPoint;
 
 	public HousePlan setSelectedWall(WallPlan wall) {
 		this.selectedWall = wall;
@@ -19,20 +21,43 @@ public class HousePlan {
 	public WallPlan getSelectedWall() {
 		return selectedWall;
 	}
-
-	public HousePlan setHighlightWall(WallPlan wall) {
-		this.highlightWall.setWall(wall);
+	
+	public HousePlan setSelectedPoint(Point point) {
+		this.selectedPoint = point;
 		return this;
 	}
 
-	public HighlightWallPlan getHighlightWall() {
-		return this.highlightWall;
+	public Point getSelectedPoint() {
+		return selectedPoint;
 	}
 
-	public HousePlan removeHighlightWall() {
-		this.highlightWall.clear();
+	public HousePlan setOverWall(WallPlan wall) {
+		this.overWall.setWall(wall);
 		return this;
 	}
+
+	public OverWallPlan getOverWall() {
+		return this.overWall;
+	}
+
+	public HousePlan removeOverWall() {
+		this.overWall.clear();
+		return this;
+	}
+	
+	public HousePlan setOverPoint(Point point) {
+		this.overPoint.setPoint(point);
+		return this;
+	}
+
+	public OverPointPlan getOverPoint() {
+		return this.overPoint;
+	}
+
+	public HousePlan removeOverPoint() {
+		this.overPoint.clear();
+		return this;
+	}	
 
 	public Array<WallPlan> getWalls () {
 		return walls;

@@ -4,12 +4,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 
-public class HighlightWallPlan {
+public class OverWallPlan {
 
 	private WallPlan origin;
 	private Point[] points = new Point[4];
 
-	public HighlightWallPlan() {
+	public OverWallPlan() {
 		for(int i = 0; i < points.length; i++) {
 			points[i] = new Point();
 		}

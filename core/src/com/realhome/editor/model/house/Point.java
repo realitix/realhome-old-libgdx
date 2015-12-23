@@ -63,8 +63,12 @@ public class Point {
 	}
 
 	public Point sub (Vector2 v) {
-		x -= v.x;
-		y -= v.y;
+		return sub((int)v.x, (int)v.y);
+	}
+	
+	public Point sub (int x, int y) {
+		this.x -= x;
+		this.y -= y;
 		return this;
 	}
 
