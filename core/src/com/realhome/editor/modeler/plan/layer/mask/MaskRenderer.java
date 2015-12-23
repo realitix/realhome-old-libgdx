@@ -1,4 +1,4 @@
-package com.realhome.editor.modeler.plan.layer.layer1_mask;
+package com.realhome.editor.modeler.plan.layer.mask;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -21,12 +21,12 @@ public class MaskRenderer implements Disposable {
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/layer1_mask/mask_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/layer1_mask/mask_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/mask/mask_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/mask/mask_fragment.glsl";
 
-	private DelaunayTriangulator triangulator = new DelaunayTriangulator();
+	private final DelaunayTriangulator triangulator = new DelaunayTriangulator();
 
-	private Color color = new Color(1, 1, 1, 1);
+	private final Color color = new Color(1, 1, 1, 1);
 
 	public MaskRenderer() {
 		initShader();

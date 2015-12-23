@@ -1,5 +1,5 @@
 
-package com.realhome.editor.modeler.plan.layer.layer1_mask;
+package com.realhome.editor.modeler.plan.layer.mask;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.realhome.editor.modeler.plan.layer.BaseLayer;

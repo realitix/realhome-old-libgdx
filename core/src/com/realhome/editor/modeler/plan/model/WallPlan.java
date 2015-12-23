@@ -70,6 +70,20 @@ public class WallPlan {
 			return true;
 		return false;
 	}
+	
+	public Point pointInWallPoint(int x, int y) {
+		int width = origin.getWidth() / 2;
+		
+		for(int i = 0; i < origin.getPoints().length; i++) {
+			int xPoint = origin.getPoints()[i].x;
+			int yPoint = origin.getPoints()[i].y;
+			
+			if( x >= xPoint - width && x <= xPoint + width && y >= yPoint - width && y <= yPoint + width)
+				return origin.getPoints()[i];
+		}
+		
+		return null;
+	}
 
 	@Override
 	public String toString() {

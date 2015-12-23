@@ -1,17 +1,17 @@
 
-package com.realhome.editor.modeler.plan.layer.layer9_highlight;
+package com.realhome.editor.modeler.plan.layer.over_wall;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.IntArray;
-import com.realhome.editor.modeler.plan.actioner.Action;
+import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.layer.BaseLayer;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 
-public class HighlightLayer extends BaseLayer {
-	HightlightRenderer renderer;
+public class OverWallLayer extends BaseLayer {
+	OverWallRenderer renderer;
 
-	public HighlightLayer () {
-		renderer = new HightlightRenderer();
+	public OverWallLayer () {
+		renderer = new OverWallRenderer();
 	}
 
 	@Override

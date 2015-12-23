@@ -1,4 +1,4 @@
-package com.realhome.editor.modeler.plan.layer.layer0_grid;
+package com.realhome.editor.modeler.plan.layer.grid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -13,18 +13,18 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class GridRenderer {
-	private int width;
-	private int height;
-	private int tileSize;
+	private final int width;
+	private final int height;
+	private final int tileSize;
 	private Mesh mesh;
 	static private final float GREY = 0.5f;
-	private Color color = new Color(GREY, GREY, GREY, GREY);
+	private final Color color = new Color(GREY, GREY, GREY, GREY);
 
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/layer0_grid/grid_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/layer0_grid/grid_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/grid/grid_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/grid/grid_fragment.glsl";
 
 	// Used for mesh creation
 	private int vertexIdx;
@@ -32,8 +32,8 @@ public class GridRenderer {
 	private float[] vertices;
 
 	// Used for computation
-	private Vector2 point0 = new Vector2();
-	private Vector2 point1 = new Vector2();
+	private final Vector2 point0 = new Vector2();
+	private final Vector2 point1 = new Vector2();
 
 	public GridRenderer(int width, int height, int tileSize) {
 		this.width = width;

@@ -3,7 +3,9 @@ package com.realhome.editor.modeler.plan.actioner;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.realhome.editor.model.house.Point;
+import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.model.HousePlan;
+import com.realhome.editor.modeler.plan.model.PointPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class OverActioner implements Actioner {
@@ -163,8 +165,10 @@ public class OverActioner implements Actioner {
 				int w = wall.getOrigin().getWidth();
 				for(Point point : wall.getOrigin().getPoints()) {
 					if( x <= point.x + w && x >= point.x - w && y <= point.y + w && y >= point.y - w) {
-						if( house.getOverPoint().getPoint() != point )
-							house.setOverPoint(point);
+						if( house.getOverPoint().getPoint() != point ) {
+							PointPlan pp = new PointPlan().setPoint(point).setWall(wall.getOrigin());
+							house.setOverPoint(pp);
+						}
 						return Action.OVER_POINT;
 					}
 				}
@@ -175,7 +179,7 @@ public class OverActioner implements Actioner {
 		
 		@Override
 		protected boolean isOverNotNull() {
-			return house.getOverPoint().getPoint() != null;
+			return house.getOverPoint().getPointPlan() != null;
 		}
 	}
 }

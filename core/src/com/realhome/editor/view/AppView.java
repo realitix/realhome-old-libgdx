@@ -25,7 +25,6 @@ public class AppView implements View, Disposable {
 
 	private void reloadPresenter () {
 		presenter.present(stage, views);
-		stage.setDebugAll(true);
 	}
 
 	private void updateDirty () {

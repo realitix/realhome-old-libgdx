@@ -1,5 +1,5 @@
 
-package com.realhome.editor.modeler.plan.layer.layer9_highlight;
+package com.realhome.editor.modeler.plan.layer.over_wall;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -16,28 +16,28 @@ import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.model.OverWallPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
-public class HightlightRenderer implements Disposable {
+public class OverWallRenderer implements Disposable {
 	private Mesh mesh;
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/layer9_highlight/highlight_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/layer9_highlight/highlight_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/over_wall/overwall_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/over_wall/overwall_fragment.glsl";
 	private float[] vertices;
 	private int id;
-	private Vector2 min = new Vector2();
-	private Vector2 max = new Vector2();
+	private final Vector2 min = new Vector2();
+	private final Vector2 max = new Vector2();
 
-	private int circleSize = 7;
-	private int lineSize = 3;
+	private final int circleSize = 7;
+	private final int lineSize = 3;
 
-	private Color circleColor = new Color(0.53f, 0.72f, 0.03f, 1);
-	private Color lineColor = new Color(0.53f, 0.72f, 0.03f, 1);
+	private final Color circleColor = new Color(0.53f, 0.72f, 0.03f, 1);
+	private final Color lineColor = new Color(0.53f, 0.72f, 0.03f, 1);
 
-	private WallPlan cachedWall = new WallPlan();
+	private final WallPlan cachedWall = new WallPlan();
 	private boolean hasWall;
 
-	public HightlightRenderer () {
+	public OverWallRenderer () {
 		initShader();
 		initMesh();
 	}

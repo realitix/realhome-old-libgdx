@@ -1,5 +1,5 @@
 
-package com.realhome.editor.modeler.plan.layer.layer2_wall;
+package com.realhome.editor.modeler.plan.layer.wall;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.realhome.editor.modeler.plan.layer.BaseLayer;

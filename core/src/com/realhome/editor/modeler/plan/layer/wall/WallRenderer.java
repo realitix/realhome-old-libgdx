@@ -1,5 +1,5 @@
 
-package com.realhome.editor.modeler.plan.layer.layer2_wall;
+package com.realhome.editor.modeler.plan.layer.wall;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -22,17 +22,17 @@ public class WallRenderer implements Disposable {
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/layer2_wall/wall_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/layer2_wall/wall_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/wall/wall_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/wall/wall_fragment.glsl";
 	private int id = 0;
-	private Vector2 min = new Vector2();
-	private Vector2 max = new Vector2();
-	private Vector2 size = new Vector2();
+	private final Vector2 min = new Vector2();
+	private final Vector2 max = new Vector2();
+	private final Vector2 size = new Vector2();
 
-	private Color backgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
-	private Color lineColor = new Color(0.39f, 0.39f, 0.39f, 1f);
-	private float lineWidth = 0.08f;
-	private Vector2 tile = new Vector2(0.05f, 0.05f);
+	private final Color backgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
+	private final Color lineColor = new Color(0.39f, 0.39f, 0.39f, 1f);
+	private final float lineWidth = 0.08f;
+	private final Vector2 tile = new Vector2(0.05f, 0.05f);
 
 	public WallRenderer () {
 		initShader();

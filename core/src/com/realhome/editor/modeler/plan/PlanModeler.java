@@ -8,32 +8,36 @@ import com.badlogic.gdx.utils.IntArray;
 import com.realhome.editor.controller.PlanController;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.Modeler;
-import com.realhome.editor.modeler.plan.actioner.Action;
 import com.realhome.editor.modeler.plan.actioner.Actioner;
-import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.OverActioner;
+import com.realhome.editor.modeler.plan.actioner.PointMovingActioner;
+import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
+import com.realhome.editor.modeler.plan.actioner.util.Action;
+import com.realhome.editor.modeler.plan.actioner.util.Focuser;
 import com.realhome.editor.modeler.plan.converter.ModelPlanConverter;
 import com.realhome.editor.modeler.plan.layer.Layer;
-import com.realhome.editor.modeler.plan.layer.layer0_grid.GridLayer;
-import com.realhome.editor.modeler.plan.layer.layer1_mask.MaskLayer;
-import com.realhome.editor.modeler.plan.layer.layer2_wall.WallLayer;
-import com.realhome.editor.modeler.plan.layer.layer9_highlight.HighlightLayer;
+import com.realhome.editor.modeler.plan.layer.grid.GridLayer;
+import com.realhome.editor.modeler.plan.layer.mask.MaskLayer;
+import com.realhome.editor.modeler.plan.layer.over_point.OverPointLayer;
+import com.realhome.editor.modeler.plan.layer.over_wall.OverWallLayer;
+import com.realhome.editor.modeler.plan.layer.wall.WallLayer;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.util.CameraController;
 import com.realhome.editor.modeler.plan.util.PointMapper;
 
 public class PlanModeler implements Modeler {
 
-	private Array<Layer> layers = new Array<Layer>();
+	private final Array<Layer> layers = new Array<Layer>();
 	private final float VIRTUAL_HEIGHT = 1000; // centimeters
 	private OrthographicCamera camera;
 	private HousePlan housePlan;
 	private House house;
 	private ModelPlanConverter converter;
-	private Array<Actioner> actioners = new Array<Actioner>();
-	private IntArray actions = new IntArray();
+	private final Array<Actioner> actioners = new Array<Actioner>();
+	private final IntArray actions = new IntArray();
 	private PointMapper pointMapper;
 	private CameraController cameraController;
+	private Focuser focuser;
 
 	public PlanModeler () {
 		create();
@@ -54,6 +58,7 @@ public class PlanModeler implements Modeler {
 		house = new House();
 		housePlan = new HousePlan();
 		converter = new ModelPlanConverter();
+		focuser = new Focuser(housePlan);
 
 		initLayers();
 		initActioners();
@@ -63,12 +68,14 @@ public class PlanModeler implements Modeler {
 		layers.add(new GridLayer());
 		layers.add(new MaskLayer());
 		layers.add(new WallLayer());
-		layers.add(new HighlightLayer());
+		layers.add(new OverWallLayer());
+		layers.add(new OverPointLayer());
 	}
 
 	private void initActioners() {
 		actioners.add(new OverActioner());
 		actioners.add(new WallMovingActioner());
+		actioners.add(new PointMovingActioner());
 
 		for(Actioner actioner : actioners) {
 			actioner.init(housePlan);
@@ -129,13 +136,14 @@ public class PlanModeler implements Modeler {
 
 	public int move(float x, float y, boolean drag) {
 		Vector2 c = pointMapper.screenToWorld(x, y);
+		focuser.begin();
 
 		for (Actioner actioner : actioners) {
 			int action = actioner.move((int) c.x, (int)c.y);
 			if(action != Action.EMPTY) actions.add(action);
 		}
 
-		if(actions.contains(Action.MOVE_WALL)) {
+		if(actions.contains(Action.MOVE_WALL) || actions.contains(Action.MOVE_POINT)) {
 			reload(house);
 		}
 
@@ -147,7 +155,8 @@ public class PlanModeler implements Modeler {
 
 	public int click(float x, float y) {
 		Vector2 c = pointMapper.screenToWorld(x, y);
-
+		focuser.begin();
+		
 		for (Actioner actioner : actioners) {
 			int action = actioner.click((int) c.x, (int)c.y);
 			if(action != Action.EMPTY) actions.add(action);
@@ -161,7 +170,8 @@ public class PlanModeler implements Modeler {
 
 	public int unclick(float x, float y) {
 		Vector2 c = pointMapper.screenToWorld(x, y);
-
+		focuser.begin();
+		
 		for (Actioner actioner : actioners) {
 			int action = actioner.unclick((int) c.x, (int)c.y);
 			if(action != Action.EMPTY) actions.add(action);
