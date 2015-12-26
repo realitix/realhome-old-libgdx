@@ -26,6 +26,7 @@ public class WallPlanConverter implements PlanConverter {
 	private Point[] currentOutPoints;
 
 	private boolean drawSimpleWall;
+	private final static int ANGLE_MAX = 12;
 
 	@Override
 	public void convert (House houseIn, HousePlan houseOut) {
@@ -67,7 +68,7 @@ public class WallPlanConverter implements PlanConverter {
 	}
 
 	/** Compute currentOutPoints from currentInPoint
-	 * 
+	 *
 	 * 1 - Loop through all walls except currentInWall 2 - If there is a common point with currentInPoint, outPoints is computed
 	 * with intersectionPoints method, else with simplePoints method */
 	private void convertPoint () {
@@ -84,7 +85,7 @@ public class WallPlanConverter implements PlanConverter {
 				// p is the current tested point
 				Point p = w.getPoints()[j];
 
-				if (p.equals(currentInPoint)) {
+				if (p.equals(currentInPoint) && this.isAngleValid(currentInWall,w)) {
 					drawSimpleWall = false;
 					intersectionPoints(w);
 				}
@@ -97,7 +98,7 @@ public class WallPlanConverter implements PlanConverter {
 	}
 
 	/** Compute outPoints based on intersection between walls wallTest argument is the wall with common point with currentInPoint
-	 * 
+	 *
 	 * Compute extrusion segments (both sides) of currentInWall Compute extrusion segments (both sides) of wallTest */
 	private void intersectionPoints (Wall wallTest) {
 		Segment[] currentInWallSegments = new Segment[2];
@@ -123,7 +124,7 @@ public class WallPlanConverter implements PlanConverter {
 	private Point getLineIntersection (Segment s0, Segment s1) {
 		Vector2 intersection = new Vector2();
 		Intersector.intersectLines(s0.point0.x, s0.point0.y, s0.point1.x, s0.point1.y, s1.point0.x, s1.point0.y, s1.point1.x,
-			s1.point1.y, intersection);
+				s1.point1.y, intersection);
 		return new Point(intersection);
 	}
 
@@ -171,5 +172,19 @@ public class WallPlanConverter implements PlanConverter {
 
 	private Vector2 getWallDirection (Wall wall) {
 		return wall.getPoint1().dir(wall.getPoint0(), new Vector2());
+	}
+
+	private boolean isAngleValid (Wall sourceWall, Wall targetWall) {
+
+		Vector2 sourceWallVector = new Vector2();
+		Vector2 targetWallVector = new Vector2();
+		sourceWall.dir(sourceWallVector);
+		targetWall.dir(targetWallVector);
+		int angle = Math.abs(Math.round(sourceWallVector.angle(targetWallVector)));
+
+		if (angle >= 180 - WallPlanConverter.ANGLE_MAX) {
+			return false;
+		}
+		return true;
 	}
 }
