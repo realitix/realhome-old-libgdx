@@ -2,9 +2,9 @@ package com.realhome.editor.modeler.plan.actioner;
 
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
+import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
@@ -13,7 +13,6 @@ public class WallMovingActioner implements Actioner {
 	private final Point tmp = new Point();
 	private final Vector2 lastLocation = new Vector2();
 	private final Vector2 delta = new Vector2();
-	private final Array<Point> tmpPoints = new Array<Point>();
 
 	@Override
 	public Actioner init (HousePlan house) {

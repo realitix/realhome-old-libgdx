@@ -7,7 +7,7 @@ import com.realhome.editor.model.house.Wall;
 public class OverWallPlan {
 
 	private WallPlan origin;
-	private Point[] points = new Point[4];
+	private final Point[] points = new Point[4];
 
 	public OverWallPlan() {
 		for(int i = 0; i < points.length; i++) {
@@ -17,7 +17,6 @@ public class OverWallPlan {
 
 	public void setWall(WallPlan wall) {
 		this.origin = wall;
-		compute();
 	}
 
 	public WallPlan getWall() {
@@ -25,6 +24,8 @@ public class OverWallPlan {
 	}
 
 	public Point[] getPoints() {
+		if(origin == null) return null;
+		compute();
 		return points;
 	}
 
@@ -38,7 +39,7 @@ public class OverWallPlan {
 
 	private void compute() {
 		Wall wall = origin.getOrigin();
-		Vector2 direction = getWallDirection(wall);
+		Vector2 direction = wall.dir(new Vector2());
 
 		int width = wall.getWidth() / 2;
 
@@ -56,9 +57,5 @@ public class OverWallPlan {
 
 			direction.rotate90(1).rotate90(1);
 		}
-	}
-
-	private Vector2 getWallDirection(Wall wall) {
-		return wall.getPoint1().dir(wall.getPoint0(), new Vector2());
 	}
 }

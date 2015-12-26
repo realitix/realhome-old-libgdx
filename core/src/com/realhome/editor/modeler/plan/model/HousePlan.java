@@ -11,7 +11,7 @@ public class HousePlan {
 	private final OverWallPlan overWall = new OverWallPlan();
 	private final OverPointPlan overPoint = new OverPointPlan();
 	private WallPlan selectedWall;
-	private Point selectedPoint;
+	private PointPlan selectedPoint;
 
 	public HousePlan setSelectedWall(WallPlan wall) {
 		this.selectedWall = wall;
@@ -22,12 +22,12 @@ public class HousePlan {
 		return selectedWall;
 	}
 	
-	public HousePlan setSelectedPoint(Point point) {
+	public HousePlan setSelectedPoint(PointPlan point) {
 		this.selectedPoint = point;
 		return this;
 	}
 
-	public Point getSelectedPoint() {
+	public PointPlan getSelectedPoint() {
 		return selectedPoint;
 	}
 
@@ -45,8 +45,8 @@ public class HousePlan {
 		return this;
 	}
 	
-	public HousePlan setOverPoint(Point point) {
-		this.overPoint.setPoint(point);
+	public HousePlan setOverPoint(PointPlan point) {
+		this.overPoint.setPointPlan(point);
 		return this;
 	}
 
@@ -57,7 +57,7 @@ public class HousePlan {
 	public HousePlan removeOverPoint() {
 		this.overPoint.clear();
 		return this;
-	}	
+	}
 
 	public Array<WallPlan> getWalls () {
 		return walls;
