@@ -14,13 +14,13 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.model.OverPointPlan;
 
-public class OverPointRenderer implements Disposable {
+public class OverPointArcRenderer implements Disposable {
 	private Mesh mesh;
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/over_point/overpoint_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/over_point/overpoint_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/over_point/overpointarc_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/over_point/overpointarc_fragment.glsl";
 	private float[] vertices;
 	private int id;
 	private boolean hasPoint;
@@ -29,7 +29,7 @@ public class OverPointRenderer implements Disposable {
 	private final int borderSize = 4;
 	private OverPointPlan overPointPlan;
 
-	public OverPointRenderer () {
+	public OverPointArcRenderer () {
 		initShader();
 		initMesh();
 	}
@@ -62,7 +62,7 @@ public class OverPointRenderer implements Disposable {
 		
 		// Compute vertices
 		id = 0;
-		Point[] points = overPointPlan.getPointsPoint();
+		Point[] points = overPointPlan.getPointsArc();
 		
 		if(points == null) {
 			hasPoint = false;
@@ -97,10 +97,6 @@ public class OverPointRenderer implements Disposable {
 
 			shader.begin();
 			shader.setUniformMatrix("u_projViewTrans", projViewTrans);
-			shader.setUniformf("u_point", overPointPlan.getPoint().x, overPointPlan.getPoint().y);
-			shader.setUniformf("u_color", color.r, color.g, color.b, color.a);
-			shader.setUniformf("u_circleSize", circleSize);
-			shader.setUniformf("u_borderSize", borderSize);
 
 			mesh.render(shader, GL20.GL_TRIANGLES);
 			shader.end();

@@ -35,6 +35,7 @@ public class OverWallRenderer implements Disposable {
 	private final Color lineColor = new Color(0.53f, 0.72f, 0.03f, 1);
 
 	private final WallPlan cachedWall = new WallPlan();
+	private OverWallPlan overWallPlan;
 	private boolean hasWall;
 
 	public OverWallRenderer () {
@@ -56,8 +57,20 @@ public class OverWallRenderer implements Disposable {
 	}
 
 	public void update (OverWallPlan hWall) {
-		WallPlan wall = hWall.getWall();
+		overWallPlan = hWall;
+		updateCache();
+	}
+	
+	private void updateCache() {
 		hasWall = true;
+		
+		if(overWallPlan == null) {
+			hasWall = false;
+			return;
+		}
+		
+		WallPlan wall = overWallPlan.getWall();
+		
 		if (wall == null ) {
 			hasWall = false;
 			return;
@@ -72,7 +85,7 @@ public class OverWallRenderer implements Disposable {
 
 		// Compute vertices
 		id = 0;
-		Point[] points = hWall.getPoints();
+		Point[] points = overWallPlan.getPoints();
 
 		// First triangle
 		vertice(points[0]);
@@ -109,8 +122,10 @@ public class OverWallRenderer implements Disposable {
 		id += 2;
 	}
 
-	public void render (Matrix4 projViewTrans) {
+	public void render (Matrix4 projViewTrans) {		
 		if (hasWall) {
+			updateCache();
+			
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 
 			Point[] points = cachedWall.getOrigin().getPoints();

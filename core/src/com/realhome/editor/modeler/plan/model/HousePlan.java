@@ -57,7 +57,7 @@ public class HousePlan {
 	public HousePlan removeOverPoint() {
 		this.overPoint.clear();
 		return this;
-	}	
+	}
 
 	public Array<WallPlan> getWalls () {
 		return walls;

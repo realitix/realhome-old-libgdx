@@ -11,7 +11,8 @@ public class Wall extends BaseModel {
 	private int type;
 	private float height;
 	private int width = DEFAULT_WIDTH;
-	private Point[] points = new Point[2];
+	private Floor floor;
+	private final Point[] points = new Point[2];
 
 	public Wall () {
 		for (int i = 0; i < points.length; i++) {
@@ -46,6 +47,7 @@ public class Wall extends BaseModel {
 		type = target.type;
 		height = target.height;
 		width = target.width;
+		floor = target.floor;
 		points[0].set(target.points[0]);
 		points[1].set(target.points[1]);
 
@@ -58,6 +60,15 @@ public class Wall extends BaseModel {
 
 	public Wall setType (int type) {
 		this.type = type;
+		return this;
+	}
+	
+	public Floor getFloor() {
+		return this.floor;
+	}
+	
+	public Wall setFloor(Floor floor) {
+		this.floor = floor;
 		return this;
 	}
 

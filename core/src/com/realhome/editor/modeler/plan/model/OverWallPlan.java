@@ -17,7 +17,6 @@ public class OverWallPlan {
 
 	public void setWall(WallPlan wall) {
 		this.origin = wall;
-		compute();
 	}
 
 	public WallPlan getWall() {
@@ -25,6 +24,8 @@ public class OverWallPlan {
 	}
 
 	public Point[] getPoints() {
+		if(origin == null) return null;
+		compute();
 		return points;
 	}
 
