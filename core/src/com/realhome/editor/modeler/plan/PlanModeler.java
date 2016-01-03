@@ -15,6 +15,7 @@ import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.converter.ModelPlanConverter;
 import com.realhome.editor.modeler.plan.layer.Layer;
+import com.realhome.editor.modeler.plan.layer.arc.ArcLayer;
 import com.realhome.editor.modeler.plan.layer.grid.GridLayer;
 import com.realhome.editor.modeler.plan.layer.mask.MaskLayer;
 import com.realhome.editor.modeler.plan.layer.over_point.OverPointLayer;
@@ -66,6 +67,7 @@ public class PlanModeler implements Modeler {
 		layers.add(new WallLayer());
 		layers.add(new OverWallLayer());
 		layers.add(new OverPointLayer());
+		layers.add(new ArcLayer());
 	}
 
 	private void initActioners() {

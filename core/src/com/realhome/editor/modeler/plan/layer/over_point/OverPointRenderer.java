@@ -62,7 +62,7 @@ public class OverPointRenderer implements Disposable {
 		
 		// Compute vertices
 		id = 0;
-		Point[] points = overPointPlan.getPointsPoint();
+		Point[] points = overPointPlan.getPoints();
 		
 		if(points == null) {
 			hasPoint = false;

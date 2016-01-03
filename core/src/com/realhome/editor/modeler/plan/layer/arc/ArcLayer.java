@@ -1,16 +1,16 @@
 
-package com.realhome.editor.modeler.plan.layer.over_point;
+package com.realhome.editor.modeler.plan.layer.arc;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.layer.BaseLayer;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 
-public class OverPointLayer extends BaseLayer {
-	OverPointRenderer renderer;
+public class ArcLayer extends BaseLayer {
+	ArcRenderer renderer;
 
-	public OverPointLayer () {
-		renderer = new OverPointRenderer();
+	public ArcLayer () {
+		renderer = new ArcRenderer();
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class OverPointLayer extends BaseLayer {
 	@Override
 	public void action (HousePlan house, int action) {
 		if(actionListened(action)) {
-			renderer.update(house.getOverPoint());
+			renderer.update(house.getArcs());
 		}
 	}
 	

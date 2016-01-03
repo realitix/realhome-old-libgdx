@@ -11,7 +11,6 @@ public class Wall extends BaseModel {
 	private int type;
 	private float height;
 	private int width = DEFAULT_WIDTH;
-	private Floor floor;
 	private final Point[] points = new Point[2];
 
 	public Wall () {
@@ -47,7 +46,6 @@ public class Wall extends BaseModel {
 		type = target.type;
 		height = target.height;
 		width = target.width;
-		floor = target.floor;
 		points[0].set(target.points[0]);
 		points[1].set(target.points[1]);
 
@@ -60,15 +58,6 @@ public class Wall extends BaseModel {
 
 	public Wall setType (int type) {
 		this.type = type;
-		return this;
-	}
-	
-	public Floor getFloor() {
-		return this.floor;
-	}
-	
-	public Wall setFloor(Floor floor) {
-		this.floor = floor;
 		return this;
 	}
 
@@ -130,7 +119,7 @@ public class Wall extends BaseModel {
 
 	public Point getLinkedPoint (Wall other) {
 		if (other.points[0].equals(points[0]) || other.points[0].equals(points[1]))
-			return  other.points[0];
+			return other.points[0];
 		if (other.points[1].equals(points[0]) || other.points[1].equals(points[1]))
 			return other.points[1];
 		return null;
@@ -145,5 +134,10 @@ public class Wall extends BaseModel {
 			other.width == width)
 			return true;
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return "( "+points[0]+" : "+points[1]+" )";
 	}
 }
