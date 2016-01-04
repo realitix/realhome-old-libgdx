@@ -26,7 +26,8 @@ public class WallPlanConverter implements PlanConverter {
 	private Point[] currentOutPoints;
 
 	private boolean drawSimpleWall;
-	private final static int ANGLE_MAX = 12;
+	private final static int ANGLE_MAX = 14;
+	private final static int ANGLE_MIN = 1;
 
 	@Override
 	public void convert (House houseIn, HousePlan houseOut) {
@@ -175,16 +176,16 @@ public class WallPlanConverter implements PlanConverter {
 	}
 
 	private boolean isAngleValid (Wall sourceWall, Wall targetWall) {
-
 		Vector2 sourceWallVector = new Vector2();
 		Vector2 targetWallVector = new Vector2();
+		
 		sourceWall.dir(sourceWallVector);
 		targetWall.dir(targetWallVector);
-		int angle = Math.abs(Math.round(sourceWallVector.angle(targetWallVector)));
+		
+		int angle = Math.abs(Math.round(sourceWallVector.angle(targetWallVector)));		
 
-		if (angle >= 180 - WallPlanConverter.ANGLE_MAX) {
+		if (angle >= 180 - ANGLE_MAX || angle <= ANGLE_MIN)
 			return false;
-		}
 		return true;
 	}
 }
