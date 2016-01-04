@@ -65,21 +65,26 @@ public class Point {
 	public Point sub (Vector2 v) {
 		return sub((int)v.x, (int)v.y);
 	}
-	
+
 	public Point sub (int x, int y) {
 		this.x -= x;
 		this.y -= y;
 		return this;
 	}
 
-	public boolean equals(Point other) {
-		if(other == this) return true;
-		if(other.x == x && other.y == y) return true;
-		return false;
-	}
-
 	@Override
 	public String toString () {
 		return "(" + x + "," + y + ")";
+	}
+
+	@Override
+	public boolean equals (Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof Point)) return false;
+		Point other = (Point)obj;
+		if (x != other.x) return false;
+		if (y != other.y) return false;
+		return true;
 	}
 }

@@ -1,14 +1,6 @@
-uniform vec2 u_pos0;
-uniform vec2 u_pos0Left;
-uniform vec2 u_pos0Right;
-
-uniform vec2 u_pos1;
-uniform vec2 u_pos1Left;
-uniform vec2 u_pos1Right;
-
-uniform vec2 u_pos2;
-uniform vec2 u_pos2Left;
-uniform vec2 u_pos2Right;
+uniform vec2 u_pos;
+uniform vec2 u_posLeft;
+uniform vec2 u_posRight;
 
 uniform float u_size;
 uniform vec4 u_color;
@@ -52,23 +44,9 @@ bool isOutline(float left, float right, float distance) {
 	return false;
 }
 
-bool isPos1Outline(float distance) {
-	float left = getDistanceFromLine(v_pos, u_pos0, u_pos0Left);
-	float right = getDistanceFromLine(v_pos, u_pos0, u_pos0Right);
-	
-	return isOutline(left, right, distance);
-}
-
-bool isPos2Outline(float distance) {
-	float left = getDistanceFromLine(v_pos, u_pos1, u_pos1Left);
-	float right = getDistanceFromLine(v_pos, u_pos1, u_pos1Right);
-	
-	return isOutline(left, right, distance);
-}
-
-bool isPos3Outline(float distance) {
-	float left = getDistanceFromLine(v_pos, u_pos2, u_pos2Left);
-	float right = getDistanceFromLine(v_pos, u_pos2, u_pos2Right);
+bool isPosOutline(float distance) {
+	float left = getDistanceFromLine(v_pos, u_pos, u_posLeft);
+	float right = getDistanceFromLine(v_pos, u_pos, u_posRight);
 	
 	return isOutline(left, right, distance);
 }
@@ -76,21 +54,12 @@ bool isPos3Outline(float distance) {
 void main() {
 	vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
 	
-	float distance_line_left = getDistanceFromLine(v_pos, u_pos0, u_pos0Left);
-	float distance_line_right = getDistanceFromLine(v_pos, u_pos0, u_pos0Right);
+	float distance_line_left = getDistanceFromLine(v_pos, u_pos, u_posLeft);
+	float distance_line_right = getDistanceFromLine(v_pos, u_pos, u_posRight);
 	
-	float d1 = distance(v_pos, u_pos0);
-	float d2 = distance(v_pos, u_pos1);
-	float d3 = distance(v_pos, u_pos2);
-	float d = min(min(d1, d2), d3);
+	float d = distance(v_pos, u_pos);
 
-	if(isPos1Outline(d)) {
-		color = u_outlineColor;
-	}
-	else if(isPos2Outline(d)) {
-		color = u_outlineColor;
-	}
-	else if(isPos3Outline(d)) {
+	if(isPosOutline(d)) {
 		color = u_outlineColor;
 	}
 	else if(d <= u_size) {

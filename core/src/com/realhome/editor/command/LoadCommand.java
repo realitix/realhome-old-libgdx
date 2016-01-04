@@ -18,6 +18,7 @@ public class LoadCommand extends Command {
 		floor.addWall(new Wall().setPoint0(0, 0).setPoint1(0, 200));
 		floor.addWall(new Wall().setPoint0(0, 200).setPoint1(300, 300));
 		floor.addWall(new Wall().setPoint0(300, 300).setPoint1(500, 300));
+		floor.addWall(new Wall().setPoint0(500, 300).setPoint1(50, 50));
 		appModel.setHouse(house);
 	}
 

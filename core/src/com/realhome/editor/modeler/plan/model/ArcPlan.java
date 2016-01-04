@@ -69,6 +69,7 @@ public class ArcPlan {
 		points[0].set(sourcePoint);
 		points[1].set(sourcePoint).add(dirs[0]);
 		points[3].set(sourcePoint).add(dirs[1]);
-		points[2].set(sourcePoint).add(dirs[0].scl(1000)).add(dirs[1].scl(1000));
+		Vector2 dirBis = dirs[0].cpy().add(dirs[1]).nor();
+		points[2].set(sourcePoint).add(dirBis.scl(1.5f*size));
 	}
 }
