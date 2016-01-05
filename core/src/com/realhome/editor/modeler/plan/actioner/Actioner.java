@@ -1,5 +1,6 @@
 package com.realhome.editor.modeler.plan.actioner;
 
+import com.realhome.editor.modeler.plan.model.HouseInteractor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 
 /**
@@ -12,5 +13,5 @@ public interface Actioner {
 	public int move(int x, int y);
 	public int click(int x, int y);
 	public int unclick(int x, int y);
-	public Actioner init(HousePlan house);
+	public Actioner init(HouseInteractor interactor);
 }

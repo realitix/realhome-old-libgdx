@@ -2,41 +2,42 @@ package com.realhome.editor.modeler.plan.actioner;
 
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
+import com.realhome.editor.modeler.plan.model.HouseInteractor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.PointPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class PointOverActioner implements Actioner {
-	private HousePlan house;
+	private HouseInteractor interactor;
 	private boolean dragging;
 
 	@Override
-	public Actioner init(HousePlan house) {
-		this.house = house;
+	public Actioner init(HouseInteractor interactor) {
+		this.interactor = interactor;
 		return this;
 	}
 
 	@Override
-	public int move(int x, int y) {		
+	public int move(int x, int y) {
 		if(dragging)
 			return Action.EMPTY;
-		
-		for(WallPlan wall : house.getWalls()) {
+
+		for(WallPlan wall : interactor.getHouse().getWalls()) {
 			int w = wall.getOrigin().getWidth();
 			for(Point point : wall.getOrigin().getPoints()) {
 				if( x <= point.x + w && x >= point.x - w && y <= point.y + w && y >= point.y - w) {
-					if( house.getOverPoint().getPoint() != point ) {
+					if( interactor.getHouse().getOverPoint().getPoint() != point ) {
 						PointPlan pp = new PointPlan().setPoint(point).setWall(wall.getOrigin());
-						house.setOverPoint(pp);
-						house.removeOverWall();
+						interactor.overPoint(pp);
+						interactor.overWall(null);
 					}
 					return Action.OVER_POINT;
 				}
 			}
 		}
 
-		if( house.getOverPoint().getPointPlan() != null ) {
-			house.removeOverPoint();
+		if( interactor.getHouse().getOverPoint().getPointPlan() != null ) {
+			interactor.overPoint(null);
 			return Action.OVER_OUT;
 		}
 

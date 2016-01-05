@@ -5,26 +5,28 @@ import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
+import com.realhome.editor.modeler.plan.model.HouseInteractor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.PointPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class PointMovingActioner implements Actioner {
-	private HousePlan house;
+	private HouseInteractor interactor;
+
 	private final Point tmp = new Point();
 	private final Vector2 lastLocation = new Vector2();
 	private final Vector2 delta = new Vector2();
 	private final Array<Point> tmpPoints = new Array<Point>();
 
 	@Override
-	public Actioner init (HousePlan house) {
-		this.house = house;
+	public Actioner init (HouseInteractor interactor) {
+		this.interactor = interactor;
 		return this;
 	}
 
 	@Override
 	public int move (int x, int y) {
-		if(house.getSelectedPoint() == null)
+		if(interactor.getHouse().getSelectedPoint() == null)
 			return Action.EMPTY;
 
 		delta.set(lastLocation.x - x, lastLocation.y - y).scl(-1);
@@ -35,12 +37,12 @@ public class PointMovingActioner implements Actioner {
 	}
 
 	private void movePointDelta(int x, int y) {
-		Point sp = house.getSelectedPoint().getPoint();
-		
+		Point sp = interactor.getHouse().getSelectedPoint().getPoint();
+
 		tmpPoints.clear();
 		tmpPoints.add(sp);
-		
-		for(WallPlan wallPlan : house.getWalls()) {
+
+		for(WallPlan wallPlan : interactor.getHouse().getWalls()) {
 			Wall wall = wallPlan.getOrigin();
 			for(Point point : wall.getPoints()) {
 				if(point != sp && point.equals(sp)) {
@@ -48,10 +50,10 @@ public class PointMovingActioner implements Actioner {
 				}
 			}
 		}
-		
-		for(Point point : tmpPoints) {
-			point.add(x, y);
-		}
+
+		int posX = tmpPoints.get(0).x + x;
+		int posY = tmpPoints.get(0).y + y;
+		interactor.movePoints(tmpPoints, posX, posY);
 	}
 
 	@Override
@@ -59,10 +61,10 @@ public class PointMovingActioner implements Actioner {
 		tmp.set(x, y);
 		lastLocation.set(x, y);
 
-		for(WallPlan wall : house.getWalls()) {
+		for(WallPlan wall : interactor.getHouse().getWalls()) {
 			Point point = wall.pointInWallPoint(x, y);
 			if( point != null ) {
-				house.setSelectedPoint(new PointPlan().setPoint(point).setWall(wall.getOrigin()));
+				interactor.selectPoint(new PointPlan().setPoint(point).setWall(wall.getOrigin()));
 				return Action.SELECT_POINT;
 			}
 		}
@@ -72,8 +74,8 @@ public class PointMovingActioner implements Actioner {
 
 	@Override
 	public int unclick (int x, int y) {
-		if(house.getSelectedPoint() != null) {
-			house.setSelectedPoint(null);
+		if(interactor.getHouse().getSelectedPoint() != null) {
+			interactor.selectPoint(null);
 			return Action.UNSELECT_POINT;
 		}
 

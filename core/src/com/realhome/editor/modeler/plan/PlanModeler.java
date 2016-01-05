@@ -20,7 +20,9 @@ import com.realhome.editor.modeler.plan.layer.grid.GridLayer;
 import com.realhome.editor.modeler.plan.layer.mask.MaskLayer;
 import com.realhome.editor.modeler.plan.layer.over_point.OverPointLayer;
 import com.realhome.editor.modeler.plan.layer.over_wall.OverWallLayer;
+import com.realhome.editor.modeler.plan.layer.text.TextLayer;
 import com.realhome.editor.modeler.plan.layer.wall.WallLayer;
+import com.realhome.editor.modeler.plan.model.HouseInteractor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.util.CameraController;
 import com.realhome.editor.modeler.plan.util.PointMapper;
@@ -32,6 +34,7 @@ public class PlanModeler implements Modeler {
 	private OrthographicCamera camera;
 	private HousePlan housePlan;
 	private House house;
+	private HouseInteractor houseInteractor;
 	private ModelPlanConverter converter;
 	private final Array<Actioner> actioners = new Array<Actioner>();
 	private PointMapper pointMapper;
@@ -55,6 +58,7 @@ public class PlanModeler implements Modeler {
 
 		house = new House();
 		housePlan = new HousePlan();
+		houseInteractor = new HouseInteractor(housePlan);
 		converter = new ModelPlanConverter();
 
 		initLayers();
@@ -68,6 +72,7 @@ public class PlanModeler implements Modeler {
 		layers.add(new OverWallLayer());
 		layers.add(new OverPointLayer());
 		layers.add(new ArcLayer());
+		layers.add(new TextLayer());
 	}
 
 	private void initActioners() {
@@ -75,9 +80,9 @@ public class PlanModeler implements Modeler {
 		actioners.add(new WallMovingActioner());
 		actioners.add(new PointOverActioner());
 		actioners.add(new WallOverActioner());
-		
+
 		for(Actioner actioner : actioners) {
-			actioner.init(housePlan);
+			actioner.init(houseInteractor);
 		}
 	}
 
@@ -154,7 +159,7 @@ public class PlanModeler implements Modeler {
 
 	public int click(float x, float y) {
 		Vector2 c = pointMapper.screenToWorld(x, y);
-		
+
 		int action = Action.EMPTY;
 		for (Actioner actioner : actioners) {
 			action = actioner.click((int) c.x, (int)c.y);
@@ -169,7 +174,7 @@ public class PlanModeler implements Modeler {
 
 	public int unclick(float x, float y) {
 		Vector2 c = pointMapper.screenToWorld(x, y);
-		
+
 		int action = Action.EMPTY;
 		for (Actioner actioner : actioners) {
 			action = actioner.unclick((int) c.x, (int)c.y);
@@ -180,7 +185,7 @@ public class PlanModeler implements Modeler {
 			if(action == Action.UNSELECT_WALL) {
 				return PlanController.Action.HOUSE_UPDATED;
 			}
-			
+
 			sendActionsLayers(action);
 		}
 
