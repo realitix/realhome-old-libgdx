@@ -16,14 +16,9 @@ RealHome planning is managed with waffle, you can view the public board here: [W
 
 ## How to contribute
 
-### 1
-Create issue in the bug tracker.
-
-### 2
-Wait for the issue to become "Ready", don't start working on it if the issue is not "Ready"
-
-### 3
-Create your pull request. The commit message must be well formated like that:
+- Create issue in the bug tracker.
+- Wait for the issue to become "Ready", don't start working on it if the issue is not "Ready"
+- Create your pull request. The commit message must be well formated like that:
 
 ```
 Resolve #issue_number
@@ -31,4 +26,7 @@ Resolve #issue_number
 Description of the pull request.
 Another line.
 ```
+
+## Architecture
+
 

@@ -2,6 +2,7 @@
 package com.realhome.editor.modeler.plan.model;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 
@@ -10,10 +11,15 @@ public class HousePlan {
 	private final Array<WallPlan> walls = new Array<WallPlan>();
 	private final Array<Point> outlinePoints = new Array<Point>();
 	private final Array<ArcPlan> arcs = new Array<ArcPlan>();
+	private final ObjectMap<Object, LabelPlan> labels = new ObjectMap<Object, LabelPlan>();
 	private final OverWallPlan overWall = new OverWallPlan();
 	private final OverPointPlan overPoint = new OverPointPlan();
 	private WallPlan selectedWall;
 	private PointPlan selectedPoint;
+
+	public HousePlan() {
+		overPoint.setHouse(this);
+	}
 
 	public HousePlan setSelectedWall(WallPlan wall) {
 		this.selectedWall = wall;
@@ -26,46 +32,7 @@ public class HousePlan {
 
 	public HousePlan setSelectedPoint(PointPlan point) {
 		this.selectedPoint = point;
-		arcs.clear();
-		if(point != null) computeSelectedPointArc(point);
 		return this;
-	}
-
-	/**
-	 * Wa add arc to all walls wich intersect point
-	 * @param point
-	 */
-	private void computeSelectedPointArc(PointPlan point) {
-		Array<Wall> linkedWalls = new Array<Wall>();
-		Array<Point> points = new Array<Point>();
-
-		// Find linked walls
-		for(WallPlan wallPlan : walls) {
-			Wall wall = wallPlan.getOrigin();
-
-			if(wall.getPoints()[0].equals(point.getPoint()) || wall.getPoints()[1].equals(point.getPoint())) {
-				linkedWalls.add(wall);
-			}
-		}
-
-		// Find all points
-		for(Wall sourceWall : linkedWalls) {
-			for(WallPlan wallPlan : walls) {
-				Wall targetWall = wallPlan.getOrigin();
-				if(targetWall == sourceWall) continue;
-
-				for(Point p : sourceWall.getPoints()) {
-					if(p.equals(targetWall.getPoints()[0]) || p.equals(targetWall.getPoints()[1])) {
-						if(!points.contains(p, false))
-							points.add(p);
-					}
-				}
-			}
-		}
-
-		for(Point p : points) {
-			arcs.add(new ArcPlan().setOrigin(p).setHouse(this));
-		}
 	}
 
 	public PointPlan getSelectedPoint() {
@@ -88,26 +55,7 @@ public class HousePlan {
 
 	public HousePlan setOverPoint(PointPlan point) {
 		this.overPoint.setPointPlan(point);
-
-		arcs.clear();
-		computeOverPointArc(point);
 		return this;
-	}
-
-	/**
-	 * If point is an intersection, we add an arc
-	 * @param point
-	 */
-	private void computeOverPointArc(PointPlan point) {
-		for(WallPlan wallPlan : walls) {
-			Wall wall = wallPlan.getOrigin();
-			if(wall == point.getWall()) continue;
-
-			Point linkedPoint = wall.getLinkedPoint(point.getWall());
-			if(linkedPoint != null && linkedPoint.equals(point.getPoint())) {
-				arcs.add(new ArcPlan().setOrigin(point.getPoint()).setHouse(this));
-			}
-		}
 	}
 
 	public OverPointPlan getOverPoint() {
@@ -116,12 +64,15 @@ public class HousePlan {
 
 	public HousePlan removeOverPoint() {
 		this.overPoint.clear();
-		arcs.clear();
 		return this;
 	}
 
 	public Array<WallPlan> getWalls () {
 		return walls;
+	}
+
+	public ObjectMap<Object, LabelPlan> getLabels () {
+		return labels;
 	}
 
 	public HousePlan addWall (WallPlan wall) {

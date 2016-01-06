@@ -1,34 +1,35 @@
 package com.realhome.editor.modeler.plan.actioner;
 
 import com.realhome.editor.modeler.plan.actioner.util.Action;
+import com.realhome.editor.modeler.plan.model.HouseInteractor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class WallOverActioner implements Actioner {
-	private HousePlan house;
+	private HouseInteractor interactor;
 	private boolean dragging;
 
 	@Override
-	public Actioner init(HousePlan house) {
-		this.house = house;
+	public Actioner init(HouseInteractor interactor) {
+		this.interactor = interactor;
 		return this;
 	}
 
 	@Override
-	public int move(int x, int y) {		
+	public int move(int x, int y) {
 		if(dragging)
 			return Action.EMPTY;
-		
-		for(WallPlan wall : house.getWalls()) {
+
+		for(WallPlan wall : interactor.getHouse().getWalls()) {
 			if(wall.pointInside(x, y)) {
-				if(house.getOverWall().getWall() != wall)
-					house.setOverWall(wall);
+				if(interactor.getHouse().getOverWall().getWall() != wall)
+					interactor.overWall(wall);
 				return Action.OVER_WALL;
 			}
 		}
 
-		if( house.getOverWall().getWall() != null ) {
-			house.removeOverWall();
+		if( interactor.getHouse().getOverWall().getWall() != null ) {
+			interactor.overWall(null);
 			return Action.OVER_OUT;
 		}
 

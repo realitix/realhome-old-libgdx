@@ -5,24 +5,25 @@ import com.badlogic.gdx.math.Vector2;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
+import com.realhome.editor.modeler.plan.model.HouseInteractor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class WallMovingActioner implements Actioner {
-	private HousePlan house;
+	private HouseInteractor interactor;
 	private final Point tmp = new Point();
 	private final Vector2 lastLocation = new Vector2();
 	private final Vector2 delta = new Vector2();
 
 	@Override
-	public Actioner init (HousePlan house) {
-		this.house = house;
+	public Actioner init (HouseInteractor interactor) {
+		this.interactor = interactor;
 		return this;
 	}
 
 	@Override
 	public int move (int x, int y) {
-		if(house.getSelectedWall() == null)
+		if(interactor.getHouse().getSelectedWall() == null)
 			return Action.EMPTY;
 
 		delta.set(lastLocation.x - x, lastLocation.y - y).scl(-1);
@@ -31,7 +32,7 @@ public class WallMovingActioner implements Actioner {
 
 		return Action.MOVE_WALL;
 	}
-	
+
 	/**
 	 * Return the number of common point in corner.
 	 * 0, 1, 2
@@ -39,10 +40,10 @@ public class WallMovingActioner implements Actioner {
 	 */
 	private int getCommonCorners() {
 		int result = 0;
-		
-		Wall wallSource = house.getSelectedWall().getOrigin();
+
+		Wall wallSource = interactor.getHouse().getSelectedWall().getOrigin();
 		for(Point sourcePoint : wallSource.getPoints()) {
-			for(WallPlan w : house.getWalls()) {
+			for(WallPlan w : interactor.getHouse().getWalls()) {
 				Wall wallTarget = w.getOrigin();
 				if ( wallTarget == wallSource ) continue;
 
@@ -67,13 +68,13 @@ public class WallMovingActioner implements Actioner {
 	 */
 	private void moveWallDelta(int x, int y, int nbCorners) {
 		// Init virtual points
-		Wall wallSource = house.getSelectedWall().getOrigin();
-		
+		Wall wallSource = interactor.getHouse().getSelectedWall().getOrigin();
+
 		if(nbCorners == 0) {
-			for(Point p : wallSource.getPoints()) p.add(x, y);
+			interactor.movePoints(wallSource.getPoints(), x, y);
 			return;
 		}
-		
+
 		Point[] virtualPoints = {
 			new Point(wallSource.getPoints()[0]),
 			new Point(wallSource.getPoints()[1])};
@@ -83,7 +84,7 @@ public class WallMovingActioner implements Actioner {
 
 		// Find linked walls
 		for(Point sourcePoint : wallSource.getPoints()) {
-			for(WallPlan w : house.getWalls()) {
+			for(WallPlan w : interactor.getHouse().getWalls()) {
 				Wall wallTarget = w.getOrigin();
 				if ( wallTarget == wallSource ) continue;
 
@@ -96,18 +97,18 @@ public class WallMovingActioner implements Actioner {
 							wallTarget.getPoints()[0].x, wallTarget.getPoints()[0].y,
 							wallTarget.getPoints()[1].x, wallTarget.getPoints()[1].y,
 							intersection);
-						
+
 						int posX = Math.round(intersection.x);
 						int posY = Math.round(intersection.y);
-						
+
 						// If only one common point, we add the same delta to the other one
 						if( nbCorners == 1 ) {
 							Point otherPoint = (wallSource.getPoints()[0] == sourcePoint) ? wallSource.getPoints()[1] : wallSource.getPoints()[0];
-							otherPoint.sub(sourcePoint.x - posX, sourcePoint.y - posY);
+							interactor.movePoint(otherPoint, otherPoint.x - (sourcePoint.x - posX), otherPoint.y - (sourcePoint.y - posY));
 						}
-						
-						sourcePoint.set(posX, posY);
-						targetPoint.set(sourcePoint);
+
+						interactor.movePoint(sourcePoint, posX, posY);
+						interactor.movePoint(targetPoint, posX, posY);
 					}
 				}
 			}
@@ -119,9 +120,9 @@ public class WallMovingActioner implements Actioner {
 		tmp.set(x, y);
 		lastLocation.set(x, y);
 
-		for(WallPlan wall : house.getWalls()) {
+		for(WallPlan wall : interactor.getHouse().getWalls()) {
 			if( wall.pointInside(tmp.x, tmp.y) ) {
-				house.setSelectedWall(wall);
+				interactor.selectWall(wall);
 				return Action.SELECT_WALL;
 			}
 		}
@@ -131,8 +132,8 @@ public class WallMovingActioner implements Actioner {
 
 	@Override
 	public int unclick (int x, int y) {
-		if(house.getSelectedWall() != null) {
-			house.setSelectedWall(null);
+		if(interactor.getHouse().getSelectedWall() != null) {
+			interactor.selectWall(null);
 			return Action.UNSELECT_WALL;
 		}
 
