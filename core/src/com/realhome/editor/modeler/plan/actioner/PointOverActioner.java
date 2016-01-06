@@ -3,8 +3,6 @@ package com.realhome.editor.modeler.plan.actioner;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.model.HouseInteractor;
-import com.realhome.editor.modeler.plan.model.HousePlan;
-import com.realhome.editor.modeler.plan.model.PointPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class PointOverActioner implements Actioner {
@@ -27,8 +25,7 @@ public class PointOverActioner implements Actioner {
 			for(Point point : wall.getOrigin().getPoints()) {
 				if( x <= point.x + w && x >= point.x - w && y <= point.y + w && y >= point.y - w) {
 					if( interactor.getHouse().getOverPoint().getPoint() != point ) {
-						PointPlan pp = new PointPlan().setPoint(point).setWall(wall.getOrigin());
-						interactor.overPoint(pp);
+						interactor.overPoint(point);
 						interactor.overWall(null);
 					}
 					return Action.OVER_POINT;
@@ -36,7 +33,7 @@ public class PointOverActioner implements Actioner {
 			}
 		}
 
-		if( interactor.getHouse().getOverPoint().getPointPlan() != null ) {
+		if( interactor.getHouse().getOverPoint().getPoint() != null ) {
 			interactor.overPoint(null);
 			return Action.OVER_OUT;
 		}

@@ -6,8 +6,6 @@ import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.model.HouseInteractor;
-import com.realhome.editor.modeler.plan.model.HousePlan;
-import com.realhome.editor.modeler.plan.model.PointPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class PointMovingActioner implements Actioner {
@@ -37,7 +35,7 @@ public class PointMovingActioner implements Actioner {
 	}
 
 	private void movePointDelta(int x, int y) {
-		Point sp = interactor.getHouse().getSelectedPoint().getPoint();
+		Point sp = interactor.getHouse().getSelectedPoint();
 
 		tmpPoints.clear();
 		tmpPoints.add(sp);
@@ -64,7 +62,7 @@ public class PointMovingActioner implements Actioner {
 		for(WallPlan wall : interactor.getHouse().getWalls()) {
 			Point point = wall.pointInWallPoint(x, y);
 			if( point != null ) {
-				interactor.selectPoint(new PointPlan().setPoint(point).setWall(wall.getOrigin()));
+				interactor.selectPoint(point);
 				return Action.SELECT_POINT;
 			}
 		}

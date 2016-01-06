@@ -11,7 +11,7 @@ public class HouseInteractor {
 		this.house = house;
 	}
 
-	public void selectPoint(PointPlan point) {
+	public void selectPoint(Point point) {
 		house.setSelectedPoint(point);
 		house.getArcs().clear();
 		if(point != null) computeSelectedPointArc(point);
@@ -28,7 +28,7 @@ public class HouseInteractor {
 			house.removeOverWall();
 	}
 
-	public void overPoint(PointPlan point) {
+	public void overPoint(Point point) {
 		if(point != null) {
 			house.setOverPoint(point);
 			computeOverPointArc(point);
@@ -63,7 +63,7 @@ public class HouseInteractor {
 	 * We add arc to all walls wich intersect point
 	 * @param point
 	 */
-	private void computeSelectedPointArc(PointPlan point) {
+	private void computeSelectedPointArc(Point point) {
 		Array<Wall> linkedWalls = new Array<Wall>();
 		Array<Point> points = new Array<Point>();
 
@@ -71,7 +71,7 @@ public class HouseInteractor {
 		for(WallPlan wallPlan : house.getWalls()) {
 			Wall wall = wallPlan.getOrigin();
 
-			if(wall.getPoints()[0].equals(point.getPoint()) || wall.getPoints()[1].equals(point.getPoint())) {
+			if(wall.getPoints()[0].equals(point) || wall.getPoints()[1].equals(point)) {
 				linkedWalls.add(wall);
 			}
 		}
@@ -100,17 +100,31 @@ public class HouseInteractor {
 	 * If point is an intersection, we add an arc
 	 * @param point
 	 */
-	private void computeOverPointArc(PointPlan point) {
+	private void computeOverPointArc(Point point) {
 		house.getArcs().clear();
+
+		Wall pointWall = getWallForPoint(point);
 
 		for(WallPlan wallPlan : house.getWalls()) {
 			Wall wall = wallPlan.getOrigin();
-			if(wall == point.getWall()) continue;
+			if(wall == pointWall) continue;
 
-			Point linkedPoint = wall.getLinkedPoint(point.getWall());
-			if(linkedPoint != null && linkedPoint.equals(point.getPoint())) {
-				house.getArcs().add(new ArcPlan().setOrigin(point.getPoint()).setHouse(house));
+			Point linkedPoint = wall.getLinkedPoint(pointWall);
+			if(linkedPoint != null && linkedPoint.equals(point)) {
+				house.getArcs().add(new ArcPlan().setOrigin(point).setHouse(house));
 			}
 		}
+	}
+
+	private Wall getWallForPoint(Point point) {
+		for(WallPlan wallPlan : house.getWalls()) {
+			Wall wall = wallPlan.getOrigin();
+			for(Point p : wall.getPoints()) {
+				if(p.equals(point))
+					return wall;
+			}
+		}
+
+		return null;
 	}
 }

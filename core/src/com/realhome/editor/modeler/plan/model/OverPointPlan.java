@@ -6,7 +6,7 @@ import com.realhome.editor.model.house.Wall;
 
 public class OverPointPlan {
 
-	private PointPlan origin;
+	private Point origin;
 	private HousePlan house;
 	private final Point[] points = new Point[4];
 
@@ -21,17 +21,12 @@ public class OverPointPlan {
 		return this;
 	}
 
-	public void setPointPlan(PointPlan point) {
+	public void setPoint(Point point) {
 		this.origin = point;
 	}
 
-	public PointPlan getPointPlan() {
-		return origin;
-	}
-
 	public Point getPoint() {
-		if(origin != null) return origin.getPoint();
-		return null;
+		return origin;
 	}
 
 	public Point[] getPoints() {
@@ -50,8 +45,6 @@ public class OverPointPlan {
 	}
 
 	private void compute() {
-		Point point = origin.getPoint();
-
 		Vector2 direction = new Vector2(1, 0);
 		Vector2 normal = new Vector2(0, 1);
 
@@ -60,20 +53,18 @@ public class OverPointPlan {
 		normal.scl(width);
 		direction.scl(width);
 
-		points[0].set(point).add(direction).add(normal);
-		points[1].set(point).add(direction).sub(normal);
-		points[2].set(point).sub(direction).add(normal);
-		points[3].set(point).sub(direction).sub(normal);
+		points[0].set(origin).add(direction).add(normal);
+		points[1].set(origin).add(direction).sub(normal);
+		points[2].set(origin).sub(direction).add(normal);
+		points[3].set(origin).sub(direction).sub(normal);
 	}
 
 	private int getWallWidth() {
-		Point point = origin.getPoint();
-
 		for(WallPlan wallPlan : house.getWalls()) {
 			Wall wall = wallPlan.getOrigin();
 
 			for(Point p : wall.getPoints()) {
-				if(p.equals(point)) {
+				if(p.equals(origin)) {
 					return wall.getWidth();
 				}
 			}

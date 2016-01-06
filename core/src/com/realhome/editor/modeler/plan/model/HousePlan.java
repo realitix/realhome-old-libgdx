@@ -4,7 +4,6 @@ package com.realhome.editor.modeler.plan.model;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.model.house.Point;
-import com.realhome.editor.model.house.Wall;
 
 public class HousePlan {
 	private int floor;
@@ -15,7 +14,7 @@ public class HousePlan {
 	private final OverWallPlan overWall = new OverWallPlan();
 	private final OverPointPlan overPoint = new OverPointPlan();
 	private WallPlan selectedWall;
-	private PointPlan selectedPoint;
+	private Point selectedPoint;
 
 	public HousePlan() {
 		overPoint.setHouse(this);
@@ -30,12 +29,12 @@ public class HousePlan {
 		return selectedWall;
 	}
 
-	public HousePlan setSelectedPoint(PointPlan point) {
+	public HousePlan setSelectedPoint(Point point) {
 		this.selectedPoint = point;
 		return this;
 	}
 
-	public PointPlan getSelectedPoint() {
+	public Point getSelectedPoint() {
 		return selectedPoint;
 	}
 
@@ -53,8 +52,8 @@ public class HousePlan {
 		return this;
 	}
 
-	public HousePlan setOverPoint(PointPlan point) {
-		this.overPoint.setPointPlan(point);
+	public HousePlan setOverPoint(Point point) {
+		this.overPoint.setPoint(point);
 		return this;
 	}
 
