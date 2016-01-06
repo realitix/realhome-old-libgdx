@@ -4,6 +4,7 @@ package com.realhome.editor.modeler.plan.converter;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
@@ -24,6 +25,7 @@ public class WallPlanConverter implements PlanConverter {
 	private WallPlan currentOutWall;
 	private Point currentInPoint;
 	private Point[] currentOutPoints;
+	private ObjectMap<Wall, WallPlan> cachedWalls = new ObjectMap<Wall, WallPlan>();
 
 	private boolean drawSimpleWall;
 	private final static int ANGLE_MAX = 14;
@@ -35,6 +37,7 @@ public class WallPlanConverter implements PlanConverter {
 		outWalls.clear();
 		inWalls = houseIn.getFloor(houseOut.getFloor()).getWalls();
 
+		initCachedWalls();
 		convertWalls();
 
 		outWalls = null;
@@ -45,11 +48,23 @@ public class WallPlanConverter implements PlanConverter {
 		currentOutPoints = null;
 	}
 
+	private void initCachedWalls() {
+		cachedWalls.clear();
+		for(WallPlan wallPlan : outWalls) {
+			cachedWalls.put(wallPlan.getOrigin(), wallPlan);
+		}
+	}
+
 	/** Compute all walls Initialize currentInWall and currentOutWall Add currentOutWall to outWalls */
 	private void convertWalls () {
 		for (int i = 0; i < inWalls.size; i++) {
 			currentInWall = inWalls.get(i);
-			currentOutWall = new WallPlan();
+
+			currentOutWall = cachedWalls.get(inWalls.get(i));
+			if(currentOutWall == null) {
+				currentOutWall = new WallPlan();
+			}
+
 			currentOutWall.setOrigin(currentInWall);
 			outWalls.add(currentOutWall);
 
@@ -125,7 +140,7 @@ public class WallPlanConverter implements PlanConverter {
 	private Point getLineIntersection (Segment s0, Segment s1) {
 		Vector2 intersection = new Vector2();
 		Intersector.intersectLines(s0.point0.x, s0.point0.y, s0.point1.x, s0.point1.y, s1.point0.x, s1.point0.y, s1.point1.x,
-				s1.point1.y, intersection);
+			s1.point1.y, intersection);
 		return new Point(intersection);
 	}
 
@@ -178,11 +193,11 @@ public class WallPlanConverter implements PlanConverter {
 	private boolean isAngleValid (Wall sourceWall, Wall targetWall) {
 		Vector2 sourceWallVector = new Vector2();
 		Vector2 targetWallVector = new Vector2();
-		
+
 		sourceWall.dir(sourceWallVector);
 		targetWall.dir(targetWallVector);
-		
-		int angle = Math.abs(Math.round(sourceWallVector.angle(targetWallVector)));		
+
+		int angle = Math.abs(Math.round(sourceWallVector.angle(targetWallVector)));
 
 		if (angle >= 180 - ANGLE_MAX || angle <= ANGLE_MIN)
 			return false;

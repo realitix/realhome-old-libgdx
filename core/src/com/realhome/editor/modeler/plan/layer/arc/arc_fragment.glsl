@@ -1,10 +1,14 @@
 uniform vec2 u_pos;
 uniform vec2 u_posLeft;
 uniform vec2 u_posRight;
+uniform vec2 u_bubblePos;
+
+uniform vec4 u_color;
+uniform vec4 u_bubbleColor;
+uniform vec4 u_outlineColor;
 
 uniform float u_size;
-uniform vec4 u_color;
-uniform vec4 u_outlineColor;
+uniform float u_bubbleSize;
 uniform float u_outlineSize;
 
 varying vec2 v_pos;
@@ -51,6 +55,20 @@ bool isPosOutline(float distance) {
 	return isOutline(left, right, distance);
 }
 
+bool isBubble(float bubbleDistance) {
+	if(bubbleDistance <= u_bubbleSize) {
+		return true;
+	}
+	return false;
+}
+
+bool isBubbleOutline(float bubbleDistance) {
+	if(bubbleDistance <= u_bubbleSize + u_outlineSize) {
+		return true;
+	}
+	return false;
+}
+
 void main() {
 	vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
 	
@@ -58,8 +76,15 @@ void main() {
 	float distance_line_right = getDistanceFromLine(v_pos, u_pos, u_posRight);
 	
 	float d = distance(v_pos, u_pos);
+	float d2 = distance(v_pos, u_bubblePos);
 
-	if(isPosOutline(d)) {
+	if(isBubble(d2)) {
+		color = u_bubbleColor;
+	}
+	else if(isBubbleOutline(d2)) {
+		color = u_outlineColor;
+	}
+	else if(isPosOutline(d)) {
 		color = u_outlineColor;
 	}
 	else if(d <= u_size) {

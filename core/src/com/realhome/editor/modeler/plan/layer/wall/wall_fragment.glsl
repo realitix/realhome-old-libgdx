@@ -1,5 +1,5 @@
-uniform vec4 u_color;
 uniform vec2 u_tile;
+uniform vec4 u_color;
 uniform vec4 u_colorBack;
 uniform vec4 u_colorFront;
 uniform float u_lineWidth;

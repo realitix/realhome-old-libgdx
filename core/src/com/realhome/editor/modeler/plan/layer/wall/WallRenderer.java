@@ -32,7 +32,12 @@ public class WallRenderer implements Disposable {
 	private final Color backgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
 	private final Color lineColor = new Color(0.39f, 0.39f, 0.39f, 1f);
 	private final float lineWidth = 0.08f;
+
+	// Hatch paramerters
 	private final Vector2 tile = new Vector2(0.05f, 0.05f);
+	private final Vector2 tileScaled = new Vector2();
+	private final Vector2 originDiff = new Vector2();
+	private  float referenceSize = 500;
 
 	public WallRenderer () {
 		initShader();
@@ -105,20 +110,24 @@ public class WallRenderer implements Disposable {
 		}
 
 		size.set(max.x - min.x, max.y - min.y);
+		tileScaled.set(tile.x * referenceSize / size.x, tile.y * referenceSize / size.y);
+		originDiff.set(min.x, min.y);
 	}
 
 	private float uvX (float x) {
-		return (x - min.x) / size.x;
+		//return (x - min.x) / size.x;
+		return x / size.x;
 	}
 
 	private float uvY (float y) {
-		return (y - min.y) / size.y;
+		//return (y - min.y) / size.y;
+		return y / size.y;
 	}
 
 	public void render (Matrix4 projViewTrans) {
 		shader.begin();
 		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
-		shader.setUniformf("u_tile", tile.x, tile.y);
+		shader.setUniformf("u_tile", tileScaled.x, tileScaled.y);
 		shader.setUniformf("u_colorFront", lineColor.r, lineColor.g, lineColor.b, lineColor.a);
 		shader.setUniformf("u_colorBack", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		shader.setUniformf("u_lineWidth", lineWidth);

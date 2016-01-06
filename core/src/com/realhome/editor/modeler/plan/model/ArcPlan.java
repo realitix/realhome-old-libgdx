@@ -4,11 +4,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
+import com.realhome.editor.modeler.plan.PlanConfiguration;
 
 public class ArcPlan {
 
 	private HousePlan house;
 	private Point origin;
+	private Point bubblePoint = new Point();
 	private final Point[] points = new Point[4];
 
 	public ArcPlan() {
@@ -38,6 +40,16 @@ public class ArcPlan {
 		return points;
 	}
 
+	public Point getBubblePoint () {
+		return bubblePoint;
+	}
+
+	public void clearLabel() {
+		if( house.getLabels().containsKey(this) ) {
+			house.getLabels().remove(this);
+		}
+	}
+
 	private void compute() {
 		Point sourcePoint = origin;
 		Array<Wall> linkedWalls = new Array<Wall>();
@@ -52,7 +64,6 @@ public class ArcPlan {
 		if(linkedWalls.size < 2) return;
 
 		Vector2[] dirs = new Vector2[2];
-		float size = 100;
 
 		for(int i = 0; i < 2; i++) {
 			Wall w = linkedWalls.get(i);
@@ -63,22 +74,32 @@ public class ArcPlan {
 				p = w.getPoints()[1];
 
 			// Compute direction
-			dirs[i] = new Vector2().set(p.x, p.y).sub(sourcePoint.x, sourcePoint.y).nor().scl(size);
+			dirs[i] = new Vector2().set(p.x, p.y).sub(sourcePoint.x, sourcePoint.y).nor().scl(PlanConfiguration.Arc.size*1.5f);
 		}
 
-		Vector2 dirBis = dirs[0].cpy().add(dirs[1]).nor().scl(1.5f*size);
+		Vector2 dirBis = dirs[0].cpy().add(dirs[1]).nor();
 
 		// Compute points
 		points[0].set(sourcePoint);
 		points[1].set(sourcePoint).add(dirs[0]);
 		points[3].set(sourcePoint).add(dirs[1]);
-		points[2].set(sourcePoint).add(dirBis);
+		points[2].set(sourcePoint).add(dirBis.cpy().scl(2.25f * PlanConfiguration.Arc.size));
 
-		// Compute angle
-		int angle = (int)dirs[0].angle(dirs[1]);
+		// Compute label
+		int angle = Math.abs((int)dirs[0].angle(dirs[1]));
 		Point anglePos = new Point();
-		anglePos.set(sourcePoint);
+		anglePos.set(sourcePoint).add(dirBis.cpy().scl(10));
 
-		house.getLabels().put(this, new LabelPlan(this, Integer.toString(angle), anglePos));
+		if(house.getLabels().containsKey(this)) {
+			LabelPlan label = house.getLabels().get(this);
+			label.setPosition(anglePos);
+			label.setLabel(Integer.toString(angle));
+		}
+		else {
+			house.getLabels().put(this, new LabelPlan(this, Integer.toString(angle), anglePos));
+		}
+
+		// Compute bubble point
+		bubblePoint.set(sourcePoint).add(dirBis.cpy().scl(PlanConfiguration.Arc.size));
 	}
 }

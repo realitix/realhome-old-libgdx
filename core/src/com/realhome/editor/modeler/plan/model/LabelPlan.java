@@ -22,6 +22,10 @@ public class LabelPlan {
 		return this;
 	}
 
+	public LabelPlan setPosition (Point p) {
+		return setPosition(p.x, p.y);
+	}
+
 	public String getLabel () {
 		return label;
 	}

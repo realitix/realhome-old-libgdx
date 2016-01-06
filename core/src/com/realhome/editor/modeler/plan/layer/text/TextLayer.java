@@ -35,6 +35,7 @@ public class TextLayer extends BaseLayer {
 			case Action.OVER_WALL:
 			case Action.OVER_OUT:
 			case Action.OVER_POINT:
+			case Action.MOVE_POINT:
 				return true;
 		}
 		
