@@ -13,7 +13,7 @@ public class HouseInteractor {
 
 	public void selectPoint(Point point) {
 		house.setSelectedPoint(point);
-		house.getArcs().clear();
+		clearArcs();
 		if(point != null) computeSelectedPointArc(point);
 	}
 
@@ -34,7 +34,7 @@ public class HouseInteractor {
 			computeOverPointArc(point);
 		}
 		else {
-			house.getArcs().clear();
+			clearArcs();
 			house.removeOverPoint();
 		}
 	}
@@ -57,6 +57,12 @@ public class HouseInteractor {
 
 	public HousePlan getHouse() {
 		return house;
+	}
+
+	private void clearArcs() {
+		for(ArcPlan arc : house.getArcs())
+			arc.clearLabel();
+		house.getArcs().clear();
 	}
 
 	/**
@@ -101,7 +107,7 @@ public class HouseInteractor {
 	 * @param point
 	 */
 	private void computeOverPointArc(Point point) {
-		house.getArcs().clear();
+		clearArcs();
 
 		Wall pointWall = getWallForPoint(point);
 

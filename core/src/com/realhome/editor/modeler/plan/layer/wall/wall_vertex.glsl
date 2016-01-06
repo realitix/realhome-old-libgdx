@@ -1,7 +1,7 @@
+uniform mat4 u_projViewTrans;
+
 attribute vec2 a_position;
 attribute vec2 a_uv;
-
-uniform mat4 u_projViewTrans;
 
 varying vec2 v_uv;
 

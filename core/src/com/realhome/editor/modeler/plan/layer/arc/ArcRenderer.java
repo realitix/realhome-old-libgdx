@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.model.house.Point;
+import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.ArcPlan;
 
 public class ArcRenderer implements Disposable {
@@ -27,6 +28,7 @@ public class ArcRenderer implements Disposable {
 	private int id;
 	private boolean hasArc;
 	private final Color color = new Color(0, 0, 0, 0.2f);
+	private final Color bubbleColor = new Color(1, 1, 1, 1);
 	private final Color outlineColor = new Color(0.53f, 0.72f, 0.03f, 1);
 	private Array<ArcPlan> arcs;
 	private final ObjectMap<ArcPlan, Point[]> pointsMap = new ObjectMap<ArcPlan, Point[]>(3);
@@ -98,29 +100,30 @@ public class ArcRenderer implements Disposable {
 
 			shader.begin();
 			shader.setUniformMatrix("u_projViewTrans", projViewTrans);
-			shader.setUniformf("u_size", 80);
+			shader.setUniformf("u_size", PlanConfiguration.Arc.size);
+			shader.setUniformf("u_bubbleSize", PlanConfiguration.Arc.bubbleSize);
 			shader.setUniformf("u_color", color);
+			shader.setUniformf("u_bubbleColor", bubbleColor);
 			shader.setUniformf("u_outlineColor", outlineColor);
 			shader.setUniformf("u_outlineSize", 2f);
 
-
 			for(int i = 0; i < arcs.size; i++) {
-				setPos(shader, i);
+				Point[] points = pointsMap.get(arcs.get(i));
+				Point p = points[0];
+				Point pLeft = points[1];
+				Point pRight = points[3];
+				Point bubblePoint = arcs.get(i).getBubblePoint();
+
+				shader.setUniformf("u_pos", p.x, p.y);
+				shader.setUniformf("u_posLeft", pLeft.x, pLeft.y);
+				shader.setUniformf("u_posRight", pRight.x, pRight.y);
+				shader.setUniformf("u_bubblePos", bubblePoint.x, bubblePoint.y);
+
 				meshes.get(i).render(shader, GL20.GL_TRIANGLES);
 			}
+
 			shader.end();
 		}
-	}
-
-	private void setPos(ShaderProgram shader, int id) {
-		ArcPlan arc = arcs.get(id);
-		Point[] points = pointsMap.get(arc);
-		Point p = points[0];
-		Point pLeft = points[1];
-		Point pRight = points[3];
-		shader.setUniformf("u_pos", p.x, p.y);
-		shader.setUniformf("u_posLeft", pLeft.x, pLeft.y);
-		shader.setUniformf("u_posRight", pRight.x, pRight.y);
 	}
 
 	@Override
