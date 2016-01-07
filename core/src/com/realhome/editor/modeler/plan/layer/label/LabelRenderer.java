@@ -1,25 +1,25 @@
 
-package com.realhome.editor.modeler.plan.layer.text;
+package com.realhome.editor.modeler.plan.layer.label;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.LabelPlan;
 
-public class TextRenderer implements Disposable {
-	private final Color color = new Color(0, 0, 0, 0.2f);
+public class LabelRenderer implements Disposable {
 	private Array<LabelPlan> labels;
 	private BitmapFont bitmapFont;
 	private SpriteBatch batch;
 	private boolean hasLabel;
+	private GlyphLayout tmpGlyph = new GlyphLayout();
 
-	public TextRenderer() {
-		bitmapFont = new BitmapFont();
-		bitmapFont.setColor(1, 0, 0, 1);
-		bitmapFont.getData().setScale(2, 2);
+	public LabelRenderer() {
+		bitmapFont = new BitmapFont(Gdx.files.internal("style/plan_font/plan_font.fnt"));
 		batch = new SpriteBatch();
 	}
 
@@ -35,18 +35,21 @@ public class TextRenderer implements Disposable {
 			hasLabel = false;
 			return;
 		}
-
-
 	}
 
 	public void render (Matrix4 projViewTrans) {
 		updateCache();
 
 		if(hasLabel) {
+			bitmapFont.setColor(PlanConfiguration.Label.color);
+			bitmapFont.getData().setScale(PlanConfiguration.Label.scale, PlanConfiguration.Label.scale);
+
 			batch.setProjectionMatrix(projViewTrans);
 			batch.begin();
 			for(LabelPlan label : labels) {
-				bitmapFont.draw(batch, label.getLabel(), label.getPosition().x, label.getPosition().y);
+				tmpGlyph.setText(bitmapFont, label.getLabel());
+				float w = tmpGlyph.width/2, h = tmpGlyph.height/2;
+				bitmapFont.draw(batch, label.getLabel(), label.getPosition().x - w, label.getPosition().y + h);
 			}
 			batch.end();
 		}

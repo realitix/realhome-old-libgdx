@@ -1,7 +1,6 @@
 package com.realhome.editor.modeler.plan.layer.mask;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ShortArray;
 import com.realhome.editor.model.house.Point;
+import com.realhome.editor.modeler.plan.PlanConfiguration;
 
 public class MaskRenderer implements Disposable {
 	private Mesh mesh;
@@ -25,8 +25,6 @@ public class MaskRenderer implements Disposable {
 	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/mask/mask_fragment.glsl";
 
 	private final DelaunayTriangulator triangulator = new DelaunayTriangulator();
-
-	private final Color color = new Color(1, 1, 1, 1);
 
 	public MaskRenderer() {
 		initShader();
@@ -87,7 +85,7 @@ public class MaskRenderer implements Disposable {
 	public void render(Matrix4 projViewTrans) {
 		shader.begin();
 		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
-		shader.setUniformf("u_color", color);
+		shader.setUniformf("u_color", PlanConfiguration.Mask.color);
 		mesh.render(shader, GL20.GL_TRIANGLES);
 		shader.end();
 	}

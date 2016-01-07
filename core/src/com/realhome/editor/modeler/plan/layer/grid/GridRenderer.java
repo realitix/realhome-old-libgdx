@@ -1,7 +1,6 @@
 package com.realhome.editor.modeler.plan.layer.grid;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
@@ -11,14 +10,13 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.realhome.editor.modeler.plan.PlanConfiguration;
 
 public class GridRenderer {
 	private final int width;
 	private final int height;
 	private final int tileSize;
 	private Mesh mesh;
-	static private final float GREY = 0.5f;
-	private final Color color = new Color(GREY, GREY, GREY, GREY);
 
 
 	// Shader
@@ -86,7 +84,7 @@ public class GridRenderer {
 	public void render(Matrix4 projViewTrans) {
 		shader.begin();
 		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
-		shader.setUniformf("u_color", color);
+		shader.setUniformf("u_color", PlanConfiguration.Grid.color);
 		mesh.render(shader, GL20.GL_LINES);
 		shader.end();
 	}

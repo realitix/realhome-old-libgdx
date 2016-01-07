@@ -1,16 +1,16 @@
 
-package com.realhome.editor.modeler.plan.layer.text;
+package com.realhome.editor.modeler.plan.layer.label;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.layer.BaseLayer;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 
-public class TextLayer extends BaseLayer {
-	TextRenderer renderer;
+public class LabelLayer extends BaseLayer {
+	LabelRenderer renderer;
 
-	public TextLayer () {
-		renderer = new TextRenderer();
+	public LabelLayer () {
+		renderer = new LabelRenderer();
 	}
 
 	@Override

@@ -2,7 +2,6 @@
 package com.realhome.editor.modeler.plan.layer.over_wall;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
@@ -13,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.model.house.Point;
+import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.OverWallPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
@@ -28,11 +28,7 @@ public class OverWallRenderer implements Disposable {
 	private final Vector2 min = new Vector2();
 	private final Vector2 max = new Vector2();
 
-	private final int circleSize = 7;
-	private final int lineSize = 3;
 
-	private final Color circleColor = new Color(0.53f, 0.72f, 0.03f, 1);
-	private final Color lineColor = new Color(0.53f, 0.72f, 0.03f, 1);
 
 	private final WallPlan cachedWall = new WallPlan();
 	private OverWallPlan overWallPlan;
@@ -60,17 +56,17 @@ public class OverWallRenderer implements Disposable {
 		overWallPlan = hWall;
 		updateCache();
 	}
-	
+
 	private void updateCache() {
 		hasWall = true;
-		
+
 		if(overWallPlan == null) {
 			hasWall = false;
 			return;
 		}
-		
+
 		WallPlan wall = overWallPlan.getWall();
-		
+
 		if (wall == null ) {
 			hasWall = false;
 			return;
@@ -122,10 +118,10 @@ public class OverWallRenderer implements Disposable {
 		id += 2;
 	}
 
-	public void render (Matrix4 projViewTrans) {		
+	public void render (Matrix4 projViewTrans) {
 		if (hasWall) {
 			updateCache();
-			
+
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 
 			Point[] points = cachedWall.getOrigin().getPoints();
@@ -135,11 +131,10 @@ public class OverWallRenderer implements Disposable {
 			shader.setUniformf("u_p2", points[1].x, points[1].y);
 			shader.setUniformf("u_min", min.x, min.y);
 			shader.setUniformf("u_max", max.x, max.y);
-			shader.setUniformf("u_circleSize", circleSize);
-			shader.setUniformf("u_lineSize", lineSize);
-			shader.setUniformf("u_lineSize", lineSize);
-			shader.setUniformf("u_circleColor", circleColor.r, circleColor.g, circleColor.b, circleColor.a);
-			shader.setUniformf("u_lineColor", lineColor.r, lineColor.g, lineColor.b, lineColor.a);
+			shader.setUniformf("u_circleSize", PlanConfiguration.OverWall.circleSize);
+			shader.setUniformf("u_lineSize", PlanConfiguration.OverWall.lineSize);
+			shader.setUniformf("u_circleColor", PlanConfiguration.OverWall.circleColor);
+			shader.setUniformf("u_lineColor", PlanConfiguration.OverWall.lineColor);
 
 			mesh.render(shader, GL20.GL_TRIANGLES);
 			shader.end();

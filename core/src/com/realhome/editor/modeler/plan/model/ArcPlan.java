@@ -87,16 +87,17 @@ public class ArcPlan {
 
 		// Compute label
 		int angle = Math.abs((int)dirs[0].angle(dirs[1]));
+		String labelStr = Integer.toString(angle)+"°";
 		Point anglePos = new Point();
-		anglePos.set(sourcePoint).add(dirBis.cpy().scl(10));
+		anglePos.set(sourcePoint).add(dirBis.cpy().scl(PlanConfiguration.Arc.size));
 
 		if(house.getLabels().containsKey(this)) {
 			LabelPlan label = house.getLabels().get(this);
 			label.setPosition(anglePos);
-			label.setLabel(Integer.toString(angle));
+			label.setLabel(labelStr);
 		}
 		else {
-			house.getLabels().put(this, new LabelPlan(this, Integer.toString(angle), anglePos));
+			house.getLabels().put(this, new LabelPlan(this, labelStr, anglePos));
 		}
 
 		// Compute bubble point
