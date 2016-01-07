@@ -2,7 +2,6 @@
 package com.realhome.editor.modeler.plan.layer.arc;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
@@ -27,9 +26,6 @@ public class ArcRenderer implements Disposable {
 	private float[] vertices;
 	private int id;
 	private boolean hasArc;
-	private final Color color = new Color(0, 0, 0, 0.2f);
-	private final Color bubbleColor = new Color(1, 1, 1, 1);
-	private final Color outlineColor = new Color(0.53f, 0.72f, 0.03f, 1);
 	private Array<ArcPlan> arcs;
 	private final ObjectMap<ArcPlan, Point[]> pointsMap = new ObjectMap<ArcPlan, Point[]>(3);
 
@@ -102,10 +98,10 @@ public class ArcRenderer implements Disposable {
 			shader.setUniformMatrix("u_projViewTrans", projViewTrans);
 			shader.setUniformf("u_size", PlanConfiguration.Arc.size);
 			shader.setUniformf("u_bubbleSize", PlanConfiguration.Arc.bubbleSize);
-			shader.setUniformf("u_color", color);
-			shader.setUniformf("u_bubbleColor", bubbleColor);
-			shader.setUniformf("u_outlineColor", outlineColor);
-			shader.setUniformf("u_outlineSize", 2f);
+			shader.setUniformf("u_color", PlanConfiguration.Arc.color);
+			shader.setUniformf("u_bubbleColor", PlanConfiguration.Arc.bubbleColor);
+			shader.setUniformf("u_outlineColor", PlanConfiguration.Arc.outlineColor);
+			shader.setUniformf("u_outlineSize", PlanConfiguration.Arc.outlineSize);
 
 			for(int i = 0; i < arcs.size; i++) {
 				Point[] points = pointsMap.get(arcs.get(i));

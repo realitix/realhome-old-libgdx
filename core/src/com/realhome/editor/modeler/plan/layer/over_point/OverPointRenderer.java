@@ -2,7 +2,6 @@
 package com.realhome.editor.modeler.plan.layer.over_point;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.model.house.Point;
+import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.OverPointPlan;
 
 public class OverPointRenderer implements Disposable {
@@ -24,9 +24,6 @@ public class OverPointRenderer implements Disposable {
 	private float[] vertices;
 	private int id;
 	private boolean hasPoint;
-	private final Color color = new Color(0.53f, 0.72f, 0.03f, 1);
-	private final int circleSize = 7;
-	private final int borderSize = 4;
 	private OverPointPlan overPointPlan;
 
 	public OverPointRenderer () {
@@ -51,19 +48,19 @@ public class OverPointRenderer implements Disposable {
 		overPointPlan = hPoint;
 		updateCache();
 	}
-	
+
 	private void updateCache() {
 		hasPoint = true;
-		
+
 		if(overPointPlan == null) {
 			hasPoint = false;
 			return;
 		}
-		
+
 		// Compute vertices
 		id = 0;
 		Point[] points = overPointPlan.getPoints();
-		
+
 		if(points == null) {
 			hasPoint = false;
 			return;
@@ -89,18 +86,18 @@ public class OverPointRenderer implements Disposable {
 		id += 2;
 	}
 
-	public void render (Matrix4 projViewTrans) {		
+	public void render (Matrix4 projViewTrans) {
 		if(hasPoint) {
 			updateCache();
-			
+
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 
 			shader.begin();
 			shader.setUniformMatrix("u_projViewTrans", projViewTrans);
 			shader.setUniformf("u_point", overPointPlan.getPoint().x, overPointPlan.getPoint().y);
-			shader.setUniformf("u_color", color.r, color.g, color.b, color.a);
-			shader.setUniformf("u_circleSize", circleSize);
-			shader.setUniformf("u_borderSize", borderSize);
+			shader.setUniformf("u_color", PlanConfiguration.OverPoint.color);
+			shader.setUniformf("u_circleSize", PlanConfiguration.OverPoint.circleSize);
+			shader.setUniformf("u_borderSize", PlanConfiguration.OverPoint.borderSize);
 
 			mesh.render(shader, GL20.GL_TRIANGLES);
 			shader.end();

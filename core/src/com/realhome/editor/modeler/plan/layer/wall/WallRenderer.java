@@ -2,7 +2,6 @@
 package com.realhome.editor.modeler.plan.layer.wall;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.model.house.Point;
+import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class WallRenderer implements Disposable {
@@ -28,16 +28,8 @@ public class WallRenderer implements Disposable {
 	private final Vector2 min = new Vector2();
 	private final Vector2 max = new Vector2();
 	private final Vector2 size = new Vector2();
-
-	private final Color backgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
-	private final Color lineColor = new Color(0.39f, 0.39f, 0.39f, 1f);
-	private final float lineWidth = 0.08f;
-
-	// Hatch paramerters
-	private final Vector2 tile = new Vector2(0.05f, 0.05f);
 	private final Vector2 tileScaled = new Vector2();
 	private final Vector2 originDiff = new Vector2();
-	private  float referenceSize = 500;
 
 	public WallRenderer () {
 		initShader();
@@ -110,6 +102,9 @@ public class WallRenderer implements Disposable {
 		}
 
 		size.set(max.x - min.x, max.y - min.y);
+
+		Vector2 tile = PlanConfiguration.Wall.tile;
+		float referenceSize = PlanConfiguration.Wall.referenceSize;
 		tileScaled.set(tile.x * referenceSize / size.x, tile.y * referenceSize / size.y);
 		originDiff.set(min.x, min.y);
 	}
@@ -128,9 +123,9 @@ public class WallRenderer implements Disposable {
 		shader.begin();
 		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
 		shader.setUniformf("u_tile", tileScaled.x, tileScaled.y);
-		shader.setUniformf("u_colorFront", lineColor.r, lineColor.g, lineColor.b, lineColor.a);
-		shader.setUniformf("u_colorBack", backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-		shader.setUniformf("u_lineWidth", lineWidth);
+		shader.setUniformf("u_colorFront", PlanConfiguration.Wall.lineColor);
+		shader.setUniformf("u_colorBack", PlanConfiguration.Wall.backgroundColor);
+		shader.setUniformf("u_lineWidth", PlanConfiguration.Wall.lineWidth);
 		mesh.render(shader, GL20.GL_TRIANGLES);
 		shader.end();
 	}

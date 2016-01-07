@@ -17,10 +17,10 @@ import com.realhome.editor.modeler.plan.converter.ModelPlanConverter;
 import com.realhome.editor.modeler.plan.layer.Layer;
 import com.realhome.editor.modeler.plan.layer.arc.ArcLayer;
 import com.realhome.editor.modeler.plan.layer.grid.GridLayer;
+import com.realhome.editor.modeler.plan.layer.label.LabelLayer;
 import com.realhome.editor.modeler.plan.layer.mask.MaskLayer;
 import com.realhome.editor.modeler.plan.layer.over_point.OverPointLayer;
 import com.realhome.editor.modeler.plan.layer.over_wall.OverWallLayer;
-import com.realhome.editor.modeler.plan.layer.text.TextLayer;
 import com.realhome.editor.modeler.plan.layer.wall.WallLayer;
 import com.realhome.editor.modeler.plan.model.HouseInteractor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
@@ -72,7 +72,7 @@ public class PlanModeler implements Modeler {
 		layers.add(new OverWallLayer());
 		layers.add(new OverPointLayer());
 		layers.add(new ArcLayer());
-		layers.add(new TextLayer());
+		layers.add(new LabelLayer());
 	}
 
 	private void initActioners() {
