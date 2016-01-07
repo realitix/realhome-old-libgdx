@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 public class PlanConfiguration {
 
 	public static class Arc {
-		public static float size = 100;
-		public static float bubbleSize = 17;
+		public static float size = 120;
+		public static float bubbleSize = 30;
 		public static float outlineSize = 2;
 		public static Color color = new Color(0, 0, 0, 0.2f);
 		public static Color bubbleColor = new Color(1, 1, 1, 1);
@@ -22,8 +22,8 @@ public class PlanConfiguration {
 	}
 
 	public static class Label {
-		public static Color color = new Color(0.5f, 0.5f, 0.5f, 1);
-		public static float scale = 0.3f;
+		public static Color color = new Color(0.2f, 0.2f, 0.2f, 1);
+		public static float scale = 0.7f;
 	}
 
 	public static class Mask {

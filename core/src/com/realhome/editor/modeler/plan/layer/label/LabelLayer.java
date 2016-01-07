@@ -9,8 +9,8 @@ import com.realhome.editor.modeler.plan.model.HousePlan;
 public class LabelLayer extends BaseLayer {
 	LabelRenderer renderer;
 
-	public LabelLayer () {
-		renderer = new LabelRenderer();
+	public LabelLayer (OrthographicCamera camera) {
+		renderer = new LabelRenderer(camera);
 	}
 
 	@Override

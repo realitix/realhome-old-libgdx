@@ -72,7 +72,7 @@ public class PlanModeler implements Modeler {
 		layers.add(new OverWallLayer());
 		layers.add(new OverPointLayer());
 		layers.add(new ArcLayer());
-		layers.add(new LabelLayer());
+		layers.add(new LabelLayer(camera));
 	}
 
 	private void initActioners() {
