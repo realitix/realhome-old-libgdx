@@ -24,7 +24,7 @@ public class PointOverActioner implements Actioner {
 			int w = wall.getOrigin().getWidth();
 			for(Point point : wall.getOrigin().getPoints()) {
 				if( x <= point.x + w && x >= point.x - w && y <= point.y + w && y >= point.y - w) {
-					if( interactor.getHouse().getOverPoint().getPoint() != point ) {
+					if( interactor.getHouse().getOverPoint().getOrigin() != point ) {
 						interactor.overPoint(point);
 						interactor.overWall(null);
 					}
@@ -33,7 +33,7 @@ public class PointOverActioner implements Actioner {
 			}
 		}
 
-		if( interactor.getHouse().getOverPoint().getPoint() != null ) {
+		if( interactor.getHouse().getOverPoint().getOrigin() != null ) {
 			interactor.overPoint(null);
 			return Action.OVER_OUT;
 		}

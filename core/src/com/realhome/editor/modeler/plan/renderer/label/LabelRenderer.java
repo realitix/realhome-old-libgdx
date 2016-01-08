@@ -1,5 +1,5 @@
 
-package com.realhome.editor.modeler.plan.layer.label;
+package com.realhome.editor.modeler.plan.renderer.label;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -10,23 +10,20 @@ import com.badlogic.gdx.graphics.g2d.DistanceFieldFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
+import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.LabelPlan;
+import com.realhome.editor.modeler.plan.renderer.Renderer;
 
-public class LabelRenderer implements Disposable {
-	private Array<LabelPlan> labels;
+public class LabelRenderer implements Renderer {
+	private ObjectMap<Object, LabelPlan> labels;
 	private LabelBitmapFont bitmapFont;
 	private SpriteBatch batch;
 	private boolean hasLabel;
-	private OrthographicCamera camera;
 	private GlyphLayout tmpGlyph = new GlyphLayout();
 
-	public LabelRenderer(OrthographicCamera camera) {
-		this.camera = camera;
-
+	public LabelRenderer() {
 		Texture texture = new Texture(Gdx.files.internal("style/plan_font/plan_font.png"), true);
 		texture.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.Linear);
 
@@ -34,31 +31,33 @@ public class LabelRenderer implements Disposable {
 		batch = new SpriteBatch(500, LabelBitmapFont.createDistanceFieldShader());
 	}
 
-	public void update (Array<LabelPlan> labels) {
-		this.labels = labels;
-		updateCache();
+	@Override
+	public void init(HousePlan housePlan) {
+		this.labels = housePlan.getLabels();
 	}
 
-	private void updateCache() {
+	private void update() {
 		hasLabel = true;
 
-		if( labels == null || labels.size == 0 ) {
+		if( labels.size == 0 ) {
 			hasLabel = false;
 			return;
 		}
 	}
 
-	public void render (Matrix4 projViewTrans) {
-		updateCache();
+	@Override
+	public void render (OrthographicCamera camera) {
+		update();
 
 		if(hasLabel) {
 			bitmapFont.setDistanceFieldSmoothing(1/camera.zoom);
 			bitmapFont.setColor(PlanConfiguration.Label.color);
 			bitmapFont.getData().setScale(PlanConfiguration.Label.scale, PlanConfiguration.Label.scale);
 
-			batch.setProjectionMatrix(projViewTrans);
+			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
-			for(LabelPlan label : labels) {
+			for(ObjectMap.Entry<Object, LabelPlan> e : labels) {
+				LabelPlan label = e.value;
 				tmpGlyph.setText(bitmapFont, label.getLabel());
 				float w = tmpGlyph.width/2, h = tmpGlyph.height/2;
 				bitmapFont.draw(batch, label.getLabel(), label.getPosition().x - w, label.getPosition().y + h);

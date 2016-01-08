@@ -1,26 +1,27 @@
 
-package com.realhome.editor.modeler.plan.layer.over_point;
+package com.realhome.editor.modeler.plan.renderer.over_point;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
+import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.OverPointPlan;
+import com.realhome.editor.modeler.plan.renderer.Renderer;
 
-public class OverPointRenderer implements Disposable {
+public class OverPointRenderer implements Renderer {
 	private Mesh mesh;
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/over_point/overpoint_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/over_point/overpoint_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/modeler/plan/renderer/over_point/overpoint_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/modeler/plan/renderer/over_point/overpoint_fragment.glsl";
 	private float[] vertices;
 	private int id;
 	private boolean hasPoint;
@@ -29,6 +30,11 @@ public class OverPointRenderer implements Disposable {
 	public OverPointRenderer () {
 		initShader();
 		initMesh();
+	}
+
+	@Override
+	public void init(HousePlan housePlan) {
+		this.overPointPlan = housePlan.getOverPoint();
 	}
 
 	private void initShader () {
@@ -44,15 +50,10 @@ public class OverPointRenderer implements Disposable {
 		vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
 	}
 
-	public void update (OverPointPlan hPoint) {
-		overPointPlan = hPoint;
-		updateCache();
-	}
-
-	private void updateCache() {
+	private void update() {
 		hasPoint = true;
 
-		if(overPointPlan == null) {
+		if(overPointPlan.getOrigin() == null) {
 			hasPoint = false;
 			return;
 		}
@@ -86,15 +87,16 @@ public class OverPointRenderer implements Disposable {
 		id += 2;
 	}
 
-	public void render (Matrix4 projViewTrans) {
-		if(hasPoint) {
-			updateCache();
+	@Override
+	public void render (OrthographicCamera camera) {
+		update();
 
+		if(hasPoint) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 
 			shader.begin();
-			shader.setUniformMatrix("u_projViewTrans", projViewTrans);
-			shader.setUniformf("u_point", overPointPlan.getPoint().x, overPointPlan.getPoint().y);
+			shader.setUniformMatrix("u_projViewTrans", camera.combined);
+			shader.setUniformf("u_point", overPointPlan.getOrigin().x, overPointPlan.getOrigin().y);
 			shader.setUniformf("u_color", PlanConfiguration.OverPoint.color);
 			shader.setUniformf("u_circleSize", PlanConfiguration.OverPoint.circleSize);
 			shader.setUniformf("u_borderSize", PlanConfiguration.OverPoint.borderSize);

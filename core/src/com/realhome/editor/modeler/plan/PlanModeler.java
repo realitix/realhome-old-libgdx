@@ -14,22 +14,22 @@ import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.converter.ModelPlanConverter;
-import com.realhome.editor.modeler.plan.layer.Layer;
-import com.realhome.editor.modeler.plan.layer.arc.ArcLayer;
-import com.realhome.editor.modeler.plan.layer.grid.GridLayer;
-import com.realhome.editor.modeler.plan.layer.label.LabelLayer;
-import com.realhome.editor.modeler.plan.layer.mask.MaskLayer;
-import com.realhome.editor.modeler.plan.layer.over_point.OverPointLayer;
-import com.realhome.editor.modeler.plan.layer.over_wall.OverWallLayer;
-import com.realhome.editor.modeler.plan.layer.wall.WallLayer;
 import com.realhome.editor.modeler.plan.model.HouseInteractor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
+import com.realhome.editor.modeler.plan.renderer.Renderer;
+import com.realhome.editor.modeler.plan.renderer.arc.ArcRenderer;
+import com.realhome.editor.modeler.plan.renderer.grid.GridRenderer;
+import com.realhome.editor.modeler.plan.renderer.label.LabelRenderer;
+import com.realhome.editor.modeler.plan.renderer.mask.MaskRenderer;
+import com.realhome.editor.modeler.plan.renderer.over_point.OverPointRenderer;
+import com.realhome.editor.modeler.plan.renderer.over_wall.OverWallRenderer;
+import com.realhome.editor.modeler.plan.renderer.wall.WallRenderer;
 import com.realhome.editor.modeler.plan.util.CameraController;
 import com.realhome.editor.modeler.plan.util.PointMapper;
 
 public class PlanModeler implements Modeler {
 
-	private final Array<Layer> layers = new Array<Layer>();
+	private final Array<Renderer> renderers = new Array<Renderer>();
 	private final float VIRTUAL_HEIGHT = 1000; // centimeters
 	private OrthographicCamera camera;
 	private HousePlan housePlan;
@@ -61,18 +61,22 @@ public class PlanModeler implements Modeler {
 		houseInteractor = new HouseInteractor(housePlan);
 		converter = new ModelPlanConverter();
 
-		initLayers();
+		initRenderers();
 		initActioners();
 	}
 
-	private void initLayers() {
-		layers.add(new GridLayer());
-		layers.add(new MaskLayer());
-		layers.add(new WallLayer());
-		layers.add(new OverWallLayer());
-		layers.add(new OverPointLayer());
-		layers.add(new ArcLayer());
-		layers.add(new LabelLayer(camera));
+	private void initRenderers() {
+		renderers.add(new GridRenderer());
+		renderers.add(new MaskRenderer());
+		renderers.add(new WallRenderer());
+		renderers.add(new OverWallRenderer());
+		renderers.add(new OverPointRenderer());
+		renderers.add(new ArcRenderer());
+		renderers.add(new LabelRenderer());
+
+		for(Renderer renderer : renderers) {
+			renderer.init(housePlan);
+		}
 	}
 
 	private void initActioners() {
@@ -90,9 +94,6 @@ public class PlanModeler implements Modeler {
 	public void resize (int width, int height) {
 		pointMapper.updateViewport(width, height);
 		updateCameraViewport(VIRTUAL_HEIGHT * width / height, VIRTUAL_HEIGHT);
-		for (Layer layer : layers) {
-			layer.resize(width, height);
-		}
 	}
 
 	private void updateCameraViewport (float viewportWidth, float viewportHeight) {
@@ -103,15 +104,15 @@ public class PlanModeler implements Modeler {
 
 	@Override
 	public void render () {
-		for (Layer layer : layers) {
-			layer.render(camera);
+		for (Renderer renderer : renderers) {
+			renderer.render(camera);
 		}
 	}
 
 	@Override
 	public void dispose () {
-		for (Layer layer : layers) {
-			layer.dispose();
+		for (Renderer renderer : renderers) {
+			renderer.dispose();
 		}
 	}
 
@@ -119,10 +120,6 @@ public class PlanModeler implements Modeler {
 	public void reload (House house) {
 		this.house.sync(house);
 		converter.convert(this.house, housePlan, 0);
-
-		for (int i = 0; i < layers.size; i++) {
-			layers.get(i).reload(housePlan);
-		}
 	}
 
 	@Override
@@ -151,8 +148,8 @@ public class PlanModeler implements Modeler {
 			reload(house);
 		}
 
-		if(action != Action.EMPTY) sendActionsLayers(action);
-		else if (drag) moveCamera(x, y);
+		if(action == Action.EMPTY && drag)
+			moveCamera(x, y);
 
 		return PlanController.Action.EMPTY;
 	}
@@ -166,7 +163,6 @@ public class PlanModeler implements Modeler {
 			if(action != Action.EMPTY) break;
 		}
 
-		if(action != Action.EMPTY) sendActionsLayers(action);
 		cameraController.init(x, y);
 
 		return PlanController.Action.EMPTY;
@@ -185,16 +181,8 @@ public class PlanModeler implements Modeler {
 			if(action == Action.UNSELECT_WALL) {
 				return PlanController.Action.HOUSE_UPDATED;
 			}
-
-			sendActionsLayers(action);
 		}
 
 		return PlanController.Action.EMPTY;
-	}
-
-	private void sendActionsLayers(int action) {
-		for (int i = 0; i < layers.size; i++) {
-			layers.get(i).action(housePlan, action);
-		}
 	}
 }

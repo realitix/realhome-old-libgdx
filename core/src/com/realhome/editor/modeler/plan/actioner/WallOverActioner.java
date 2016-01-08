@@ -22,13 +22,13 @@ public class WallOverActioner implements Actioner {
 
 		for(WallPlan wall : interactor.getHouse().getWalls()) {
 			if(wall.pointInside(x, y)) {
-				if(interactor.getHouse().getOverWall().getWall() != wall)
+				if(interactor.getHouse().getOverWall().getOrigin() != wall)
 					interactor.overWall(wall);
 				return Action.OVER_WALL;
 			}
 		}
 
-		if( interactor.getHouse().getOverWall().getWall() != null ) {
+		if( interactor.getHouse().getOverWall().getOrigin() != null ) {
 			interactor.overWall(null);
 			return Action.OVER_OUT;
 		}

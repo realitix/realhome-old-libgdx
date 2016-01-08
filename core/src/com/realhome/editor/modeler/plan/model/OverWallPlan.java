@@ -15,11 +15,11 @@ public class OverWallPlan {
 		}
 	}
 
-	public void setWall(WallPlan wall) {
+	public void setOrigin(WallPlan wall) {
 		this.origin = wall;
 	}
 
-	public WallPlan getWall() {
+	public WallPlan getOrigin() {
 		return origin;
 	}
 
