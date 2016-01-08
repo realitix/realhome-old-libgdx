@@ -10,7 +10,7 @@ public class ArcPlan {
 
 	private HousePlan house;
 	private Point origin;
-	private Point bubblePoint = new Point();
+	private final Point bubblePoint = new Point();
 	private final Point[] points = new Point[4];
 
 	public ArcPlan() {
@@ -87,7 +87,7 @@ public class ArcPlan {
 
 		// Compute label
 		int angle = Math.abs((int)dirs[0].angle(dirs[1]));
-		String labelStr = Integer.toString(angle)+"°";
+		String labelStr = Integer.toString(angle)+Character.toString((char)0x00B0);
 		Point anglePos = new Point();
 		anglePos.set(sourcePoint).add(dirBis.cpy().scl(PlanConfiguration.Arc.size));
 
