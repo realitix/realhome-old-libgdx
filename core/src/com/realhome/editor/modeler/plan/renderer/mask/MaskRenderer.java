@@ -1,34 +1,41 @@
-package com.realhome.editor.modeler.plan.layer.mask;
+package com.realhome.editor.modeler.plan.renderer.mask;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.DelaunayTriangulator;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ShortArray;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
+import com.realhome.editor.modeler.plan.model.HousePlan;
+import com.realhome.editor.modeler.plan.renderer.Renderer;
 
-public class MaskRenderer implements Disposable {
+public class MaskRenderer implements Renderer {
 	private Mesh mesh;
+	private Array<Point> points;
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/mask/mask_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/mask/mask_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/modeler/plan/renderer/mask/mask_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/modeler/plan/renderer/mask/mask_fragment.glsl";
 
 	private final DelaunayTriangulator triangulator = new DelaunayTriangulator();
 
 	public MaskRenderer() {
 		initShader();
 		initMesh();
+	}
+
+	@Override
+	public void init(HousePlan housePlan) {
+		points = housePlan.getOutlinePoints();
 	}
 
 	private void initShader() {
@@ -43,7 +50,7 @@ public class MaskRenderer implements Disposable {
 		mesh = new Mesh(true, maxVertices, 0, new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE));
 	}
 
-	public void reload(Array<Point> points) {
+	public void update() {
 		// Create variables for triangulation
 		FloatArray floatPoints = new FloatArray();
 		ShortArray triangles = null;
@@ -82,9 +89,12 @@ public class MaskRenderer implements Disposable {
 		mesh.setVertices(vertices);
 	}
 
-	public void render(Matrix4 projViewTrans) {
+	@Override
+	public void render(OrthographicCamera camera) {
+		update();
+
 		shader.begin();
-		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
+		shader.setUniformMatrix("u_projViewTrans", camera.combined);
 		shader.setUniformf("u_color", PlanConfiguration.Mask.color);
 		mesh.render(shader, GL20.GL_TRIANGLES);
 		shader.end();

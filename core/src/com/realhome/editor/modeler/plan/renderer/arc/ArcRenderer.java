@@ -1,28 +1,29 @@
 
-package com.realhome.editor.modeler.plan.layer.arc;
+package com.realhome.editor.modeler.plan.renderer.arc;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.ArcPlan;
+import com.realhome.editor.modeler.plan.model.HousePlan;
+import com.realhome.editor.modeler.plan.renderer.Renderer;
 
-public class ArcRenderer implements Disposable {
+public class ArcRenderer implements Renderer {
 	private Array<Mesh> meshes = new Array<Mesh>(3);
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/arc/arc_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/arc/arc_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/modeler/plan/renderer/arc/arc_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/modeler/plan/renderer/arc/arc_fragment.glsl";
 	private float[] vertices;
 	private int id;
 	private boolean hasArc;
@@ -32,6 +33,11 @@ public class ArcRenderer implements Disposable {
 	public ArcRenderer () {
 		initShader();
 		initMeshes();
+	}
+
+	@Override
+	public void init(HousePlan housePlan) {
+		this.arcs = housePlan.getArcs();
 	}
 
 	private void initShader () {
@@ -48,15 +54,10 @@ public class ArcRenderer implements Disposable {
 		vertices = new float[maxVertices * (meshes.get(0).getVertexAttributes().vertexSize / 4)];
 	}
 
-	public void update (Array<ArcPlan> arcs) {
-		this.arcs = arcs;
-		updateCache();
-	}
-
-	private void updateCache() {
+	private void update() {
 		hasArc = true;
 
-		if( arcs == null || arcs.size == 0 ) {
+		if( arcs.size == 0 ) {
 			hasArc = false;
 			return;
 		}
@@ -87,15 +88,16 @@ public class ArcRenderer implements Disposable {
 		id += 2;
 	}
 
-	public void render (Matrix4 projViewTrans) {
-		updateCache();
+	@Override
+	public void render (OrthographicCamera camera) {
+		update();
 
 		if(hasArc) {
 
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 
 			shader.begin();
-			shader.setUniformMatrix("u_projViewTrans", projViewTrans);
+			shader.setUniformMatrix("u_projViewTrans", camera.combined);
 			shader.setUniformf("u_size", PlanConfiguration.Arc.size);
 			shader.setUniformf("u_bubbleSize", PlanConfiguration.Arc.bubbleSize);
 			shader.setUniformf("u_color", PlanConfiguration.Arc.color);

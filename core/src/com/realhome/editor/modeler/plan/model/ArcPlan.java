@@ -36,18 +36,12 @@ public class ArcPlan {
 	public Point[] getPoints () {
 		if(origin == null) return null;
 
-		compute();
+		//compute();
 		return points;
 	}
 
 	public Point getBubblePoint () {
 		return bubblePoint;
-	}
-
-	public void clearLabel() {
-		if( house.getLabels().containsKey(this) ) {
-			house.getLabels().remove(this);
-		}
 	}
 
 	private void compute() {

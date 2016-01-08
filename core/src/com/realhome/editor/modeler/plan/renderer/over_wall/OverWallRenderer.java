@@ -1,34 +1,33 @@
 
-package com.realhome.editor.modeler.plan.layer.over_wall;
+package com.realhome.editor.modeler.plan.renderer.over_wall;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
+import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.OverWallPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
+import com.realhome.editor.modeler.plan.renderer.Renderer;
 
-public class OverWallRenderer implements Disposable {
+public class OverWallRenderer implements Renderer {
 	private Mesh mesh;
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/over_wall/overwall_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/over_wall/overwall_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/modeler/plan/renderer/over_wall/overwall_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/modeler/plan/renderer/over_wall/overwall_fragment.glsl";
 	private float[] vertices;
 	private int id;
 	private final Vector2 min = new Vector2();
 	private final Vector2 max = new Vector2();
-
-
 
 	private final WallPlan cachedWall = new WallPlan();
 	private OverWallPlan overWallPlan;
@@ -37,6 +36,11 @@ public class OverWallRenderer implements Disposable {
 	public OverWallRenderer () {
 		initShader();
 		initMesh();
+	}
+
+	@Override
+	public void init(HousePlan housePlan) {
+		this.overWallPlan = housePlan.getOverWall();
 	}
 
 	private void initShader () {
@@ -52,20 +56,10 @@ public class OverWallRenderer implements Disposable {
 		vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
 	}
 
-	public void update (OverWallPlan hWall) {
-		overWallPlan = hWall;
-		updateCache();
-	}
-
-	private void updateCache() {
+	private void update() {
 		hasWall = true;
 
-		if(overWallPlan == null) {
-			hasWall = false;
-			return;
-		}
-
-		WallPlan wall = overWallPlan.getWall();
+		WallPlan wall = overWallPlan.getOrigin();
 
 		if (wall == null ) {
 			hasWall = false;
@@ -118,15 +112,16 @@ public class OverWallRenderer implements Disposable {
 		id += 2;
 	}
 
-	public void render (Matrix4 projViewTrans) {
-		if (hasWall) {
-			updateCache();
+	@Override
+	public void render (OrthographicCamera camera) {
+		update();
 
+		if (hasWall) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 
 			Point[] points = cachedWall.getOrigin().getPoints();
 			shader.begin();
-			shader.setUniformMatrix("u_projViewTrans", projViewTrans);
+			shader.setUniformMatrix("u_projViewTrans", camera.combined);
 			shader.setUniformf("u_p1", points[0].x, points[0].y);
 			shader.setUniformf("u_p2", points[1].x, points[1].y);
 			shader.setUniformf("u_min", min.x, min.y);

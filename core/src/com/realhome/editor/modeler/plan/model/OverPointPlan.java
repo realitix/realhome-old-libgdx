@@ -21,11 +21,11 @@ public class OverPointPlan {
 		return this;
 	}
 
-	public void setPoint(Point point) {
+	public void setOrigin(Point point) {
 		this.origin = point;
 	}
 
-	public Point getPoint() {
+	public Point getOrigin() {
 		return origin;
 	}
 

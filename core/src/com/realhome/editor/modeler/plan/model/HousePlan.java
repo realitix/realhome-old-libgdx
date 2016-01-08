@@ -39,7 +39,7 @@ public class HousePlan {
 	}
 
 	public HousePlan setOverWall(WallPlan wall) {
-		this.overWall.setWall(wall);
+		this.overWall.setOrigin(wall);
 		return this;
 	}
 
@@ -53,7 +53,7 @@ public class HousePlan {
 	}
 
 	public HousePlan setOverPoint(Point point) {
-		this.overPoint.setPoint(point);
+		this.overPoint.setOrigin(point);
 		return this;
 	}
 

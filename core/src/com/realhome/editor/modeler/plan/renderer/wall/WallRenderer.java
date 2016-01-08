@@ -1,39 +1,46 @@
 
-package com.realhome.editor.modeler.plan.layer.wall;
+package com.realhome.editor.modeler.plan.renderer.wall;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
+import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
+import com.realhome.editor.modeler.plan.renderer.Renderer;
 
-public class WallRenderer implements Disposable {
+public class WallRenderer implements Renderer {
 	private Mesh mesh;
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/layer/wall/wall_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/layer/wall/wall_fragment.glsl";
+	private static final String vertexShader = "com/realhome/editor/modeler/plan/renderer/wall/wall_vertex.glsl";
+	private static final String fragmentShader = "com/realhome/editor/modeler/plan/renderer/wall/wall_fragment.glsl";
 	private int id = 0;
 	private final Vector2 min = new Vector2();
 	private final Vector2 max = new Vector2();
 	private final Vector2 size = new Vector2();
 	private final Vector2 tileScaled = new Vector2();
 	private final Vector2 originDiff = new Vector2();
+	private Array<WallPlan> walls;
 
 	public WallRenderer () {
 		initShader();
 		initMesh();
+	}
+
+	@Override
+	public void init(HousePlan housePlan) {
+		this.walls = housePlan.getWalls();
 	}
 
 	private void initShader () {
@@ -50,7 +57,7 @@ public class WallRenderer implements Disposable {
 		mesh = new Mesh(true, maxVertices, 0, a);
 	}
 
-	public void reload (Array<WallPlan> walls) {
+	public void update () {
 		initUv(walls);
 
 		// 6 points for each wall (2 triangles)
@@ -119,9 +126,12 @@ public class WallRenderer implements Disposable {
 		return y / size.y;
 	}
 
-	public void render (Matrix4 projViewTrans) {
+	@Override
+	public void render (OrthographicCamera camera) {
+		update();
+
 		shader.begin();
-		shader.setUniformMatrix("u_projViewTrans", projViewTrans);
+		shader.setUniformMatrix("u_projViewTrans", camera.combined);
 		shader.setUniformf("u_tile", tileScaled.x, tileScaled.y);
 		shader.setUniformf("u_colorFront", PlanConfiguration.Wall.lineColor);
 		shader.setUniformf("u_colorBack", PlanConfiguration.Wall.backgroundColor);
