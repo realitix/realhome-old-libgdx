@@ -14,7 +14,7 @@ import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.converter.ModelPlanConverter;
-import com.realhome.editor.modeler.plan.model.HouseInteractor;
+import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.renderer.Renderer;
 import com.realhome.editor.modeler.plan.renderer.arc.ArcRenderer;
@@ -34,7 +34,7 @@ public class PlanModeler implements Modeler {
 	private OrthographicCamera camera;
 	private HousePlan housePlan;
 	private House house;
-	private HouseInteractor houseInteractor;
+	private Interactor houseInteractor;
 	private ModelPlanConverter converter;
 	private final Array<Actioner> actioners = new Array<Actioner>();
 	private PointMapper pointMapper;
@@ -58,7 +58,7 @@ public class PlanModeler implements Modeler {
 
 		house = new House();
 		housePlan = new HousePlan();
-		houseInteractor = new HouseInteractor(housePlan);
+		houseInteractor = new Interactor(house, housePlan);
 		converter = new ModelPlanConverter();
 
 		initRenderers();

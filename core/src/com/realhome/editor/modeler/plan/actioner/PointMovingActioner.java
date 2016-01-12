@@ -5,11 +5,11 @@ import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
-import com.realhome.editor.modeler.plan.model.HouseInteractor;
+import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class PointMovingActioner implements Actioner {
-	private HouseInteractor interactor;
+	private Interactor interactor;
 
 	private final Point tmp = new Point();
 	private final Vector2 lastLocation = new Vector2();
@@ -17,7 +17,7 @@ public class PointMovingActioner implements Actioner {
 	private final Array<Point> tmpPoints = new Array<Point>();
 
 	@Override
-	public Actioner init (HouseInteractor interactor) {
+	public Actioner init (Interactor interactor) {
 		this.interactor = interactor;
 		return this;
 	}
