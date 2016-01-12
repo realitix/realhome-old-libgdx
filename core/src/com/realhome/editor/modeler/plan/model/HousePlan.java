@@ -47,11 +47,6 @@ public class HousePlan {
 		return this.overWall;
 	}
 
-	public HousePlan removeOverWall() {
-		this.overWall.clear();
-		return this;
-	}
-
 	public HousePlan setOverPoint(Point point) {
 		this.overPoint.setOrigin(point);
 		return this;
@@ -59,11 +54,6 @@ public class HousePlan {
 
 	public OverPointPlan getOverPoint() {
 		return this.overPoint;
-	}
-
-	public HousePlan removeOverPoint() {
-		this.overPoint.clear();
-		return this;
 	}
 
 	public Array<WallPlan> getWalls () {

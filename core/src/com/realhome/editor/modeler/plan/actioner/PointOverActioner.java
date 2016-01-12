@@ -2,15 +2,15 @@ package com.realhome.editor.modeler.plan.actioner;
 
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.actioner.util.Action;
-import com.realhome.editor.modeler.plan.model.HouseInteractor;
+import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class PointOverActioner implements Actioner {
-	private HouseInteractor interactor;
+	private Interactor interactor;
 	private boolean dragging;
 
 	@Override
-	public Actioner init(HouseInteractor interactor) {
+	public Actioner init(Interactor interactor) {
 		this.interactor = interactor;
 		return this;
 	}
@@ -21,7 +21,7 @@ public class PointOverActioner implements Actioner {
 			return Action.EMPTY;
 
 		for(WallPlan wall : interactor.getHouse().getWalls()) {
-			int w = wall.getOrigin().getWidth();
+			int w = wall.getOrigin().getWidth() /2;
 			for(Point point : wall.getOrigin().getPoints()) {
 				if( x <= point.x + w && x >= point.x - w && y <= point.y + w && y >= point.y - w) {
 					if( interactor.getHouse().getOverPoint().getOrigin() != point ) {

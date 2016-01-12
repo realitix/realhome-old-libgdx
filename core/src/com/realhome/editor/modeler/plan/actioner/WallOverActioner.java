@@ -1,16 +1,16 @@
 package com.realhome.editor.modeler.plan.actioner;
 
 import com.realhome.editor.modeler.plan.actioner.util.Action;
-import com.realhome.editor.modeler.plan.model.HouseInteractor;
+import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class WallOverActioner implements Actioner {
-	private HouseInteractor interactor;
+	private Interactor interactor;
 	private boolean dragging;
 
 	@Override
-	public Actioner init(HouseInteractor interactor) {
+	public Actioner init(Interactor interactor) {
 		this.interactor = interactor;
 		return this;
 	}
