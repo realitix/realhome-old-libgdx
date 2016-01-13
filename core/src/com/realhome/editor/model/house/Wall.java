@@ -1,6 +1,8 @@
 
 package com.realhome.editor.model.house;
 
+import java.util.Arrays;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
@@ -125,19 +127,21 @@ public class Wall extends BaseModel {
 		return null;
 	}
 
-	public boolean equals(Wall other) {
-		if( other == this ) return true;
-		if( other.points[0].equals(points[0]) &&
-			other.points[1].equals(points[1]) &&
-			other.type == type &&
-			other.height == height &&
-			other.width == width)
-			return true;
-		return false;
-	}
-	
 	@Override
 	public String toString() {
 		return "( "+points[0]+" : "+points[1]+" )";
+	}
+
+	@Override
+	public boolean equals (Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof Wall)) return false;
+		Wall other = (Wall)obj;
+		if (Float.floatToIntBits(height) != Float.floatToIntBits(other.height)) return false;
+		if (!Arrays.equals(points, other.points)) return false;
+		if (type != other.type) return false;
+		if (width != other.width) return false;
+		return true;
 	}
 }

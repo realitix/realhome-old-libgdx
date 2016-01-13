@@ -4,7 +4,6 @@ package com.realhome.editor.modeler.plan;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.controller.PlanController;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.Modeler;
 import com.realhome.editor.modeler.plan.actioner.Actioner;
@@ -12,8 +11,6 @@ import com.realhome.editor.modeler.plan.actioner.PointMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.PointOverActioner;
 import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
-import com.realhome.editor.modeler.plan.actioner.util.Action;
-import com.realhome.editor.modeler.plan.converter.ModelPlanConverter;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.renderer.Renderer;
@@ -35,7 +32,6 @@ public class PlanModeler implements Modeler {
 	private HousePlan housePlan;
 	private House house;
 	private Interactor houseInteractor;
-	private ModelPlanConverter converter;
 	private final Array<Actioner> actioners = new Array<Actioner>();
 	private PointMapper pointMapper;
 	private CameraController cameraController;
@@ -59,7 +55,6 @@ public class PlanModeler implements Modeler {
 		house = new House();
 		housePlan = new HousePlan();
 		houseInteractor = new Interactor(house, housePlan);
-		converter = new ModelPlanConverter();
 
 		initRenderers();
 		initActioners();
@@ -119,7 +114,7 @@ public class PlanModeler implements Modeler {
 	@Override
 	public void reload (House house) {
 		this.house.sync(house);
-		converter.convert(this.house, housePlan, 0);
+		houseInteractor.update();
 	}
 
 	@Override
@@ -135,54 +130,42 @@ public class PlanModeler implements Modeler {
 		cameraController.zoom(z);
 	}
 
-	public int move(float x, float y, boolean drag) {
+	public boolean move(float x, float y, boolean drag) {
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
-		int action = Action.EMPTY;
+		boolean action = false;
 		for (Actioner actioner : actioners) {
 			action = actioner.move((int) c.x, (int)c.y);
-			if(action != Action.EMPTY) break;
+			if(action) break;
 		}
 
-		if(action == Action.MOVE_POINT || action == Action.MOVE_WALL) {
-			reload(house);
-		}
-
-		if(action == Action.EMPTY && drag)
+		if(!action && drag)
 			moveCamera(x, y);
 
-		return PlanController.Action.EMPTY;
+		return false;
 	}
 
-	public int click(float x, float y) {
+	public boolean click(float x, float y) {
 		Vector2 c = pointMapper.screenToWorld(x, y);
-
-		int action = Action.EMPTY;
-		for (Actioner actioner : actioners) {
-			action = actioner.click((int) c.x, (int)c.y);
-			if(action != Action.EMPTY) break;
-		}
 
 		cameraController.init(x, y);
 
-		return PlanController.Action.EMPTY;
+		for (Actioner actioner : actioners) {
+			if(actioner.click((int) c.x, (int)c.y))
+				return true;
+		}
+
+		return false;
 	}
 
-	public int unclick(float x, float y) {
+	public boolean unclick(float x, float y) {
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
-		int action = Action.EMPTY;
 		for (Actioner actioner : actioners) {
-			action = actioner.unclick((int) c.x, (int)c.y);
-			if(action != Action.EMPTY) break;
+			if( actioner.unclick((int) c.x, (int)c.y) )
+				return true;
 		}
 
-		if(action != Action.EMPTY) {
-			if(action == Action.UNSELECT_WALL) {
-				return PlanController.Action.HOUSE_UPDATED;
-			}
-		}
-
-		return PlanController.Action.EMPTY;
+		return false;
 	}
 }

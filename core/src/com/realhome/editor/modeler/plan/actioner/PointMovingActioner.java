@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
-import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
@@ -23,24 +22,24 @@ public class PointMovingActioner implements Actioner {
 	}
 
 	@Override
-	public int move (int x, int y) {
-		if(interactor.getHouse().getSelectedPoint() == null)
-			return Action.EMPTY;
+	public boolean move (int x, int y) {
+		if(interactor.getHousePlan().getSelectedPoint() == null)
+			return false;
 
 		delta.set(lastLocation.x - x, lastLocation.y - y).scl(-1);
 		movePointDelta((int) -(lastLocation.x - x), (int) -(lastLocation.y - y));
 		lastLocation.set(x, y);
 
-		return Action.MOVE_POINT;
+		return true;
 	}
 
 	private void movePointDelta(int x, int y) {
-		Point sp = interactor.getHouse().getSelectedPoint();
+		Point sp = interactor.getHousePlan().getSelectedPoint();
 
 		tmpPoints.clear();
 		tmpPoints.add(sp);
 
-		for(WallPlan wallPlan : interactor.getHouse().getWalls()) {
+		for(WallPlan wallPlan : interactor.getHousePlan().getWalls()) {
 			Wall wall = wallPlan.getOrigin();
 			for(Point point : wall.getPoints()) {
 				if(point != sp && point.equals(sp)) {
@@ -55,28 +54,28 @@ public class PointMovingActioner implements Actioner {
 	}
 
 	@Override
-	public int click (int x, int y) {
+	public boolean click (int x, int y) {
 		tmp.set(x, y);
 		lastLocation.set(x, y);
 
-		for(WallPlan wall : interactor.getHouse().getWalls()) {
+		for(WallPlan wall : interactor.getHousePlan().getWalls()) {
 			Point point = wall.pointInWallPoint(x, y);
 			if( point != null ) {
 				interactor.selectPoint(point);
-				return Action.SELECT_POINT;
+				return true;
 			}
 		}
 
-		return Action.EMPTY;
+		return false;
 	}
 
 	@Override
-	public int unclick (int x, int y) {
-		if(interactor.getHouse().getSelectedPoint() != null) {
+	public boolean unclick (int x, int y) {
+		if(interactor.getHousePlan().getSelectedPoint() != null) {
 			interactor.selectPoint(null);
-			return Action.UNSELECT_POINT;
+			return true;
 		}
 
-		return Action.EMPTY;
+		return false;
 	}
 }

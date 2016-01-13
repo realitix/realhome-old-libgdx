@@ -10,8 +10,8 @@ public interface Actioner {
 	/**
 	 * Return null if no action trigerred
 	 */
-	public int move(int x, int y);
-	public int click(int x, int y);
-	public int unclick(int x, int y);
+	public boolean move(int x, int y);
+	public boolean click(int x, int y);
+	public boolean unclick(int x, int y);
 	public Actioner init(Interactor interactor);
 }

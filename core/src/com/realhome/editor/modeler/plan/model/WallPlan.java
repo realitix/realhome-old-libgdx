@@ -17,6 +17,11 @@ public class WallPlan {
 	private int type;
 	private Wall origin;
 
+	public WallPlan (Wall origin) {
+		this();
+		this.origin = origin;
+	}
+
 	public WallPlan () {
 		for (int i = 0; i < points.length; i++) {
 			points[i] = new Point();
@@ -54,7 +59,7 @@ public class WallPlan {
 	public Point[] getPoints() {
 		return points;
 	}
-	
+
 	public boolean pointInside(int x, int y) {
 		if(Intersector.isPointInTriangle(
 			x, y,
@@ -70,18 +75,18 @@ public class WallPlan {
 			return true;
 		return false;
 	}
-	
+
 	public Point pointInWallPoint(int x, int y) {
 		int width = origin.getWidth() / 2;
-		
+
 		for(int i = 0; i < origin.getPoints().length; i++) {
 			int xPoint = origin.getPoints()[i].x;
 			int yPoint = origin.getPoints()[i].y;
-			
+
 			if( x >= xPoint - width && x <= xPoint + width && y >= yPoint - width && y <= yPoint + width)
 				return origin.getPoints()[i];
 		}
-		
+
 		return null;
 	}
 

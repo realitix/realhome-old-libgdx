@@ -1,39 +1,35 @@
-package com.realhome.editor.modeler.plan.converter;
+package com.realhome.editor.modeler.plan.interactor;
 
 import java.util.Comparator;
 import java.util.Stack;
 import java.util.TreeSet;
 
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.model.house.House;
 import com.realhome.editor.model.house.Point;
-import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
-/**
- * Use the Graham Scan to find outline points
- */
-public class OutlinePlanConverter implements PlanConverter {
+public class OutlineInteractor {
 
-	/**
-	 * Must be called after WallPlanconverter
-	 */
-	@Override
-	public void convert (House houseIn, HousePlan houseOut) {
-		Array<Point> points = getWallsPoints(houseOut.getWalls());
-		Array<Point> outlinePoints = houseOut.getOutlinePoints();
+	private Interactor interactor;
+
+	public OutlineInteractor(Interactor interactor) {
+		this.interactor = interactor;
+	}
+
+	public void compute() {
+		Array<Point> points = getWallsPoints();
+		Array<Point> outlinePoints = interactor.getHousePlan().getOutlinePoints();
 		Array<Point> newOutlinePoints = GrahamScan.getConvexHull(points);
 
 		outlinePoints.clear();
 		outlinePoints.addAll(newOutlinePoints);
 	}
 
-	private Array<Point> getWallsPoints(Array<WallPlan> walls) {
+	private Array<Point> getWallsPoints() {
 		Array<Point> points = new Array<Point>();
-		for(int i = 0; i < walls.size; i++) {
-			WallPlan w = walls.get(i);
-			for(int j = 0; j < w.getPoints().length; j++) {
-				points.add(new Point(w.getPoints()[j]));
+		for(WallPlan w : interactor.getHousePlan().getWalls()) {
+			for(Point p : w.getPoints()) {
+				points.add(new Point(p));
 			}
 		}
 
@@ -193,5 +189,4 @@ public class OutlinePlanConverter implements PlanConverter {
 			}
 		}
 	}
-
 }

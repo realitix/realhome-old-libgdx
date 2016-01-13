@@ -60,4 +60,16 @@ public class House {
 		this.floors.removeValue(floor, true);
 		return this;
 	}
+
+	@Override
+	public boolean equals (Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof House)) return false;
+		House other = (House)obj;
+		if (floors == null) {
+			if (other.floors != null) return false;
+		} else if (!floors.equals(other.floors)) return false;
+		return true;
+	}
 }

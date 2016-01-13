@@ -59,11 +59,8 @@ public class PlanController extends BaseController<PlanView> {
 
 		@Override
 		public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-			int action = view.unclick(x, y);
-
-			if( action == Action.HOUSE_UPDATED ) {
+			if(view.unclick(x, y))
 				syncHouses();
-			}
 		}
 
 		@Override
