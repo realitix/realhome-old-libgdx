@@ -65,4 +65,16 @@ public class Floor extends BaseModel {
 		walls.removeValue(wall, true);
 		return this;
 	}
+
+	@Override
+	public boolean equals (Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof Floor)) return false;
+		Floor other = (Floor)obj;
+		if (walls == null) {
+			if (other.walls != null) return false;
+		} else if (!walls.equals(other.walls)) return false;
+		return true;
+	}
 }

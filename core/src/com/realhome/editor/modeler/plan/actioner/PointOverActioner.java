@@ -1,7 +1,6 @@
 package com.realhome.editor.modeler.plan.actioner;
 
 import com.realhome.editor.model.house.Point;
-import com.realhome.editor.modeler.plan.actioner.util.Action;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
@@ -16,40 +15,40 @@ public class PointOverActioner implements Actioner {
 	}
 
 	@Override
-	public int move(int x, int y) {
+	public boolean move(int x, int y) {
 		if(dragging)
-			return Action.EMPTY;
+			return false;
 
-		for(WallPlan wall : interactor.getHouse().getWalls()) {
+		for(WallPlan wall : interactor.getHousePlan().getWalls()) {
 			int w = wall.getOrigin().getWidth() /2;
 			for(Point point : wall.getOrigin().getPoints()) {
 				if( x <= point.x + w && x >= point.x - w && y <= point.y + w && y >= point.y - w) {
-					if( interactor.getHouse().getOverPoint().getOrigin() != point ) {
+					if( interactor.getHousePlan().getOverPoint().getOrigin() != point ) {
 						interactor.overPoint(point);
 						interactor.overWall(null);
 					}
-					return Action.OVER_POINT;
+					return true;
 				}
 			}
 		}
 
-		if( interactor.getHouse().getOverPoint().getOrigin() != null ) {
+		if( interactor.getHousePlan().getOverPoint().getOrigin() != null ) {
 			interactor.overPoint(null);
-			return Action.OVER_OUT;
+			return true;
 		}
 
-		return Action.EMPTY;
+		return false;
 	}
 
 	@Override
-	public int click(int x, int y) {
+	public boolean click(int x, int y) {
 		dragging = true;
-		return Action.EMPTY;
+		return false;
 	}
 
 	@Override
-	public int unclick(int x, int y) {
+	public boolean unclick(int x, int y) {
 		dragging = false;
-		return Action.EMPTY;
+		return false;
 	}
 }

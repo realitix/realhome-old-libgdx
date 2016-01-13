@@ -54,15 +54,15 @@ public class PlanView extends BaseView<PlanWidget> {
 		actor.zoomCamera(z);
 	}
 
-	public int move(float x, float y, boolean drag) {
+	public boolean move(float x, float y, boolean drag) {
 		return actor.move(x, y, drag);
 	}
 
-	public int click(float x, float y) {
+	public boolean click(float x, float y) {
 		return actor.click(x, y);
 	}
 
-	public int unclick(float x, float y) {
+	public boolean unclick(float x, float y) {
 		return actor.unclick(x, y);
 	}
 }

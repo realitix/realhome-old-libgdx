@@ -21,19 +21,19 @@ public class PlanWidget extends ModelerWidget<PlanModeler> {
 		modeler.zoomCamera(z);
 	}
 
-	public int move(float x, float y, boolean drag) {
+	public boolean move(float x, float y, boolean drag) {
 		tmpV2.set(x, y);
 		this.getStage().stageToScreenCoordinates(tmpV2);
 		return modeler.move(tmpV2.x, tmpV2.y, drag);
 	}
 
-	public int click(float x, float y) {
+	public boolean click(float x, float y) {
 		tmpV2.set(x, y);
 		this.getStage().stageToScreenCoordinates(tmpV2);
 		return modeler.click(tmpV2.x, tmpV2.y);
 	}
 
-	public int unclick(float x, float y) {
+	public boolean unclick(float x, float y) {
 		tmpV2.set(x, y);
 		this.getStage().stageToScreenCoordinates(tmpV2);
 		return modeler.unclick(tmpV2.x, tmpV2.y);
