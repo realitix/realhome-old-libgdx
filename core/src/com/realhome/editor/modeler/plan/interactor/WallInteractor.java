@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
+import com.realhome.editor.modeler.plan.model.LabelPlan;
+import com.realhome.editor.modeler.plan.model.MeasurePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class WallInteractor {
@@ -228,10 +230,75 @@ public class WallInteractor {
 	}
 
 	private void computeMeasure(WallPlan wall) {
-		Vector2 normal = wall.getOrigin().dir(new Vector2()).rotate90(1);
-		
-		// First measure
-		Point[] firstPoints = new Point[] {wall.getPoints()[0], wall.getPoints()[1]};
+		Array<MeasurePlan> findedMeasures = new Array<MeasurePlan>(2);
+		Array<MeasurePlan> measures = interactor.getHousePlan().getMeasures();
 
+		for(MeasurePlan measure : measures) {
+			if(measure.getOrigin() == wall) {
+				findedMeasures.add(measure);
+			}
+		}
+
+		// if not measure yet
+		if(findedMeasures.size == 0) {
+			findedMeasures.add(new MeasurePlan(wall));
+			findedMeasures.add(new MeasurePlan(wall));
+
+			interactor.getHousePlan().getMeasures().add(findedMeasures.get(0));
+			interactor.getHousePlan().getMeasures().add(findedMeasures.get(1));
+		}
+
+		computeMeasure(findedMeasures.get(0), wall.getPoints()[0], wall.getPoints()[2]);
+		computeMeasure(findedMeasures.get(1), wall.getPoints()[3], wall.getPoints()[1]);
+	}
+
+	private void computeMeasure(MeasurePlan measure, Point point0, Point point1) {
+		Vector2 dir = new Vector2(point1.x, point1.y).sub(point0.x, point0.y);
+		int size = (int)dir.len();
+		Vector2 normal = dir.nor().cpy().rotate90(1).scl(10);
+		measure.setSize(size);
+		Array<Point> measurePoints = measure.getPoints();
+
+		float gap = 25;
+
+		// Left line
+		measurePoints.get(0).set(point0).add(normal);
+		measurePoints.get(1).set(point0).add(normal).add(dir.cpy().scl(size/2 - gap));
+
+		// Right line
+		measurePoints.get(2).set(point1).add(normal);
+		measurePoints.get(3).set(point1).add(normal).sub(dir.cpy().scl(size/2 - gap));
+
+		float angleArrow = 45;
+		float sizeArrow = 10;
+
+		// Left Arrow
+		Vector2 dirArrow = new Vector2(dir).nor().rotate(angleArrow).scl(sizeArrow);
+		Vector2 dirArrow2 = new Vector2(dir).nor().rotate(-angleArrow).scl(sizeArrow);
+		measurePoints.get(4).set(point0).add(normal);
+		measurePoints.get(5).set(point0).add(normal).add(dirArrow);
+		measurePoints.get(6).set(point0).add(normal);
+		measurePoints.get(7).set(point0).add(normal).add(dirArrow2);
+
+		// Right Arrow
+		dirArrow.rotate90(1).rotate90(1);
+		dirArrow2.rotate90(1).rotate90(1);
+		measurePoints.get(8).set(point1).add(normal);
+		measurePoints.get(9).set(point1).add(normal).add(dirArrow);
+		measurePoints.get(10).set(point1).add(normal);
+		measurePoints.get(11).set(point1).add(normal).add(dirArrow2);
+
+		// the text must always be at the good side
+		float angleLabel = dir.angle();
+		if(angleLabel > 90 && angleLabel < 270)
+			angleLabel = (angleLabel + 180) % 360;
+
+
+		LabelPlan label = new LabelPlan(measure,
+			Integer.toString(measure.getSize()),
+			point0.cpy().add(dir.cpy().scl(size/2)).add(normal.cpy().nor().scl(14)),
+			angleLabel);
+
+		interactor.getHousePlan().getLabels().put(measure, label);
 	}
 }

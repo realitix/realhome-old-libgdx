@@ -18,6 +18,7 @@ import com.realhome.editor.modeler.plan.renderer.arc.ArcRenderer;
 import com.realhome.editor.modeler.plan.renderer.grid.GridRenderer;
 import com.realhome.editor.modeler.plan.renderer.label.LabelRenderer;
 import com.realhome.editor.modeler.plan.renderer.mask.MaskRenderer;
+import com.realhome.editor.modeler.plan.renderer.measure.MeasureRenderer;
 import com.realhome.editor.modeler.plan.renderer.over_point.OverPointRenderer;
 import com.realhome.editor.modeler.plan.renderer.over_wall.OverWallRenderer;
 import com.realhome.editor.modeler.plan.renderer.wall.WallRenderer;
@@ -67,6 +68,7 @@ public class PlanModeler implements Modeler {
 		renderers.add(new OverWallRenderer());
 		renderers.add(new OverPointRenderer());
 		renderers.add(new ArcRenderer());
+		renderers.add(new MeasureRenderer());
 		renderers.add(new LabelRenderer());
 
 		for(Renderer renderer : renderers) {

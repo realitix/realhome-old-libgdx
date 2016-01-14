@@ -58,7 +58,6 @@ public class LabelRenderer implements Renderer {
 
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
-
 			for(ObjectMap.Entry<Object, LabelPlan> e : labels) {
 				LabelPlan label = e.value;
 				tmpGlyph.setText(bitmapFont, label.getLabel());
@@ -69,9 +68,9 @@ public class LabelRenderer implements Renderer {
 
 				transform.idt().translate(posX, posY, 0).rotate(0, 0, 1, label.getAngle());
 				batch.setTransformMatrix(transform);
+				
 				bitmapFont.draw(batch, label.getLabel(), -w, h);
 			}
-
 			batch.end();
 		}
 	}

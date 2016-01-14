@@ -20,6 +20,7 @@ import com.realhome.editor.modeler.plan.renderer.Renderer;
 public class MaskRenderer implements Renderer {
 	private Mesh mesh;
 	private Array<Point> points;
+	private float[] vertices;
 
 	// Shader
 	private ShaderProgram shader;
@@ -48,6 +49,7 @@ public class MaskRenderer implements Renderer {
 	private void initMesh() {
 		int maxVertices = 5000;
 		mesh = new Mesh(true, maxVertices, 0, new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE));
+		vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
 	}
 
 	public void update() {
@@ -63,10 +65,6 @@ public class MaskRenderer implements Renderer {
 
 		// Triangulate
 		triangles = triangulator.computeTriangles(floatPoints, false);
-
-		// Create vertices (One triangle = 3 points)
-		int maxVertices = triangles.size * 3;
-		float[] vertices = new float[maxVertices * (mesh.getVertexAttributes().vertexSize / 4)];
 
 		// Compute vertices
 		for (int i = 0; i < triangles.size; i += 3) {
@@ -86,7 +84,7 @@ public class MaskRenderer implements Renderer {
 		}
 
 		// Set vertices in mesh
-		mesh.setVertices(vertices);
+		mesh.setVertices(vertices, 0, triangles.size*6);
 	}
 
 	@Override

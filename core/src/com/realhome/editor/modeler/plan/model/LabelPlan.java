@@ -12,10 +12,18 @@ public class LabelPlan {
 		this(origin, label, position, 0);
 	}
 
+	public LabelPlan(Object origin, String label, int x, int y) {
+		this(origin, label, x, y, 0);
+	}
+
 	public LabelPlan(Object origin, String label, Point position, float angle) {
+		this(origin, label, position.x, position.y, angle);
+	}
+
+	public LabelPlan(Object origin, String label, int x, int y, float angle) {
 		this.origin = origin;
 		this.label = label;
-		this.position.set(position);
+		this.position.set(x, y);
 		this.angle = angle;
 	}
 

@@ -10,6 +10,7 @@ public class HousePlan {
 	private final Array<WallPlan> walls = new Array<WallPlan>();
 	private final Array<Point> outlinePoints = new Array<Point>();
 	private final Array<ArcPlan> arcs = new Array<ArcPlan>();
+	private final Array<MeasurePlan> measures = new Array<MeasurePlan>();
 	private final ObjectMap<Object, LabelPlan> labels = new ObjectMap<Object, LabelPlan>();
 	private final OverWallPlan overWall = new OverWallPlan();
 	private final OverPointPlan overPoint = new OverPointPlan();
@@ -106,5 +107,9 @@ public class HousePlan {
 
 	public Array<ArcPlan> getArcs () {
 		return arcs;
+	}
+
+	public Array<MeasurePlan> getMeasures () {
+		return measures;
 	}
 }
