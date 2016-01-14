@@ -5,16 +5,26 @@ import com.realhome.editor.model.house.Point;
 public class LabelPlan {
 	private Object origin;
 	private Point position = new Point();
+	private float angle;
 	private String label;
 
 	public LabelPlan(Object origin, String label, Point position) {
+		this(origin, label, position, 0);
+	}
+
+	public LabelPlan(Object origin, String label, Point position, float angle) {
 		this.origin = origin;
 		this.label = label;
 		this.position.set(position);
+		this.angle = angle;
 	}
 
 	public Point getPosition () {
 		return position;
+	}
+
+	public float getAngle () {
+		return angle;
 	}
 
 	public LabelPlan setPosition (int x, int y) {

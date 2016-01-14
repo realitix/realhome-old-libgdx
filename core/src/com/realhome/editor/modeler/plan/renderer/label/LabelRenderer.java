@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.DistanceFieldFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
@@ -22,6 +23,7 @@ public class LabelRenderer implements Renderer {
 	private SpriteBatch batch;
 	private boolean hasLabel;
 	private GlyphLayout tmpGlyph = new GlyphLayout();
+	private Matrix4 transform = new Matrix4();
 
 	public LabelRenderer() {
 		Texture texture = new Texture(Gdx.files.internal("style/plan_font/plan_font.png"), true);
@@ -56,12 +58,20 @@ public class LabelRenderer implements Renderer {
 
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
+
 			for(ObjectMap.Entry<Object, LabelPlan> e : labels) {
 				LabelPlan label = e.value;
 				tmpGlyph.setText(bitmapFont, label.getLabel());
 				float w = tmpGlyph.width/2, h = tmpGlyph.height/2;
-				bitmapFont.draw(batch, label.getLabel(), label.getPosition().x - w, label.getPosition().y + h);
+
+				float posX = label.getPosition().x;
+				float posY = label.getPosition().y;
+
+				transform.idt().translate(posX, posY, 0).rotate(0, 0, 1, label.getAngle());
+				batch.setTransformMatrix(transform);
+				bitmapFont.draw(batch, label.getLabel(), -w, h);
 			}
+
 			batch.end();
 		}
 	}

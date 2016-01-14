@@ -36,9 +36,12 @@ public class WallInteractor {
 	public void compute(Point point) {
 		initCachedWalls(point);
 
-		for(int i = 0; i < cachedWalls.size; i++) {
+		// Compute walls, then compute measure
+		for(int i = 0; i < cachedWalls.size; i++)
 			computeWall(cachedWalls.get(i));
-		}
+
+		for(int i = 0; i < cachedWalls.size; i++)
+			computeMeasure(cachedWalls.get(i));
 	}
 
 	private void syncWalls() {
@@ -222,5 +225,13 @@ public class WallInteractor {
 		if (angle >= 180 - ANGLE_MAX || angle <= ANGLE_MIN)
 			return false;
 		return true;
+	}
+
+	private void computeMeasure(WallPlan wall) {
+		Vector2 normal = wall.getOrigin().dir(new Vector2()).rotate90(1);
+		
+		// First measure
+		Point[] firstPoints = new Point[] {wall.getPoints()[0], wall.getPoints()[1]};
+
 	}
 }
