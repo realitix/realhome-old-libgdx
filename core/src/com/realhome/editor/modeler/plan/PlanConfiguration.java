@@ -29,6 +29,14 @@ public class PlanConfiguration {
 	public static class Mask {
 		public static Color color = new Color(1, 1, 1, 1);
 	}
+	
+	public static class Measure {
+		public static Color color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+		public static int gap = 25;
+		public static float arrowAngle = 45;
+		public static float arrowSize = 10;
+		public static float labelOffset = 14;
+	}
 
 	public static class OverPoint {
 		public static Color color = new Color(0.53f, 0.72f, 0.03f, 1);

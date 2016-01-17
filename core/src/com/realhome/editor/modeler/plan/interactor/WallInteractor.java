@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
+import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.LabelPlan;
 import com.realhome.editor.modeler.plan.model.MeasurePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
@@ -19,8 +20,8 @@ public class WallInteractor {
 	private final static int ANGLE_MAX = 14;
 	private final static int ANGLE_MIN = 1;
 
-	private Interactor interactor;
-	private Array<WallPlan> cachedWalls = new Array<WallPlan>();
+	private final Interactor interactor;
+	private final Array<WallPlan> cachedWalls = new Array<WallPlan>();
 
 	public WallInteractor(Interactor interactor) {
 		this.interactor = interactor;
@@ -259,22 +260,25 @@ public class WallInteractor {
 		measure.setSize(size);
 		Array<Point> measurePoints = measure.getPoints();
 
-		float gap = 25;
-
 		// Left line
 		measurePoints.get(0).set(point0).add(normal);
-		measurePoints.get(1).set(point0).add(normal).add(dir.cpy().scl(size/2 - gap));
+		measurePoints.get(1).set(point0).add(normal).add(dir.cpy().scl(size/2 - PlanConfiguration.Measure.gap));
 
 		// Right line
 		measurePoints.get(2).set(point1).add(normal);
-		measurePoints.get(3).set(point1).add(normal).sub(dir.cpy().scl(size/2 - gap));
-
-		float angleArrow = 45;
-		float sizeArrow = 10;
+		measurePoints.get(3).set(point1).add(normal).sub(dir.cpy().scl(size/2 - PlanConfiguration.Measure.gap));
 
 		// Left Arrow
-		Vector2 dirArrow = new Vector2(dir).nor().rotate(angleArrow).scl(sizeArrow);
-		Vector2 dirArrow2 = new Vector2(dir).nor().rotate(-angleArrow).scl(sizeArrow);
+		Vector2 dirArrow = new Vector2(dir)
+			.nor()
+			.rotate(PlanConfiguration.Measure.arrowAngle)
+			.scl(PlanConfiguration.Measure.arrowSize);
+		
+		Vector2 dirArrow2 = new Vector2(dir)
+			.nor()
+			.rotate(-PlanConfiguration.Measure.arrowAngle)
+			.scl(PlanConfiguration.Measure.arrowSize);
+		
 		measurePoints.get(4).set(point0).add(normal);
 		measurePoints.get(5).set(point0).add(normal).add(dirArrow);
 		measurePoints.get(6).set(point0).add(normal);
@@ -293,10 +297,13 @@ public class WallInteractor {
 		if(angleLabel > 90 && angleLabel < 270)
 			angleLabel = (angleLabel + 180) % 360;
 
-
+		Point labelPosition = new Point(point0)
+			.add(dir.cpy().scl(size/2))
+			.add(normal.cpy().nor().scl(PlanConfiguration.Measure.labelOffset));
+		
 		LabelPlan label = new LabelPlan(measure,
 			Integer.toString(measure.getSize()),
-			point0.cpy().add(dir.cpy().scl(size/2)).add(normal.cpy().nor().scl(14)),
+			labelPosition,
 			angleLabel);
 
 		interactor.getHousePlan().getLabels().put(measure, label);

@@ -17,10 +17,6 @@ public class HousePlan {
 	private WallPlan selectedWall;
 	private Point selectedPoint;
 
-	public HousePlan() {
-		overPoint.setHouse(this);
-	}
-
 	public HousePlan setSelectedWall(WallPlan wall) {
 		this.selectedWall = wall;
 		return this;

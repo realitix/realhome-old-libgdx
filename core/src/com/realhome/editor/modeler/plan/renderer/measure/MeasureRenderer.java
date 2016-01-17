@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.model.house.Point;
@@ -25,14 +24,7 @@ public class MeasureRenderer implements Renderer {
 	private static final String vertexShader = "com/realhome/editor/modeler/plan/renderer/measure/measure_vertex.glsl";
 	private static final String fragmentShader = "com/realhome/editor/modeler/plan/renderer/measure/measure_fragment.glsl";
 
-	// Used for mesh creation
-	private int vertexIdx;
-	private int vertexSize;
 	private float[] vertices;
-
-	// Used for computation
-	private final Vector2 point0 = new Vector2();
-	private final Vector2 point1 = new Vector2();
 
 	public MeasureRenderer() {
 		initShader();
@@ -75,7 +67,7 @@ public class MeasureRenderer implements Renderer {
 		
 		shader.begin();
 		shader.setUniformMatrix("u_projViewTrans", camera.combined);
-		shader.setUniformf("u_color", PlanConfiguration.Grid.color);
+		shader.setUniformf("u_color", PlanConfiguration.Measure.color);
 		mesh.render(shader, GL20.GL_LINES);
 		shader.end();
 	}
