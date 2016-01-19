@@ -1,12 +1,16 @@
 package com.realhome.editor.modeler.plan.interactor;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.model.house.Point;
+import com.realhome.editor.modeler.plan.PlanModeler;
+import com.realhome.editor.modeler.plan.event.WallEditEvent;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class Interactor {
+	private PlanModeler modeler;
 	private HousePlan housePlan;
 	private House house;
 	private OverWallInteractor overWallInteractor;
@@ -15,7 +19,8 @@ public class Interactor {
 	private ArcInteractor arcInteractor;
 	private OutlineInteractor outlineInteractor;
 
-	public Interactor(House house, HousePlan housePlan) {
+	public Interactor(PlanModeler modeler, House house, HousePlan housePlan) {
+		this.modeler = modeler;
 		this.house = house;
 		this.housePlan = housePlan;
 		overWallInteractor = new OverWallInteractor(this);
@@ -32,6 +37,11 @@ public class Interactor {
 
 	public void selectWall(WallPlan wall) {
 		overWallInteractor.select(wall);
+	}
+
+	public void editWall(WallPlan wall, int x, int y) {
+		Vector2 pos = modeler.getPointMapper().worldToScreen(x, y);
+		modeler.setEvent(new WallEditEvent((int)pos.x, (int)pos.y, wall.getOrigin()));
 	}
 
 	public void overWall(WallPlan wall) {

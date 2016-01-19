@@ -3,11 +3,18 @@ package com.realhome.editor.controller;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.realhome.editor.command.SyncHouseCommand;
 import com.realhome.editor.common.Message;
 import com.realhome.editor.common.pattern.mvc.BaseController;
 import com.realhome.editor.common.pattern.notification.Notification;
+import com.realhome.editor.modeler.plan.event.Event;
+import com.realhome.editor.modeler.plan.event.HouseUpdateEvent;
+import com.realhome.editor.modeler.plan.event.WallEditEvent;
 import com.realhome.editor.view.PlanView;
+import com.realhome.editor.widget.PlanEditWallWidget;
+import com.realhome.editor.widget.PlanEditWallWidget.EditWallListener;
 
 public class PlanController extends BaseController<PlanView> {
 
@@ -28,12 +35,34 @@ public class PlanController extends BaseController<PlanView> {
 			view.getModeler().getHouse());
 	}
 
+	private void editWall(final WallEditEvent event) {
+		EditWallListener widthListener = new EditWallListener() {
+			@Override
+			public void changed(int value) {
+				event.setWidth(value);
+			}
+		};
+
+		EditWallListener heightListener = new EditWallListener() {
+			@Override
+			public void changed(int value) {
+				event.setHeight(value);
+			}
+		};
+
+		Table widget = new PlanEditWallWidget(event.getWidth(), event.getHeight(), widthListener, null);
+		widget.pack();
+		widget.setPosition(event.getX(), event.getY(), Align.topLeft);
+
+		view.getActor().getStage().addActor(widget);
+	}
+
 	@Override
 	public void receiveNotification (Notification notification) {
 		switch (notification.getName()) {
-			case Message.HOUSE_LOADED:
-				view.reloadHouse(appModel.getHouse());
-				view.enable();
+		case Message.HOUSE_LOADED:
+			view.reloadHouse(appModel.getHouse());
+			view.enable();
 		}
 	}
 
@@ -59,8 +88,14 @@ public class PlanController extends BaseController<PlanView> {
 
 		@Override
 		public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-			if(view.unclick(x, y))
-				syncHouses();
+			if(view.unclick(x, y)) {
+				Event e = view.getModeler().getEvent();
+				if(e instanceof HouseUpdateEvent)
+					syncHouses();
+				else if (e instanceof WallEditEvent)
+					editWall((WallEditEvent)e);
+			}
+
 		}
 
 		@Override

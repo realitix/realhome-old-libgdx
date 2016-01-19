@@ -11,7 +11,7 @@ public class Wall extends BaseModel {
 	private static final int DEFAULT_WIDTH = 50;
 
 	private int type;
-	private float height;
+	private int height;
 	private int width = DEFAULT_WIDTH;
 	private final Point[] points = new Point[2];
 
@@ -104,11 +104,11 @@ public class Wall extends BaseModel {
 		return this;
 	}
 
-	public float getHeight () {
+	public int getHeight () {
 		return height;
 	}
 
-	public Wall setHeight (float height) {
+	public Wall setHeight (int height) {
 		this.height = height;
 		return this;
 	}
@@ -138,7 +138,7 @@ public class Wall extends BaseModel {
 		if (obj == null) return false;
 		if (!(obj instanceof Wall)) return false;
 		Wall other = (Wall)obj;
-		if (Float.floatToIntBits(height) != Float.floatToIntBits(other.height)) return false;
+		if (height != other.height) return false;
 		if (!Arrays.equals(points, other.points)) return false;
 		if (type != other.type) return false;
 		if (width != other.width) return false;

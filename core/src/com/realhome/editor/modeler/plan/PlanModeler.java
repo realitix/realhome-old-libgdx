@@ -9,8 +9,10 @@ import com.realhome.editor.modeler.Modeler;
 import com.realhome.editor.modeler.plan.actioner.Actioner;
 import com.realhome.editor.modeler.plan.actioner.PointMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.PointOverActioner;
+import com.realhome.editor.modeler.plan.actioner.WallEditActioner;
 import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
+import com.realhome.editor.modeler.plan.event.Event;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.renderer.Renderer;
@@ -32,10 +34,11 @@ public class PlanModeler implements Modeler {
 	private OrthographicCamera camera;
 	private HousePlan housePlan;
 	private House house;
-	private Interactor houseInteractor;
+	private Interactor interactor;
 	private final Array<Actioner> actioners = new Array<Actioner>();
 	private PointMapper pointMapper;
 	private CameraController cameraController;
+	private Event currentEvent;
 
 	public PlanModeler () {
 		create();
@@ -55,7 +58,7 @@ public class PlanModeler implements Modeler {
 
 		house = new House();
 		housePlan = new HousePlan();
-		houseInteractor = new Interactor(house, housePlan);
+		interactor = new Interactor(this, house, housePlan);
 
 		initRenderers();
 		initActioners();
@@ -78,12 +81,13 @@ public class PlanModeler implements Modeler {
 
 	private void initActioners() {
 		actioners.add(new PointMovingActioner());
+		actioners.add(new WallEditActioner());
 		actioners.add(new WallMovingActioner());
 		actioners.add(new PointOverActioner());
 		actioners.add(new WallOverActioner());
 
 		for(Actioner actioner : actioners) {
-			actioner.init(houseInteractor);
+			actioner.init(interactor);
 		}
 	}
 
@@ -101,6 +105,11 @@ public class PlanModeler implements Modeler {
 
 	@Override
 	public void render () {
+		// During event, reload house
+		if(currentEvent != null) {
+			interactor.update();
+		}
+
 		for (Renderer renderer : renderers) {
 			renderer.render(camera);
 		}
@@ -116,12 +125,24 @@ public class PlanModeler implements Modeler {
 	@Override
 	public void reload (House house) {
 		this.house.sync(house);
-		houseInteractor.update();
+		interactor.update();
 	}
 
 	@Override
 	public House getHouse () {
 		return house;
+	}
+
+	public Event getEvent() {
+		return currentEvent;
+	}
+
+	public void setEvent(Event event) {
+		currentEvent = event;
+	}
+
+	public PointMapper getPointMapper() {
+		return pointMapper;
 	}
 
 	public void moveCamera (float x, float y) {

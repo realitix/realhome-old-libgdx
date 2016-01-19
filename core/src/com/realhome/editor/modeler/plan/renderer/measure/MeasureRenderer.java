@@ -9,15 +9,17 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.MeasurePlan;
+import com.realhome.editor.modeler.plan.model.WallPlan;
 import com.realhome.editor.modeler.plan.renderer.Renderer;
 
 public class MeasureRenderer implements Renderer {
 	private Mesh mesh;
-	private Array<MeasurePlan> measures;
+	private ObjectMap<WallPlan, Array<MeasurePlan>> measures;
 
 	// Shader
 	private ShaderProgram shader;
@@ -51,10 +53,12 @@ public class MeasureRenderer implements Renderer {
 
 	public void update() {
 		int id = 0;
-		for (MeasurePlan measure : measures) {
-			for(Point point : measure.getPoints()) {
-				vertices[id++] = point.x;
-				vertices[id++] = point.y;
+		for(ObjectMap.Entry<WallPlan, Array<MeasurePlan>> e: measures) {
+			for (MeasurePlan measure : e.value) {
+				for(Point point : measure.getPoints()) {
+					vertices[id++] = point.x;
+					vertices[id++] = point.y;
+				}
 			}
 		}
 
@@ -64,7 +68,7 @@ public class MeasureRenderer implements Renderer {
 	@Override
 	public void render(OrthographicCamera camera) {
 		update();
-		
+
 		shader.begin();
 		shader.setUniformMatrix("u_projViewTrans", camera.combined);
 		shader.setUniformf("u_color", PlanConfiguration.Measure.color);

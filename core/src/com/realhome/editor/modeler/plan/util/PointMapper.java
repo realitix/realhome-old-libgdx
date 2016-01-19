@@ -26,4 +26,11 @@ public class PointMapper {
 		tmpV2.set(Math.round(tmpV3.x), Math.round(tmpV3.y));
 		return tmpV2;
 	}
+
+	public Vector2 worldToScreen(int x, int y) {
+		tmpV3.set(x, y, 0);
+		camera.project(tmpV3, 0, 0, viewportWidth, viewportHeight);
+		tmpV2.set(Math.round(tmpV3.x), Math.round(tmpV3.y));
+		return tmpV2;
+	}
 }
