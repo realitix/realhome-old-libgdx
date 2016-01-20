@@ -81,7 +81,7 @@ public class WallRenderer implements Renderer {
 		}
 
 		// Set vertices in mesh
-		mesh.setVertices(vertices);
+		mesh.setVertices(vertices, 0, id);
 	}
 
 	private void vertice (float[] vertices, Point point) {

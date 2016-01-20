@@ -75,11 +75,12 @@ public class WallInteractor {
 	private void initCachedWalls(Point point) {
 		cachedWalls.clear();
 
-		// I fpoint null, we take all walls
+		// If point null, we take all walls
 		if(point == null) {
 			for(WallPlan wallPlan : interactor.getHousePlan().getWalls()) {
 				cachedWalls.add(wallPlan);
 			}
+			return;
 		}
 
 		// Directly linked walls

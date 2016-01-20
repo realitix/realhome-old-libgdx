@@ -78,7 +78,7 @@ public class ArcRenderer implements Renderer {
 			vertice(points[0]);
 			vertice(points[3]);
 
-			meshes.get(i).setVertices(vertices);
+			meshes.get(i).setVertices(vertices, 0 , 12);
 		}
 	}
 

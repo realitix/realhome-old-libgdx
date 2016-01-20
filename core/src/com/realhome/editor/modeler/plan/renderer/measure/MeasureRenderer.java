@@ -62,7 +62,7 @@ public class MeasureRenderer implements Renderer {
 			}
 		}
 
-		mesh.setVertices(vertices);
+		mesh.setVertices(vertices, 0 , id);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanModeler;
 import com.realhome.editor.modeler.plan.event.WallEditEvent;
 import com.realhome.editor.modeler.plan.model.HousePlan;
+import com.realhome.editor.modeler.plan.model.MeasurePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class Interactor {
@@ -41,7 +42,18 @@ public class Interactor {
 
 	public void editWall(WallPlan wall, int x, int y) {
 		Vector2 pos = modeler.getPointMapper().worldToScreen(x, y);
-		modeler.setEvent(new WallEditEvent((int)pos.x, (int)pos.y, wall.getOrigin()));
+		modeler.setEvent(new WallEditEvent((int)pos.x, (int)pos.y, wall));
+	}
+
+	public void deleteWall(WallPlan wall) {
+		overWallInteractor.clear();
+		for(MeasurePlan measure : housePlan.getMeasures().get(wall)) {
+			housePlan.getLabels().remove(measure);
+		}
+		housePlan.getMeasures().remove(wall);
+		house.getFloor(housePlan.getFloor()).removeWall(wall.getOrigin());
+		housePlan.getWalls().removeValue(wall, true);
+		update();
 	}
 
 	public void overWall(WallPlan wall) {

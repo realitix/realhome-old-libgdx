@@ -1,9 +1,14 @@
 
 package com.realhome.editor.controller;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.realhome.editor.command.SyncHouseCommand;
 import com.realhome.editor.common.Message;
@@ -22,6 +27,9 @@ public class PlanController extends BaseController<PlanView> {
 		public static final int EMPTY = 0;
 		public static final int HOUSE_UPDATED = 1;
 	}
+
+	private Table currentWidget;
+	private EventListener currentListener;
 
 	public PlanController (PlanView view) {
 		super(view);
@@ -50,11 +58,50 @@ public class PlanController extends BaseController<PlanView> {
 			}
 		};
 
-		Table widget = new PlanEditWallWidget(event.getWidth(), event.getHeight(), widthListener, null);
-		widget.pack();
-		widget.setPosition(event.getX(), event.getY(), Align.topLeft);
+		ChangeListener closeListener = new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent e, Actor actor) {
+				event.close();
+				removeWidget();
+			}
+		};
 
-		view.getActor().getStage().addActor(widget);
+		ChangeListener deleteListener = new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent e, Actor actor) {
+				event.delete();
+				removeWidget();
+			}
+		};
+
+		currentListener = new ClickListener() {
+			@Override
+			public void clicked(InputEvent e, float x, float y)  {
+				Vector2 tmp = new Vector2(x, y);
+				tmp = currentWidget.stageToLocalCoordinates(tmp);
+				if(currentWidget.hit(tmp.x, tmp.y, false) == null) {
+					event.close();
+					removeWidget();
+				}
+			}
+		};
+
+		currentWidget = new PlanEditWallWidget(event.getWidth(), event.getHeight(),
+			widthListener, heightListener, closeListener, deleteListener);
+		currentWidget.pack();
+		currentWidget.setPosition(event.getX(), event.getY(), Align.topLeft);
+
+		addWidget();
+	}
+
+	private void addWidget() {
+		view.getActor().getStage().addActor(currentWidget);
+		view.getActor().getStage().addListener(currentListener);
+	}
+
+	private void removeWidget() {
+		currentWidget.remove();
+		view.getActor().getStage().removeListener(currentListener);
 	}
 
 	@Override

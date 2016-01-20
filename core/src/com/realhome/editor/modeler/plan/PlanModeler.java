@@ -13,6 +13,7 @@ import com.realhome.editor.modeler.plan.actioner.WallEditActioner;
 import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
 import com.realhome.editor.modeler.plan.event.Event;
+import com.realhome.editor.modeler.plan.event.WallEditEvent;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.renderer.Renderer;
@@ -38,7 +39,7 @@ public class PlanModeler implements Modeler {
 	private final Array<Actioner> actioners = new Array<Actioner>();
 	private PointMapper pointMapper;
 	private CameraController cameraController;
-	private Event currentEvent;
+	private WallEditEvent currentEvent;
 
 	public PlanModeler () {
 		create();
@@ -106,9 +107,7 @@ public class PlanModeler implements Modeler {
 	@Override
 	public void render () {
 		// During event, reload house
-		if(currentEvent != null) {
-			interactor.update();
-		}
+		if(locked()) interactor.update();
 
 		for (Renderer renderer : renderers) {
 			renderer.render(camera);
@@ -138,7 +137,7 @@ public class PlanModeler implements Modeler {
 	}
 
 	public void setEvent(Event event) {
-		currentEvent = event;
+		currentEvent = (WallEditEvent)event;
 	}
 
 	public PointMapper getPointMapper() {
@@ -154,6 +153,8 @@ public class PlanModeler implements Modeler {
 	}
 
 	public boolean move(float x, float y, boolean drag) {
+		if(locked()) return false;
+
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
 		boolean action = false;
@@ -169,6 +170,8 @@ public class PlanModeler implements Modeler {
 	}
 
 	public boolean click(float x, float y) {
+		if(locked()) return false;
+
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
 		cameraController.init(x, y);
@@ -182,6 +185,8 @@ public class PlanModeler implements Modeler {
 	}
 
 	public boolean unclick(float x, float y) {
+		if(locked()) return false;
+
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
 		for (Actioner actioner : actioners) {
@@ -190,5 +195,14 @@ public class PlanModeler implements Modeler {
 		}
 
 		return false;
+	}
+
+	private boolean locked() {
+		if(currentEvent != null) {
+			if(currentEvent.toDelete()) interactor.deleteWall(currentEvent.getWall());
+			if(currentEvent.toClose()) currentEvent = null;
+		}
+
+		return currentEvent != null;
 	}
 }

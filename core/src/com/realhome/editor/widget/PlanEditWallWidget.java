@@ -1,6 +1,7 @@
 package com.realhome.editor.widget;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.kotcrab.vis.ui.VisUI;
 
 public class PlanEditWallWidget extends Table {
@@ -27,18 +29,24 @@ public class PlanEditWallWidget extends Table {
 		abstract public void changed(int value);
 	}
 
-	private Slider widthSlider;
+	private Table header;
+	private TextButton closeButton;
+	private TextButton validateButton;
+	private TextButton deleteButton;
 	private TextField widthText;
-	private Slider heightSlider;
 	private TextField heightText;
+	private Slider widthSlider;
+	private Slider heightSlider;
 
-	public PlanEditWallWidget(int width, int height, EditWallListener widthListener, EditWallListener heightListener) {
+	public PlanEditWallWidget(int width, int height,
+		EditWallListener widthListener, EditWallListener heightListener,
+		ChangeListener closeListener, ChangeListener deleteListener) {
 		// ----------
 		// HEADER
 		// ----------
-		Table header = new Table();
+		header = new Table();
 		header.add(label("Paramètres"));
-		header.add(button("Close"));
+		header.add(closeButton = button("Close"));
 
 		// ----------
 		// BODY
@@ -63,8 +71,8 @@ public class PlanEditWallWidget extends Table {
 
 		// Footer
 		Table footer = new Table();
-		footer.add(button("Supprimer"));
-		footer.add(button("Valider"));
+		footer.add(deleteButton = button("Supprimer"));
+		footer.add(validateButton = button("Valider"));
 
 		// Create this table
 		this.add(header);
@@ -105,10 +113,21 @@ public class PlanEditWallWidget extends Table {
 		});
 
 		// Attach external events
+		closeButton.addListener(closeListener);
+		validateButton.addListener(closeListener);
+		deleteButton.addListener(deleteListener);
 		widthSlider.addListener(widthListener);
 		widthText.addListener(widthListener);
 		heightSlider.addListener(heightListener);
 		heightText.addListener(heightListener);
+
+		// Drag this widget
+		header.addListener(new DragListener() {
+			@Override
+			public void drag(InputEvent event, float x, float y, int pointer) {
+				PlanEditWallWidget.this.moveBy(x - PlanEditWallWidget.this.getWidth() / 2, y - PlanEditWallWidget.this.getHeight() / 2);
+			}
+		});
 	}
 
 	private Label label(String name) {

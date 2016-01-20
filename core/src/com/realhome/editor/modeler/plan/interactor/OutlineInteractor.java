@@ -19,10 +19,9 @@ public class OutlineInteractor {
 	public void compute() {
 		Array<Point> points = getWallsPoints();
 		Array<Point> outlinePoints = interactor.getHousePlan().getOutlinePoints();
-		Array<Point> newOutlinePoints = GrahamScan.getConvexHull(points);
 
 		outlinePoints.clear();
-		outlinePoints.addAll(newOutlinePoints);
+		outlinePoints.addAll(GrahamScan.getConvexHull(points));
 	}
 
 	private Array<Point> getWallsPoints() {
@@ -61,11 +60,15 @@ public class OutlineInteractor {
 			Array<Point> sorted = new Array<Point>(getSortedPointSet(points));
 
 			if(sorted.size < 3) {
-				throw new IllegalArgumentException("can only create a convex hull of 3 or more unique points");
+				sorted.clear();
+				return sorted;
+				//throw new IllegalArgumentException("can only create a convex hull of 3 or more unique points");
 			}
 
 			if(areAllCollinear(sorted)) {
-				throw new IllegalArgumentException("cannot create a convex hull from collinear points");
+				sorted.clear();
+				return sorted;
+				//throw new IllegalArgumentException("cannot create a convex hull from collinear points");
 			}
 
 			Stack<Point> stack = new Stack<Point>();

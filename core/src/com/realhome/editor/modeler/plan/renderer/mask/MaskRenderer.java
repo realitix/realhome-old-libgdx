@@ -84,7 +84,7 @@ public class MaskRenderer implements Renderer {
 		}
 
 		// Set vertices in mesh
-		mesh.setVertices(vertices, 0, triangles.size*6);
+		mesh.setVertices(vertices, 0, triangles.size*2);
 	}
 
 	@Override

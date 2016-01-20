@@ -78,7 +78,7 @@ public class OverPointRenderer implements Renderer {
 		vertice(points[3]);
 
 		// Set vertices in mesh
-		mesh.setVertices(vertices);
+		mesh.setVertices(vertices, 0, 12);
 	}
 
 	private void vertice (Point point) {

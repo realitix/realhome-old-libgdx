@@ -53,6 +53,7 @@ public class WallMovingActioner implements Actioner {
 				}
 			}
 		}
+
 		return result;
 	}
 
@@ -71,7 +72,11 @@ public class WallMovingActioner implements Actioner {
 		Wall wallSource = interactor.getHousePlan().getSelectedWall().getOrigin();
 
 		if(nbCorners == 0) {
-			interactor.movePoints(wallSource.getPoints(), x, y);
+			for(int i = 0; i < wallSource.getPoints().length; i++ ) {
+				cachedPoints.clear();
+				cachedPoints.add(wallSource.getPoints()[i]);
+				interactor.movePoints(cachedPoints, wallSource.getPoints()[i].x + x, wallSource.getPoints()[i].y + y);
+			}
 			return;
 		}
 
