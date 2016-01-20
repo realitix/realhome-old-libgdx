@@ -76,13 +76,14 @@ public class PlanController extends BaseController<PlanView> {
 
 		currentListener = new ClickListener() {
 			@Override
-			public void clicked(InputEvent e, float x, float y)  {
+		 	public boolean touchDown(InputEvent e, float x, float y, int pointer, int button) {
 				Vector2 tmp = new Vector2(x, y);
 				tmp = currentWidget.stageToLocalCoordinates(tmp);
 				if(currentWidget.hit(tmp.x, tmp.y, false) == null) {
 					event.close();
 					removeWidget();
 				}
+				return true;
 			}
 		};
 

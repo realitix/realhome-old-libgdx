@@ -10,7 +10,7 @@ import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class OutlineInteractor {
 
-	private Interactor interactor;
+	private final Interactor interactor;
 
 	public OutlineInteractor(Interactor interactor) {
 		this.interactor = interactor;
@@ -21,7 +21,8 @@ public class OutlineInteractor {
 		Array<Point> outlinePoints = interactor.getHousePlan().getOutlinePoints();
 
 		outlinePoints.clear();
-		outlinePoints.addAll(GrahamScan.getConvexHull(points));
+		if(points.size > 0)
+			outlinePoints.addAll(GrahamScan.getConvexHull(points));
 	}
 
 	private Array<Point> getWallsPoints() {
