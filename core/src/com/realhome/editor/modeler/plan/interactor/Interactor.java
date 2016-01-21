@@ -11,14 +11,14 @@ import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class Interactor {
-	private PlanModeler modeler;
-	private HousePlan housePlan;
-	private House house;
-	private OverWallInteractor overWallInteractor;
-	private WallInteractor wallInteractor;
-	private OverPointInteractor pointInteractor;
-	private ArcInteractor arcInteractor;
-	private OutlineInteractor outlineInteractor;
+	private final PlanModeler modeler;
+	private final HousePlan housePlan;
+	private final House house;
+	private final OverWallInteractor overWallInteractor;
+	private final WallInteractor wallInteractor;
+	private final OverPointInteractor pointInteractor;
+	private final ArcInteractor arcInteractor;
+	private final OutlineInteractor outlineInteractor;
 
 	public Interactor(PlanModeler modeler, House house, HousePlan housePlan) {
 		this.modeler = modeler;
@@ -49,6 +49,17 @@ public class Interactor {
 		overWallInteractor.clear();
 		wallInteractor.removeWall(wall);
 		update();
+	}
+	
+	public void deleteWall(Wall wall) {
+		WallPlan wallPlan = null;;
+		for(WallPlan w : housePlan.getWalls()) {
+			if(w.getOrigin() == wall) {
+				wallPlan = w;
+			}
+		}
+		
+		deleteWall(wallPlan);
 	}
 
 	public Wall addWall(Point point) {

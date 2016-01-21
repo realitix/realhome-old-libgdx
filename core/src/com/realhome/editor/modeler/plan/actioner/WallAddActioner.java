@@ -22,6 +22,16 @@ public class WallAddActioner extends BaseActioner {
 	public void enable () {
 		enabled = true;
 	}
+	
+	private boolean inLastPoint(int x, int y) {
+		if(lastWall == null) return false;
+		
+		int w = lastWall.getWidth()/2;
+		Point p = lastWall.getPoints()[0];
+		
+		if(x >= p.x - w && x <= p.x + w && y >= p.y - w && y <= p.y + w) return true;
+		return false;
+	}
 
 	@Override
 	public boolean move (int x, int y) {
@@ -44,6 +54,12 @@ public class WallAddActioner extends BaseActioner {
 	@Override
 	public boolean click (int x, int y) {
 		if(!enabled) return false;
+		
+		if(inLastPoint(x, y)) {
+			interactor.deleteWall(lastWall);
+			enabled = false;
+			return true;
+		}
 
 		lastLocation.set(x, y);
 		lastWall = interactor.addWall(new Point(x, y));
