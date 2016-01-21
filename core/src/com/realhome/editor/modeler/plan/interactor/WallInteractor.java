@@ -4,9 +4,11 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.realhome.editor.model.house.House;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
+import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.LabelPlan;
 import com.realhome.editor.modeler.plan.model.MeasurePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
@@ -101,6 +103,13 @@ public class WallInteractor {
 				}
 			}
 		}
+
+		// Remove wall if the two point are equals
+		/*for(int i = 0; i < cachedWalls.size; i++) {
+			if(cachedWalls.get(i).getOrigin().isZero()) {
+				cachedWalls.removeIndex(i);
+			}
+		} */
 	}
 
 	private boolean isWallsLinked(WallPlan wall0, WallPlan wall1) {
@@ -115,6 +124,13 @@ public class WallInteractor {
 	}
 
 	private void computeWall(WallPlan wall) {
+		if ( wall.getOrigin().isZero() ) {
+			for(Point p : wall.getPoints()) {
+				p.set(wall.getOrigin().getPoints()[0]);
+			}
+			return;
+		}
+
 		for(int i = 0; i < wall.getOrigin().getPoints().length; i++) {
 			Point point = wall.getOrigin().getPoints()[i];
 
@@ -303,5 +319,27 @@ public class WallInteractor {
 			angleLabel);
 
 		interactor.getHousePlan().getLabels().put(measure, label);
+	}
+
+	public void removeWall(WallPlan wall) {
+		HousePlan housePlan = interactor.getHousePlan();
+		House house = interactor.getHouse();
+
+		for(MeasurePlan measure : housePlan.getMeasures().get(wall)) {
+			housePlan.getLabels().remove(measure);
+		}
+		housePlan.getMeasures().remove(wall);
+		house.getFloor(housePlan.getFloor()).removeWall(wall.getOrigin());
+		housePlan.getWalls().removeValue(wall, true);
+	}
+
+	public Wall addWall(Point point) {
+		HousePlan housePlan = interactor.getHousePlan();
+		House house = interactor.getHouse();
+
+		Wall wall = new Wall().setPoint0(point.x, point.y).setPoint1(point.x, point.y);
+		house.getFloor(housePlan.getFloor()).addWall(wall);
+
+		return wall;
 	}
 }

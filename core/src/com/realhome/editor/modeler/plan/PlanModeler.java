@@ -9,6 +9,7 @@ import com.realhome.editor.modeler.Modeler;
 import com.realhome.editor.modeler.plan.actioner.Actioner;
 import com.realhome.editor.modeler.plan.actioner.PointMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.PointOverActioner;
+import com.realhome.editor.modeler.plan.actioner.WallAddActioner;
 import com.realhome.editor.modeler.plan.actioner.WallEditActioner;
 import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
@@ -39,7 +40,7 @@ public class PlanModeler implements Modeler {
 	private final Array<Actioner> actioners = new Array<Actioner>();
 	private PointMapper pointMapper;
 	private CameraController cameraController;
-	private WallEditEvent currentEvent;
+	private Event currentEvent;
 
 	public PlanModeler () {
 		create();
@@ -81,6 +82,7 @@ public class PlanModeler implements Modeler {
 	}
 
 	private void initActioners() {
+		actioners.add(new WallAddActioner());
 		actioners.add(new PointMovingActioner());
 		actioners.add(new WallEditActioner());
 		actioners.add(new WallMovingActioner());
@@ -127,6 +129,16 @@ public class PlanModeler implements Modeler {
 		interactor.update();
 	}
 
+	/**
+	 * Enable actioner
+	 */
+	public void action(String actionerName) {
+		for(Actioner actioner : actioners) {
+			if(actioner.getName() == actionerName)
+				actioner.enable();
+		}
+	}
+
 	@Override
 	public House getHouse () {
 		return house;
@@ -137,7 +149,7 @@ public class PlanModeler implements Modeler {
 	}
 
 	public void setEvent(Event event) {
-		currentEvent = (WallEditEvent)event;
+		currentEvent = event;
 	}
 
 	public PointMapper getPointMapper() {
@@ -199,10 +211,17 @@ public class PlanModeler implements Modeler {
 
 	private boolean locked() {
 		if(currentEvent != null) {
-			if(currentEvent.toDelete()) interactor.deleteWall(currentEvent.getWall());
+			manageEvent(currentEvent);
 			if(currentEvent.toClose()) currentEvent = null;
 		}
 
 		return currentEvent != null;
+	}
+
+	private void manageEvent(Event event) {
+		if(event instanceof WallEditEvent) {
+			if(((WallEditEvent) event).toDelete())
+				interactor.deleteWall(((WallEditEvent) event).getWall());
+		}
 	}
 }

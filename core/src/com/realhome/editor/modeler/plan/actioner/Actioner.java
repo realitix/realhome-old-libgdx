@@ -9,5 +9,7 @@ public interface Actioner {
 	public boolean move(int x, int y);
 	public boolean click(int x, int y);
 	public boolean unclick(int x, int y);
-	public Actioner init(Interactor interactor);
+	public void init(Interactor interactor);
+	public void enable();
+	public String getName();
 }

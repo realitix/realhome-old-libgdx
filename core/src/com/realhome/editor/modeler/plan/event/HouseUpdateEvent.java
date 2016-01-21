@@ -4,8 +4,7 @@ public class HouseUpdateEvent implements Event {
 
 	@Override
 	public boolean toClose () {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

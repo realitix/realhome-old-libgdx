@@ -6,7 +6,6 @@ import com.realhome.editor.model.house.House;
 
 public class AppModel extends Model {
 	private House house;
-	private WallPopupParameter wallEdit = new WallPopupParameter();
 
 	public void setHouse (House house) {
 		this.house = house;
@@ -14,9 +13,5 @@ public class AppModel extends Model {
 
 	public House getHouse () {
 		return house;
-	}
-
-	public WallPopupParameter getWallEdit() {
-		return wallEdit;
 	}
 }

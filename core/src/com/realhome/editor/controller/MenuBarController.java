@@ -12,6 +12,8 @@ public class MenuBarController extends BaseController<MenuBarView> {
 
 	public MenuBarController (MenuBarView view) {
 		super(view);
+
+		view.addNewListener(new NewListener());
 		view.addOpenListener(new OpenListener());
 	}
 
@@ -22,4 +24,12 @@ public class MenuBarController extends BaseController<MenuBarView> {
 			notificationManager.sendNotification(Message.HOUSE_LOADED);
 		}
 	}
+
+	private class NewListener extends ChangeListener {
+		@Override
+		public void changed (ChangeEvent event, Actor actor) {
+			notificationManager.sendNotification(Message.PLAN_MODELER_ADD_WALL);
+		}
+	}
+
 }

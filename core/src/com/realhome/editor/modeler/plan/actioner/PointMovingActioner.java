@@ -7,8 +7,8 @@ import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
-public class PointMovingActioner implements Actioner {
-	private Interactor interactor;
+public class PointMovingActioner extends BaseActioner {
+	public static final String NAME = "PointMovingActioner";
 
 	private final Point tmp = new Point();
 	private final Vector2 lastLocation = new Vector2();
@@ -16,9 +16,8 @@ public class PointMovingActioner implements Actioner {
 	private final Array<Point> tmpPoints = new Array<Point>();
 
 	@Override
-	public Actioner init (Interactor interactor) {
-		this.interactor = interactor;
-		return this;
+	public String getName() {
+		return NAME;
 	}
 
 	@Override

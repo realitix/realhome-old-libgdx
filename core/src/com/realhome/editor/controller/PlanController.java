@@ -9,11 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.realhome.editor.command.SyncHouseCommand;
 import com.realhome.editor.common.Message;
 import com.realhome.editor.common.pattern.mvc.BaseController;
 import com.realhome.editor.common.pattern.notification.Notification;
+import com.realhome.editor.modeler.plan.actioner.WallAddActioner;
 import com.realhome.editor.modeler.plan.event.Event;
 import com.realhome.editor.modeler.plan.event.HouseUpdateEvent;
 import com.realhome.editor.modeler.plan.event.WallEditEvent;
@@ -76,23 +76,22 @@ public class PlanController extends BaseController<PlanView> {
 
 		currentListener = new ClickListener() {
 			@Override
-		 	public boolean touchDown(InputEvent e, float x, float y, int pointer, int button) {
+			public void clicked (InputEvent e, float x, float y) {
 				Vector2 tmp = new Vector2(x, y);
 				tmp = currentWidget.stageToLocalCoordinates(tmp);
 				if(currentWidget.hit(tmp.x, tmp.y, false) == null) {
 					event.close();
 					removeWidget();
 				}
-				return true;
 			}
 		};
 
 		currentWidget = new PlanEditWallWidget(event.getWidth(), event.getHeight(),
 			widthListener, heightListener, closeListener, deleteListener);
 		currentWidget.pack();
-		currentWidget.setPosition(event.getX(), event.getY(), Align.topLeft);
 
 		addWidget();
+		currentWidget.setPosition(event.getX(), event.getY());
 	}
 
 	private void addWidget() {
@@ -105,12 +104,20 @@ public class PlanController extends BaseController<PlanView> {
 		view.getActor().getStage().removeListener(currentListener);
 	}
 
+	private void action(String actionerName) {
+		view.getModeler().action(actionerName);
+	}
+
 	@Override
 	public void receiveNotification (Notification notification) {
 		switch (notification.getName()) {
 		case Message.HOUSE_LOADED:
 			view.reloadHouse(appModel.getHouse());
 			view.enable();
+			break;
+		case Message.PLAN_MODELER_ADD_WALL:
+			action(WallAddActioner.NAME);
+			break;
 		}
 	}
 

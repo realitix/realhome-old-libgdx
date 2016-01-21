@@ -3,16 +3,16 @@ package com.realhome.editor.modeler.plan.actioner;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
-public class WallOverActioner implements Actioner {
-	private Interactor interactor;
+public class WallOverActioner extends BaseActioner {
+	public static final String NAME = "WallOverActioner";
+
 	private boolean dragging;
 
 	@Override
-	public Actioner init(Interactor interactor) {
-		this.interactor = interactor;
-		return this;
+	public String getName() {
+		return NAME;
 	}
-
+	
 	@Override
 	public boolean move(int x, int y) {
 		if(dragging)

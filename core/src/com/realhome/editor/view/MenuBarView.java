@@ -14,13 +14,14 @@ public class MenuBarView extends BaseView<Table> {
 	public final static String NAME = "view.menu.MenuBarView";
 
 	private MenuBar menuBar;
+	private MenuItem menuNew;
 	private MenuItem menuOpen;
 
 	public MenuBarView () {
 		menuBar = new MenuBar();
 
 		Menu file = new Menu(_.g("file"));
-		file.addItem(new MenuItem(_.g("new")));
+		file.addItem(menuNew = new MenuItem(_.g("new")));
 		file.addItem(menuOpen = new MenuItem(_.g("open")));
 		file.addItem(new MenuItem(_.g("save")));
 		file.addItem(new MenuItem(_.g("save_as")));
@@ -52,6 +53,10 @@ public class MenuBarView extends BaseView<Table> {
 
 	public void addOpenListener (ChangeListener listener) {
 		menuOpen.addListener(listener);
+	}
+
+	public void addNewListener (ChangeListener listener) {
+		menuNew.addListener(listener);
 	}
 
 	private void padMenus (int pad) {

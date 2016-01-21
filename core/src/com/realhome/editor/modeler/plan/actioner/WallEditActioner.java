@@ -4,17 +4,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
-public class WallEditActioner implements Actioner {
-	private Interactor interactor;
+public class WallEditActioner extends BaseActioner {
+	public static final String NAME = "WallEditActioner";
+
 	private final Vector2 lastLocation = new Vector2();
 	private WallPlan currentWall;
-
 	private static float DISTANCE_MAX = 3;
 
 	@Override
-	public Actioner init (Interactor interactor) {
-		this.interactor = interactor;
-		return this;
+	public String getName() {
+		return NAME;
 	}
 
 	@Override

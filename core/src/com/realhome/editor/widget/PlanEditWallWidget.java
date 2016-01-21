@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.ActorUtils;
 
 public class PlanEditWallWidget extends Table {
 
@@ -45,7 +46,7 @@ public class PlanEditWallWidget extends Table {
 		// HEADER
 		// ----------
 		header = new Table();
-		header.add(label("Paramètres"));
+		header.add(label("Parametres"));
 		header.add(closeButton = button("Close"));
 
 		// ----------
@@ -66,7 +67,7 @@ public class PlanEditWallWidget extends Table {
 		body.row();
 
 		// All walls
-		body.add(label("Appliquer à tous les murs"));
+		body.add(label("Appliquer a tous les murs"));
 		body.add(checkbox());
 
 		// Footer
@@ -122,12 +123,33 @@ public class PlanEditWallWidget extends Table {
 		heightText.addListener(heightListener);
 
 		// Drag this widget
-		header.addListener(new DragListener() {
+		DragListener dragListener =new DragListener() {
+			private float startDragX;
+			private float startDragY;
+
+			@Override
+			public void dragStart(InputEvent event, float x, float y, int pointer) {
+				startDragX = x;
+				startDragY = y;
+			}
+
 			@Override
 			public void drag(InputEvent event, float x, float y, int pointer) {
-				PlanEditWallWidget.this.moveBy(x - PlanEditWallWidget.this.getWidth() / 2, y - PlanEditWallWidget.this.getHeight() / 2);
+				PlanEditWallWidget.this.moveBy(x - startDragX, y - startDragY);
+				ActorUtils.keepWithinStage(PlanEditWallWidget.this.getStage(), PlanEditWallWidget.this);
 			}
-		});
+		};
+
+		dragListener.setTapSquareSize(1);
+		header.addListener(dragListener);
+	}
+
+	@Override
+	public void setPosition(float x, float y) {
+		y -= getHeight();
+
+		super.setPosition(x, y);
+		ActorUtils.keepWithinStage(this.getStage(), this);
 	}
 
 	private Label label(String name) {

@@ -127,6 +127,10 @@ public class Wall extends BaseModel {
 		return null;
 	}
 
+	public boolean isZero() {
+		return points[0].equals(points[1]);
+	}
+
 	@Override
 	public String toString() {
 		return "( "+points[0]+" : "+points[1]+" )";

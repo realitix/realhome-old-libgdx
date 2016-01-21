@@ -4,14 +4,14 @@ import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
-public class PointOverActioner implements Actioner {
-	private Interactor interactor;
+public class PointOverActioner extends BaseActioner {
+	public static final String NAME = "PointOverActioner";
+
 	private boolean dragging;
 
 	@Override
-	public Actioner init(Interactor interactor) {
-		this.interactor = interactor;
-		return this;
+	public String getName() {
+		return NAME;
 	}
 
 	@Override

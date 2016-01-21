@@ -8,19 +8,19 @@ import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
-public class WallMovingActioner implements Actioner {
-	private Interactor interactor;
+public class WallMovingActioner extends BaseActioner {
+	public static final String NAME = "WallMovingActioner";
+
 	private final Point tmp = new Point();
 	private final Vector2 lastLocation = new Vector2();
 	private final Vector2 delta = new Vector2();
 	private Array<Point> cachedPoints = new Array<Point>();
 
 	@Override
-	public Actioner init (Interactor interactor) {
-		this.interactor = interactor;
-		return this;
+	public String getName() {
+		return NAME;
 	}
-
+	
 	@Override
 	public boolean move (int x, int y) {
 		if(interactor.getHousePlan().getSelectedWall() == null)
