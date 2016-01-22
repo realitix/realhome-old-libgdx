@@ -16,6 +16,7 @@ public class HousePlan {
 	private final OverPointPlan overPoint = new OverPointPlan();
 	private WallPlan selectedWall;
 	private Point selectedPoint;
+	private WallButtonPlan wallButton = new WallButtonPlan();
 
 	public HousePlan setSelectedWall(WallPlan wall) {
 		this.selectedWall = wall;
