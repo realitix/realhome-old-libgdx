@@ -67,6 +67,14 @@ public class Interactor {
 		update();
 		return result;
 	}
+	
+	public void setWallButton(int type, int x, int y, int width) {
+		housePlan.getWallButton().set(type, x, y, width);
+	}
+	
+	public void disableWallButton() {
+		housePlan.getWallButton().set(-1, 0, 0, 0);
+	}
 
 	public void overWall(WallPlan wall) {
 		overWallInteractor.over(wall);

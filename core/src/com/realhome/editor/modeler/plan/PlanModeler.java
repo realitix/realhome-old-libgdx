@@ -26,6 +26,7 @@ import com.realhome.editor.modeler.plan.renderer.measure.MeasureRenderer;
 import com.realhome.editor.modeler.plan.renderer.over_point.OverPointRenderer;
 import com.realhome.editor.modeler.plan.renderer.over_wall.OverWallRenderer;
 import com.realhome.editor.modeler.plan.renderer.wall.WallRenderer;
+import com.realhome.editor.modeler.plan.renderer.wall_button.WallButtonRenderer;
 import com.realhome.editor.modeler.plan.util.CameraController;
 import com.realhome.editor.modeler.plan.util.PointMapper;
 
@@ -75,6 +76,7 @@ public class PlanModeler implements Modeler {
 		renderers.add(new ArcRenderer());
 		renderers.add(new MeasureRenderer());
 		renderers.add(new LabelRenderer());
+		renderers.add(new WallButtonRenderer());
 
 		for(Renderer renderer : renderers) {
 			renderer.init(housePlan);

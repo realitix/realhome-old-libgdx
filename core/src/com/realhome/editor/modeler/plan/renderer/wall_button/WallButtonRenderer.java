@@ -7,31 +7,29 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.DistanceFieldFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.realhome.editor.modeler.plan.PlanConfiguration;
+import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.modeler.plan.model.HousePlan;
-import com.realhome.editor.modeler.plan.model.LabelPlan;
+import com.realhome.editor.modeler.plan.model.WallButtonPlan;
 import com.realhome.editor.modeler.plan.renderer.Renderer;
 
 public class WallButtonRenderer implements Renderer {
 	public static final int CHECK = 0;
 	public static final int CANCEL = 1;
-
-	private Array<Texture> textures = new Array<Texture>();
+	
+	private final Array<Texture> textures = new Array<Texture>();
 	private WallButtonPlan wallButton;
-	private SpriteBatch batch = new SpriteBatch(500, LabelBitmapFont.createDistanceFieldShader());
+	private final SpriteBatch batch = new SpriteBatch();
 	private boolean hasWallButton;
 
 	public WallButtonRenderer() {
-		textures.insert(CHECK, new Texture(Gdx.files.internal("icon/check.png")));
-		textures.insert(CANCEL, new Texture(Gdx.files.internal("icon/cancel.png")));
+		
+		textures.insert(CHECK, new Texture(Gdx.files.internal("icon/check.png"), true));
+		textures.insert(CANCEL, new Texture(Gdx.files.internal("icon/cancel.png"), true));
 
 		for(Texture t : textures) {
-			t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+			t.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 		}
 	}
 
@@ -52,13 +50,14 @@ public class WallButtonRenderer implements Renderer {
 		update();
 
 		if(hasWallButton) {
+			float w = wallButton.getWidth() / 2;
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
 			batch.draw(textures.get(wallButton.getType()),
-				wallButton.getX(),
-				wallButton.getY(),
+				wallButton.getX() - w,
+				wallButton.getY() - w,
 				wallButton.getWidth(),
-				wallButton.getHeight());
+				wallButton.getWidth());
 			batch.end();
 		}
 	}

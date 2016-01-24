@@ -12,7 +12,7 @@ import com.realhome.editor.common.pattern.mvc.Controller;
 import com.realhome.editor.common.pattern.notification.NotificationManager;
 import com.realhome.editor.controller.AppController;
 import com.realhome.editor.controller.MenuBarController;
-import com.realhome.editor.controller.PlanController;
+import com.realhome.editor.controller.plan.PlanController;
 import com.realhome.editor.model.AppModel;
 import com.realhome.editor.presenter.DefaultPresenter;
 import com.realhome.editor.view.AppView;

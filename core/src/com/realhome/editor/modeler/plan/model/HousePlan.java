@@ -14,9 +14,13 @@ public class HousePlan {
 	private final ObjectMap<Object, LabelPlan> labels = new ObjectMap<Object, LabelPlan>();
 	private final OverWallPlan overWall = new OverWallPlan();
 	private final OverPointPlan overPoint = new OverPointPlan();
+	private final WallButtonPlan wallButton = new WallButtonPlan();
 	private WallPlan selectedWall;
 	private Point selectedPoint;
-	private WallButtonPlan wallButton = new WallButtonPlan();
+	
+	public WallButtonPlan getWallButton() {
+		return wallButton;
+	}
 
 	public HousePlan setSelectedWall(WallPlan wall) {
 		this.selectedWall = wall;

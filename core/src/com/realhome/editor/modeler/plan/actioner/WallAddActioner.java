@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
+import com.realhome.editor.modeler.plan.renderer.wall_button.WallButtonRenderer;
 
 public class WallAddActioner extends BaseActioner {
 	public static final String NAME = "WallAddActioner";
@@ -57,13 +58,22 @@ public class WallAddActioner extends BaseActioner {
 		
 		if(inLastPoint(x, y)) {
 			interactor.deleteWall(lastWall);
+			interactor.disableWallButton();
 			enabled = false;
+			lastWall = null;
 			return true;
 		}
 
-		lastLocation.set(x, y);
+		boolean lastWallNull = (lastWall == null);
+		
 		lastWall = interactor.addWall(new Point(x, y));
+		
+		if(lastWallNull)
+			interactor.setWallButton(WallButtonRenderer.CANCEL, lastWall.getPoints()[0].x, lastWall.getPoints()[0].y, lastWall.getWidth());
+		else
+			interactor.setWallButton(WallButtonRenderer.CHECK, lastWall.getPoints()[0].x, lastWall.getPoints()[0].y, lastWall.getWidth());
 
+		lastLocation.set(x, y);
 		return true;
 	}
 
