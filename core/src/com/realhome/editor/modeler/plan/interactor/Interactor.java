@@ -6,6 +6,7 @@ import com.realhome.editor.model.house.House;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.PlanModeler;
+import com.realhome.editor.modeler.plan.event.MeasureEditEvent;
 import com.realhome.editor.modeler.plan.event.WallEditEvent;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
@@ -45,12 +46,29 @@ public class Interactor {
 		modeler.setEvent(new WallEditEvent((int)pos.x, (int)pos.y, wall));
 	}
 
+	public void editMeasure(WallPlan wall, int x, int y) {
+		Vector2 pos = modeler.getPointMapper().worldToScreen(x, y);
+		modeler.setEvent(new MeasureEditEvent((int)pos.x, (int)pos.y, wall, this));
+	}
+
+	public void editSizeWallLeft(WallPlan wall, int delta) {
+
+	}
+
+	public void editSizeWallRight(WallPlan wall, int delta) {
+
+	}
+
+	public void editSizeWallCenter(WallPlan wall, int delta) {
+
+	}
+
 	public void deleteWall(WallPlan wall) {
 		overWallInteractor.clear();
 		wallInteractor.removeWall(wall);
 		update();
 	}
-	
+
 	public void deleteWall(Wall wall) {
 		WallPlan wallPlan = null;;
 		for(WallPlan w : housePlan.getWalls()) {
@@ -58,7 +76,7 @@ public class Interactor {
 				wallPlan = w;
 			}
 		}
-		
+
 		deleteWall(wallPlan);
 	}
 
@@ -67,11 +85,11 @@ public class Interactor {
 		update();
 		return result;
 	}
-	
+
 	public void setWallButton(int type, int x, int y, int width) {
 		housePlan.getWallButton().set(type, x, y, width);
 	}
-	
+
 	public void disableWallButton() {
 		housePlan.getWallButton().set(-1, 0, 0, 0);
 	}

@@ -10,23 +10,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.realhome.editor.modeler.plan.event.MeasureEditEvent;
-import com.realhome.editor.widget.PlanEditWallWidget;
+import com.realhome.editor.widget.PlanEditMeasureWidget;
 
 public class MeasureEditController  {
 
 	private final MeasureEditEvent event;
 	private final Stage stage;
-	
+
 	private Table currentWidget;
 	private EventListener currentListener;
-	
+
 	public MeasureEditController(Stage stage, MeasureEditEvent event) {
 		this.stage = stage;
 		this.event = event;
-		
+
 		init();
 	}
-	
+
 	private void init() {
 		ChangeListener widthListener = new ChangeListener() {
 			@Override
@@ -38,6 +38,37 @@ public class MeasureEditController  {
 			}
 		};
 
+		ChangeListener leftListener = new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent e, Actor actor) {
+				event.left();
+				removeWidget();
+			}
+		};
+
+		ChangeListener centerListener = new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent e, Actor actor) {
+				event.center();
+				removeWidget();
+			}
+		};
+
+		ChangeListener rightListener = new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent e, Actor actor) {
+				event.right();
+				removeWidget();
+			}
+		};
+
+		ChangeListener angleListener = new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent e, Actor actor) {
+
+			}
+		};
+
 		ChangeListener closeListener = new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent e, Actor actor) {
@@ -46,14 +77,16 @@ public class MeasureEditController  {
 			}
 		};
 
-		currentWidget = new PlanEditWallWidget(event.getWidth(), event.getHeight(),
-			widthListener, heightListener, closeListener, deleteListener);
+		currentWidget = new PlanEditMeasureWidget(event.getWidth(), widthListener,
+			leftListener, centerListener, rightListener,
+			angleListener, closeListener);
+
 		currentWidget.pack();
 
 		addWidget();
 		currentWidget.setPosition(event.getX(), event.getY());
 	}
-	
+
 	private void addWidget() {
 		currentListener = new ClickListener() {
 			@Override
@@ -66,7 +99,7 @@ public class MeasureEditController  {
 				}
 			}
 		};
-		
+
 		stage.addActor(currentWidget);
 		stage.addListener(currentListener);
 	}

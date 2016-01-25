@@ -10,6 +10,7 @@ import com.realhome.editor.common.pattern.notification.Notification;
 import com.realhome.editor.modeler.plan.actioner.WallAddActioner;
 import com.realhome.editor.modeler.plan.event.Event;
 import com.realhome.editor.modeler.plan.event.HouseUpdateEvent;
+import com.realhome.editor.modeler.plan.event.MeasureEditEvent;
 import com.realhome.editor.modeler.plan.event.WallEditEvent;
 import com.realhome.editor.view.PlanView;
 
@@ -34,6 +35,10 @@ public class PlanController extends BaseController<PlanView> {
 
 	private void editWall(final WallEditEvent event) {
 		new WallEditController(view.getActor().getStage(), event);
+	}
+
+	private void editMeasure(final MeasureEditEvent event) {
+		new MeasureEditController(view.getActor().getStage(), event);
 	}
 
 	private void action(String actionerName) {
@@ -81,6 +86,8 @@ public class PlanController extends BaseController<PlanView> {
 					syncHouses();
 				else if (e instanceof WallEditEvent)
 					editWall((WallEditEvent)e);
+				else if (e instanceof MeasureEditEvent)
+					editMeasure((MeasureEditEvent) e);
 			}
 
 		}

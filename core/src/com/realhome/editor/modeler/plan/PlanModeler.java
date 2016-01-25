@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.Modeler;
 import com.realhome.editor.modeler.plan.actioner.Actioner;
+import com.realhome.editor.modeler.plan.actioner.MeasureEditActioner;
 import com.realhome.editor.modeler.plan.actioner.PointMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.PointOverActioner;
 import com.realhome.editor.modeler.plan.actioner.WallAddActioner;
@@ -86,6 +87,7 @@ public class PlanModeler implements Modeler {
 	private void initActioners() {
 		actioners.add(new WallAddActioner());
 		actioners.add(new PointMovingActioner());
+		actioners.add(new MeasureEditActioner());
 		actioners.add(new WallEditActioner());
 		actioners.add(new WallMovingActioner());
 		actioners.add(new PointOverActioner());
