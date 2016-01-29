@@ -22,8 +22,8 @@ public class OverWallRenderer implements Renderer {
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/renderer/over_wall/overwall_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/renderer/over_wall/overwall_fragment.glsl";
+	private static final String vertexShader = "shader/plan/overwall_vertex.glsl";
+	private static final String fragmentShader = "shader/plan/overwall_fragment.glsl";
 	private float[] vertices;
 	private int id;
 	private final Vector2 min = new Vector2();
@@ -44,8 +44,8 @@ public class OverWallRenderer implements Renderer {
 	}
 
 	private void initShader () {
-		String vertex = Gdx.files.classpath(vertexShader).readString();
-		String fragment = Gdx.files.classpath(fragmentShader).readString();
+		String vertex = Gdx.files.internal(vertexShader).readString();
+		String fragment = Gdx.files.internal(fragmentShader).readString();
 		shader = new ShaderProgram(vertex, fragment);
 		if (!shader.isCompiled()) throw new GdxRuntimeException(shader.getLog());
 	}

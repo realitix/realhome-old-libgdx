@@ -23,8 +23,8 @@ public class WallRenderer implements Renderer {
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "com/realhome/editor/modeler/plan/renderer/wall/wall_vertex.glsl";
-	private static final String fragmentShader = "com/realhome/editor/modeler/plan/renderer/wall/wall_fragment.glsl";
+	private static final String vertexShader = "shader/plan/wall_vertex.glsl";
+	private static final String fragmentShader = "shader/plan/wall_fragment.glsl";
 	private int id = 0;
 	private final Vector2 min = new Vector2();
 	private final Vector2 max = new Vector2();
@@ -44,8 +44,8 @@ public class WallRenderer implements Renderer {
 	}
 
 	private void initShader () {
-		String vertex = Gdx.files.classpath(vertexShader).readString();
-		String fragment = Gdx.files.classpath(fragmentShader).readString();
+		String vertex = Gdx.files.internal(vertexShader).readString();
+		String fragment = Gdx.files.internal(fragmentShader).readString();
 		shader = new ShaderProgram(vertex, fragment);
 		if (!shader.isCompiled()) throw new GdxRuntimeException(shader.getLog());
 	}
