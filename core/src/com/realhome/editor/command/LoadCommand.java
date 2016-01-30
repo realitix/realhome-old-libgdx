@@ -7,6 +7,10 @@ import com.realhome.editor.model.house.Floor;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.model.house.Wall;
 
+/**
+ * Command to load file
+ * @author realitix
+ */
 public class LoadCommand extends Command {
 
 	@Override

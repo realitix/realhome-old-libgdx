@@ -3,6 +3,13 @@ package com.realhome.editor.common.pattern.mvc;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+/**
+ * Base view.
+ * Needs actor.
+ * @author realitix
+ *
+ * @param <T>
+ */
 public class BaseView<T extends Actor> implements View {
 	protected T actor;
 	protected String name;

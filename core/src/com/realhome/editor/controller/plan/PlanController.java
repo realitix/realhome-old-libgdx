@@ -14,6 +14,12 @@ import com.realhome.editor.modeler.plan.event.MeasureEditEvent;
 import com.realhome.editor.modeler.plan.event.WallEditEvent;
 import com.realhome.editor.view.PlanView;
 
+/**
+ * This controller manages the plan modeler
+ * It catchs events and redirect them to view.
+ * @author realitix
+ *
+ */
 public class PlanController extends BaseController<PlanView> {
 
 	public class Action {

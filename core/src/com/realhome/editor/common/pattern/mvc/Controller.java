@@ -6,6 +6,11 @@ import com.realhome.editor.common.pattern.notification.NotificationListener;
 import com.realhome.editor.common.pattern.notification.NotificationManager;
 import com.realhome.editor.model.AppModel;
 
+/**
+ * Controller interface
+ * @author realitix
+ *
+ */
 public interface Controller extends NotificationListener {
 
 	public Controller setNotificationManager (NotificationManager notificationManager);

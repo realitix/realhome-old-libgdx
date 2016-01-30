@@ -6,6 +6,13 @@ import com.realhome.editor.common.pattern.notification.Notification;
 import com.realhome.editor.common.pattern.notification.NotificationManager;
 import com.realhome.editor.model.AppModel;
 
+/**
+ * Base controller class
+ * This clas needs view
+ * @author realitix
+ *
+ * @param <T>
+ */
 public class BaseController<T extends View> implements Controller {
 
 	protected NotificationManager notificationManager;
