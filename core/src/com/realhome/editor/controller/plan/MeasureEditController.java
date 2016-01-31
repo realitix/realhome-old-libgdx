@@ -34,6 +34,7 @@ public class MeasureEditController  {
 				String t = ((TextField)actor).getText();
 				if(!t.isEmpty()) {
 					int width = Integer.valueOf(t);
+					event.setWidth(width);
 				}
 			}
 		};

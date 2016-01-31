@@ -9,6 +9,7 @@ import com.realhome.editor.modeler.plan.PlanModeler;
 import com.realhome.editor.modeler.plan.event.MeasureEditEvent;
 import com.realhome.editor.modeler.plan.event.WallEditEvent;
 import com.realhome.editor.modeler.plan.model.HousePlan;
+import com.realhome.editor.modeler.plan.model.MeasurePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class Interactor {
@@ -20,6 +21,7 @@ public class Interactor {
 	private final OverPointInteractor pointInteractor;
 	private final ArcInteractor arcInteractor;
 	private final OutlineInteractor outlineInteractor;
+	private final MeasureInteractor measureInteractor;
 
 	public Interactor(PlanModeler modeler, House house, HousePlan housePlan) {
 		this.modeler = modeler;
@@ -30,6 +32,7 @@ public class Interactor {
 		arcInteractor = new ArcInteractor(this);
 		wallInteractor = new WallInteractor(this);
 		outlineInteractor = new OutlineInteractor(this);
+		measureInteractor = new MeasureInteractor(this);
 	}
 
 	public void selectPoint(Point point) {
@@ -46,20 +49,24 @@ public class Interactor {
 		modeler.setEvent(new WallEditEvent((int)pos.x, (int)pos.y, wall));
 	}
 
-	public void editMeasure(WallPlan wall, int x, int y) {
+	public void editMeasure(MeasurePlan measure, int x, int y) {
 		Vector2 pos = modeler.getPointMapper().worldToScreen(x, y);
-		modeler.setEvent(new MeasureEditEvent((int)pos.x, (int)pos.y, wall, this));
+		modeler.setEvent(new MeasureEditEvent((int)pos.x, (int)pos.y, measure));
 	}
 
-	public void editSizeWallLeft(WallPlan wall, int delta) {
+	public void editSizeWallLeft(MeasurePlan measure, int delta) {
+		Wall origin = measureInteractor.getWallFromMeasure(measure).getOrigin();
+		Vector2 dir = origin.dir(new Vector2());
+		dir.scl(delta);
+		origin.getPoints()[1].add(dir);
+		update();
+	}
+
+	public void editSizeWallRight(MeasurePlan measure, int delta) {
 
 	}
 
-	public void editSizeWallRight(WallPlan wall, int delta) {
-
-	}
-
-	public void editSizeWallCenter(WallPlan wall, int delta) {
+	public void editSizeWallCenter(MeasurePlan measure, int delta) {
 
 	}
 

@@ -12,7 +12,7 @@ public class MeasureEditActioner extends BaseActioner {
 	public static final String NAME = "WallEditActioner";
 
 	private final Vector2 lastLocation = new Vector2();
-	private WallPlan currentWall;
+	private MeasurePlan currentMeasure;
 	private static float DISTANCE_MAX = 3;
 	private final Array<Vector2> polygon = new Array<Vector2>(4);
 
@@ -23,9 +23,9 @@ public class MeasureEditActioner extends BaseActioner {
 
 	@Override
 	public boolean move (int x, int y) {
-		if( currentWall != null ) {
+		if( currentMeasure != null ) {
 			if( lastLocation.dst(x, y) <= DISTANCE_MAX ) return true;
-			else currentWall = null;
+			else currentMeasure = null;
 		}
 
 		return false;
@@ -38,13 +38,13 @@ public class MeasureEditActioner extends BaseActioner {
 		for(ObjectMap.Entry<WallPlan, Array<MeasurePlan>> e : interactor.getHousePlan().getMeasures()) {
 			for(MeasurePlan measure : e.value) {
 				if(pointInMeasure(measure)) {
-					currentWall = e.key;
+					currentMeasure = measure;
 					return true;
 				}
 			}
 		}
 
-		currentWall = null;
+		currentMeasure = null;
 		return false;
 	}
 
@@ -66,8 +66,8 @@ public class MeasureEditActioner extends BaseActioner {
 
 	@Override
 	public boolean unclick (int x, int y) {
-		if( currentWall != null && lastLocation.dst(x, y) <= DISTANCE_MAX ) {
-			interactor.editMeasure(currentWall, x, y);
+		if( currentMeasure != null && lastLocation.dst(x, y) <= DISTANCE_MAX ) {
+			interactor.editMeasure(currentMeasure, x, y);
 			return true;
 		}
 

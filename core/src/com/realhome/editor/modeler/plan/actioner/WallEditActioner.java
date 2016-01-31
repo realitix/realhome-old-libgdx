@@ -1,7 +1,6 @@
 package com.realhome.editor.modeler.plan.actioner;
 
 import com.badlogic.gdx.math.Vector2;
-import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class WallEditActioner extends BaseActioner {
@@ -32,7 +31,7 @@ public class WallEditActioner extends BaseActioner {
 		for(WallPlan wall : interactor.getHousePlan().getWalls()) {
 			if( wall.pointInside(x, y) ) {
 				currentWall = wall;
-				return true;
+				return false;
 			}
 		}
 
@@ -44,7 +43,7 @@ public class WallEditActioner extends BaseActioner {
 	public boolean unclick (int x, int y) {
 		if( currentWall != null && lastLocation.dst(x, y) <= DISTANCE_MAX ) {
 			interactor.editWall(currentWall, x, y);
-			return true;
+			return false;
 		}
 
 		return false;

@@ -1,22 +1,27 @@
 package com.realhome.editor.modeler.plan.event;
 
-import com.realhome.editor.modeler.plan.interactor.Interactor;
-import com.realhome.editor.modeler.plan.model.WallPlan;
+import com.realhome.editor.modeler.plan.model.MeasurePlan;
 
 
 public class MeasureEditEvent implements Event {
+	public static final int NONE = 0;
+	public static final int LEFT = 1;
+	public static final int CENTER = 2;
+	public static final int RIGHT = 3;
+	
 	private final int x, y;
 	private int newWidth;
-	private WallPlan wall;
+	private final int currentWidth;
+	private final MeasurePlan measure;
 	private boolean close;
-	private final Interactor interactor;
+	private int value = NONE;
 
-	public MeasureEditEvent(int x, int y, WallPlan wall, Interactor interactor) {
+	public MeasureEditEvent(int x, int y, MeasurePlan measure) {
 		this.x = x;
 		this.y = y;
-		this.wall = wall;
-		this.newWidth = wall.getOrigin().getWidth();
-		this.interactor = interactor;
+		this.measure = measure;
+		this.currentWidth = measure.getSize();
+		this.newWidth = measure.getSize();
 	}
 
 	public int getX() {
@@ -29,20 +34,29 @@ public class MeasureEditEvent implements Event {
 
 	public void left() {
 		close = true;
-		int delta = newWidth - wall.getOrigin().getWidth();
-		interactor.editSizeWallLeft(wall, delta);
+		value = LEFT;
 	}
 
 	public void right() {
 		close = true;
-		int delta = newWidth - wall.getOrigin().getWidth();
-		interactor.editSizeWallRight(wall, delta);
+		value = RIGHT;
 	}
 
 	public void center() {
 		close = true;
-		int delta = newWidth - wall.getOrigin().getWidth();
-		interactor.editSizeWallCenter(wall, delta);
+		value = CENTER;
+	}
+	
+	public int getDelta() {
+		return newWidth - currentWidth;
+	}
+	
+	public int getValue() {
+		return value;
+	}
+	
+	public MeasurePlan getMeasure() {
+		return measure;
 	}
 
 	public int getWidth() {

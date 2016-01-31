@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
-import com.realhome.editor.modeler.plan.renderer.wall_button.WallButtonRenderer;
+import com.realhome.editor.modeler.plan.renderer.WallButtonRenderer;
 
 public class WallAddActioner extends BaseActioner {
 	public static final String NAME = "WallAddActioner";

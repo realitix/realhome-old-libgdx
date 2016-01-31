@@ -1,5 +1,5 @@
 
-package com.realhome.editor.modeler.plan.renderer.wall_button;
+package com.realhome.editor.modeler.plan.renderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallButtonPlan;
-import com.realhome.editor.modeler.plan.renderer.Renderer;
 
 public class WallButtonRenderer implements Renderer {
 	public static final int CHECK = 0;

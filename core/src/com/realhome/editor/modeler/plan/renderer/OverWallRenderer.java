@@ -1,5 +1,5 @@
 
-package com.realhome.editor.modeler.plan.renderer.over_wall;
+package com.realhome.editor.modeler.plan.renderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,7 +15,6 @@ import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.OverWallPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
-import com.realhome.editor.modeler.plan.renderer.Renderer;
 
 public class OverWallRenderer implements Renderer {
 	private Mesh mesh;

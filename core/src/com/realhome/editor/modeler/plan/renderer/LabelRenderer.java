@@ -1,5 +1,5 @@
 
-package com.realhome.editor.modeler.plan.renderer.label;
+package com.realhome.editor.modeler.plan.renderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.LabelPlan;
-import com.realhome.editor.modeler.plan.renderer.Renderer;
 
 public class LabelRenderer implements Renderer {
 	private ObjectMap<Object, LabelPlan> labels;

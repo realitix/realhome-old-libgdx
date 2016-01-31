@@ -1,4 +1,4 @@
-package com.realhome.editor.modeler.plan.renderer.measure;
+package com.realhome.editor.modeler.plan.renderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,7 +15,6 @@ import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.MeasurePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
-import com.realhome.editor.modeler.plan.renderer.Renderer;
 
 public class MeasureRenderer implements Renderer {
 	private Mesh mesh;

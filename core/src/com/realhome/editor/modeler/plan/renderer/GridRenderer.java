@@ -1,4 +1,4 @@
-package com.realhome.editor.modeler.plan.renderer.grid;
+package com.realhome.editor.modeler.plan.renderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,7 +12,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
-import com.realhome.editor.modeler.plan.renderer.Renderer;
 
 public class GridRenderer implements Renderer {
 	private final int width;

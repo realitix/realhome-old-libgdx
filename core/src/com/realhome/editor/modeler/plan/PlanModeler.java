@@ -15,19 +15,21 @@ import com.realhome.editor.modeler.plan.actioner.WallEditActioner;
 import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
 import com.realhome.editor.modeler.plan.event.Event;
+import com.realhome.editor.modeler.plan.event.MeasureEditEvent;
 import com.realhome.editor.modeler.plan.event.WallEditEvent;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
+import com.realhome.editor.modeler.plan.model.MeasurePlan;
+import com.realhome.editor.modeler.plan.renderer.ArcRenderer;
+import com.realhome.editor.modeler.plan.renderer.GridRenderer;
+import com.realhome.editor.modeler.plan.renderer.LabelRenderer;
+import com.realhome.editor.modeler.plan.renderer.MaskRenderer;
+import com.realhome.editor.modeler.plan.renderer.MeasureRenderer;
+import com.realhome.editor.modeler.plan.renderer.OverPointRenderer;
+import com.realhome.editor.modeler.plan.renderer.OverWallRenderer;
 import com.realhome.editor.modeler.plan.renderer.Renderer;
-import com.realhome.editor.modeler.plan.renderer.arc.ArcRenderer;
-import com.realhome.editor.modeler.plan.renderer.grid.GridRenderer;
-import com.realhome.editor.modeler.plan.renderer.label.LabelRenderer;
-import com.realhome.editor.modeler.plan.renderer.mask.MaskRenderer;
-import com.realhome.editor.modeler.plan.renderer.measure.MeasureRenderer;
-import com.realhome.editor.modeler.plan.renderer.over_point.OverPointRenderer;
-import com.realhome.editor.modeler.plan.renderer.over_wall.OverWallRenderer;
-import com.realhome.editor.modeler.plan.renderer.wall.WallRenderer;
-import com.realhome.editor.modeler.plan.renderer.wall_button.WallButtonRenderer;
+import com.realhome.editor.modeler.plan.renderer.WallButtonRenderer;
+import com.realhome.editor.modeler.plan.renderer.WallRenderer;
 import com.realhome.editor.modeler.plan.util.CameraController;
 import com.realhome.editor.modeler.plan.util.PointMapper;
 
@@ -226,6 +228,26 @@ public class PlanModeler implements Modeler {
 		if(event instanceof WallEditEvent) {
 			if(((WallEditEvent) event).toDelete())
 				interactor.deleteWall(((WallEditEvent) event).getWall());
+		}
+		
+		if(event instanceof MeasureEditEvent) {
+			if(((MeasureEditEvent) event).toClose()) {
+				int value = ((MeasureEditEvent) event).getValue();
+				int delta = ((MeasureEditEvent) event).getDelta();
+				MeasurePlan measure = ((MeasureEditEvent) event).getMeasure();
+				System.out.println(delta);
+				switch(value) {
+				case MeasureEditEvent.LEFT:
+					interactor.editSizeWallLeft(measure, delta);
+					break;
+				case MeasureEditEvent.RIGHT:
+					interactor.editSizeWallRight(measure, delta);
+					break;
+				case MeasureEditEvent.CENTER:
+					interactor.editSizeWallCenter(measure, delta);
+					break;
+				}
+			}
 		}
 	}
 }
