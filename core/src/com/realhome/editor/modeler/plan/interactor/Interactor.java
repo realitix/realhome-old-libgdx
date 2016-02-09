@@ -67,7 +67,12 @@ public class Interactor {
 	}
 
 	public void editSizeWallCenter(MeasurePlan measure, int delta) {
-
+		Wall origin = measureInteractor.getWallFromMeasure(measure).getOrigin();
+		Vector2 dir = origin.dir(new Vector2());
+		dir.scl(delta/2);
+		origin.getPoints()[1].add(dir);
+		origin.getPoints()[0].add(dir.rotate90(1).rotate90(1));
+		update();
 	}
 
 	public void deleteWall(WallPlan wall) {
