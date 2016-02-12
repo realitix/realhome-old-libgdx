@@ -1,6 +1,7 @@
 
 package com.realhome.editor.modeler.plan;
 
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -45,6 +46,7 @@ public class PlanModeler implements Modeler {
 	private PointMapper pointMapper;
 	private CameraController cameraController;
 	private Event currentEvent;
+	private PlanInputProcessor inputProcessor;
 
 	public PlanModeler () {
 		create();
@@ -65,6 +67,7 @@ public class PlanModeler implements Modeler {
 		house = new House();
 		housePlan = new HousePlan();
 		interactor = new Interactor(this, house, housePlan);
+		inputProcessor = new PlanInputProcessor(this);
 
 		initRenderers();
 		initActioners();
@@ -138,6 +141,8 @@ public class PlanModeler implements Modeler {
 	/**
 	 * Enable actioner
 	 */
+
+	@Override
 	public void action(String actionerName) {
 		for(Actioner actioner : actioners) {
 			if(actioner.getName() == actionerName)
@@ -229,7 +234,7 @@ public class PlanModeler implements Modeler {
 			if(((WallEditEvent) event).toDelete())
 				interactor.deleteWall(((WallEditEvent) event).getWall());
 		}
-		
+
 		if(event instanceof MeasureEditEvent) {
 			if(((MeasureEditEvent) event).toClose()) {
 				int value = ((MeasureEditEvent) event).getValue();
@@ -249,5 +254,10 @@ public class PlanModeler implements Modeler {
 				}
 			}
 		}
+	}
+
+	@Override
+	public InputProcessor getInputProcessor () {
+		return inputProcessor;
 	}
 }
