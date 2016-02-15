@@ -1,5 +1,6 @@
+package com.realhome.editor.ui;
 
-package com.realhome.editor.view;
+
 
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -7,17 +8,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;
-import com.realhome.editor.common.pattern.mvc.BaseView;
 import com.realhome.editor.util._;
 
-public class MenuBarView extends BaseView<Table> {
-	public final static String NAME = "view.menu.MenuBarView";
+public class MenuBarComposer {
+	public final static String NAME = "ui.MenuBar";
 
 	private MenuBar menuBar;
 	private MenuItem menuNew;
 	private MenuItem menuOpen;
 
-	public MenuBarView () {
+	public MenuBarComposer () {
 		menuBar = new MenuBar();
 
 		Menu file = new Menu(_.g("file"));
@@ -46,9 +46,11 @@ public class MenuBarView extends BaseView<Table> {
 		menuBar.addMenu(share);
 		menuBar.addMenu(help);
 
-		init(menuBar.getTable(), NAME);
-
 		padMenus(20);
+	}
+
+	public Table getTable() {
+		return menuBar.getTable();
 	}
 
 	public void addOpenListener (ChangeListener listener) {

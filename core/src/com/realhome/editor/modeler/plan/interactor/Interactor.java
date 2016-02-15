@@ -6,11 +6,11 @@ import com.realhome.editor.model.house.House;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.PlanModeler;
-import com.realhome.editor.modeler.plan.event.MeasureEditEvent;
-import com.realhome.editor.modeler.plan.event.WallEditEvent;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.MeasurePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
+import com.realhome.editor.modeler.plan.widget.PlanEditMeasureWidget;
+import com.realhome.editor.modeler.plan.widget.PlanEditWallWidget;
 
 public class Interactor {
 	private final PlanModeler modeler;
@@ -46,12 +46,12 @@ public class Interactor {
 
 	public void editWall(WallPlan wall, int x, int y) {
 		Vector2 pos = modeler.getPointMapper().worldToScreen(x, y);
-		modeler.setEvent(new WallEditEvent((int)pos.x, (int)pos.y, wall));
+		modeler.setWidget(new PlanEditWallWidget(wall), (int)pos.x, (int)pos.y);
 	}
 
 	public void editMeasure(MeasurePlan measure, int x, int y) {
 		Vector2 pos = modeler.getPointMapper().worldToScreen(x, y);
-		modeler.setEvent(new MeasureEditEvent((int)pos.x, (int)pos.y, measure));
+		modeler.setWidget(new PlanEditMeasureWidget(measure), (int)pos.x, (int)pos.y);
 	}
 
 	public void editSizeWallLeft(MeasurePlan measure, int delta) {

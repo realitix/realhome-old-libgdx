@@ -1,9 +1,12 @@
 
 package com.realhome.editor.modeler.plan;
 
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.realhome.editor.RealHomeApp;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.Modeler;
 import com.realhome.editor.modeler.plan.actioner.Actioner;
@@ -14,9 +17,6 @@ import com.realhome.editor.modeler.plan.actioner.WallAddActioner;
 import com.realhome.editor.modeler.plan.actioner.WallEditActioner;
 import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
-import com.realhome.editor.modeler.plan.event.Event;
-import com.realhome.editor.modeler.plan.event.MeasureEditEvent;
-import com.realhome.editor.modeler.plan.event.WallEditEvent;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.MeasurePlan;
@@ -32,6 +32,8 @@ import com.realhome.editor.modeler.plan.renderer.WallButtonRenderer;
 import com.realhome.editor.modeler.plan.renderer.WallRenderer;
 import com.realhome.editor.modeler.plan.util.CameraController;
 import com.realhome.editor.modeler.plan.util.PointMapper;
+import com.realhome.editor.modeler.plan.widget.PlanEditMeasureWidget;
+import com.realhome.editor.modeler.plan.widget.PlanEditWallWidget;
 
 public class PlanModeler implements Modeler {
 
@@ -44,9 +46,12 @@ public class PlanModeler implements Modeler {
 	private final Array<Actioner> actioners = new Array<Actioner>();
 	private PointMapper pointMapper;
 	private CameraController cameraController;
-	private Event currentEvent;
+	private Table currentWidget;
+	private PlanInputProcessor inputProcessor;
+	private RealHomeApp app;
 
-	public PlanModeler () {
+	public PlanModeler (RealHomeApp app) {
+		this.app = app;
 		create();
 	}
 
@@ -65,6 +70,7 @@ public class PlanModeler implements Modeler {
 		house = new House();
 		housePlan = new HousePlan();
 		interactor = new Interactor(this, house, housePlan);
+		inputProcessor = new PlanInputProcessor(this);
 
 		initRenderers();
 		initActioners();
@@ -135,9 +141,8 @@ public class PlanModeler implements Modeler {
 		interactor.update();
 	}
 
-	/**
-	 * Enable actioner
-	 */
+	/** Enable actioner */
+	@Override
 	public void action(String actionerName) {
 		for(Actioner actioner : actioners) {
 			if(actioner.getName() == actionerName)
@@ -150,12 +155,10 @@ public class PlanModeler implements Modeler {
 		return house;
 	}
 
-	public Event getEvent() {
-		return currentEvent;
-	}
-
-	public void setEvent(Event event) {
-		currentEvent = event;
+	public void setWidget(Table widget, int posX, int posY) {
+		currentWidget = widget;
+		app.getStage().addActor(currentWidget);
+		currentWidget.setPosition(posX, posY);
 	}
 
 	public PointMapper getPointMapper() {
@@ -216,38 +219,45 @@ public class PlanModeler implements Modeler {
 	}
 
 	private boolean locked() {
-		if(currentEvent != null) {
-			manageEvent(currentEvent);
-			if(currentEvent.toClose()) currentEvent = null;
-		}
+		if(currentWidget != null)
+			manageWidget(currentWidget);
 
-		return currentEvent != null;
+		return currentWidget != null;
 	}
 
-	private void manageEvent(Event event) {
-		if(event instanceof WallEditEvent) {
-			if(((WallEditEvent) event).toDelete())
-				interactor.deleteWall(((WallEditEvent) event).getWall());
+	private void manageWidget(Table widget) {
+		if(widget instanceof PlanEditWallWidget) {
+			if(((PlanEditWallWidget) widget).toDelete())
+				interactor.deleteWall(((PlanEditWallWidget) widget).getWall());
+			if(((PlanEditWallWidget) widget).toClose()) {
+				currentWidget = null;
+			}
 		}
-		
-		if(event instanceof MeasureEditEvent) {
-			if(((MeasureEditEvent) event).toClose()) {
-				int value = ((MeasureEditEvent) event).getValue();
-				int delta = ((MeasureEditEvent) event).getDelta();
-				MeasurePlan measure = ((MeasureEditEvent) event).getMeasure();
-				System.out.println(delta);
+
+		if(widget instanceof PlanEditMeasureWidget) {
+			if(((PlanEditMeasureWidget) widget).toClose()) {
+				currentWidget = null;
+				int value = ((PlanEditMeasureWidget) widget).getValue();
+				int delta = ((PlanEditMeasureWidget) widget).getDelta();
+				MeasurePlan measure = ((PlanEditMeasureWidget) widget).getMeasure();
+
 				switch(value) {
-				case MeasureEditEvent.LEFT:
+				case PlanEditMeasureWidget.LEFT:
 					interactor.editSizeWallLeft(measure, delta);
 					break;
-				case MeasureEditEvent.RIGHT:
+				case PlanEditMeasureWidget.RIGHT:
 					interactor.editSizeWallRight(measure, delta);
 					break;
-				case MeasureEditEvent.CENTER:
+				case PlanEditMeasureWidget.CENTER:
 					interactor.editSizeWallCenter(measure, delta);
 					break;
 				}
 			}
 		}
+	}
+
+	@Override
+	public InputProcessor getInputProcessor () {
+		return inputProcessor;
 	}
 }
