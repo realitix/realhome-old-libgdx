@@ -9,18 +9,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.ui.VisUI;
 import com.realhome.editor.common.pattern.command.CommandManager;
-import com.realhome.editor.common.pattern.mvc.Controller;
-import com.realhome.editor.common.pattern.notification.NotificationManager;
 import com.realhome.editor.model.AppModel;
 import com.realhome.editor.model.house.Floor;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.ModelerManager;
 import com.realhome.editor.ui.UIManager;
-import com.realhome.editor.view.AppView;
 
 public class RealHomeApp extends ApplicationAdapter {
 	public static final String NAME = "RealHomeApp";
@@ -30,9 +26,6 @@ public class RealHomeApp extends ApplicationAdapter {
 	private CommandManager commandManager;
 	private UIManager uiManager;
 	private AppModel appModel;
-
-	private AppView appView;
-	private Array<Controller> controllers = new Array<Controller>();
 
 	@Override
 	public void create () {
@@ -53,26 +46,8 @@ public class RealHomeApp extends ApplicationAdapter {
 		uiManager.init();
 
 		// Create managers
-		//NotificationManager notificationManager = new NotificationManager();
 		commandManager = new CommandManager();
 
-		// Create views
-		/*appView = new AppView(new DefaultPresenter());
-		MenuBarView menuBarView = new MenuBarView();
-		PlanView planView = new PlanView().disable();
-
-		// Insert views in app view
-		appView.addView(menuBarView);
-		appView.addView(planView);
-
-		// Create controllers
-		// Controllers exist threw notification and view (listen event)
-		controllers.add(new AppController(appView));
-		controllers.add(new MenuBarController(menuBarView));
-		controllers.add(new PlanController(planView));
-
-		initControllers(notificationManager, commandManager, appModel);
-		 */
 		Gdx.input.setInputProcessor(new InputMultiplexer(stage, modelerManager));
 	}
 
@@ -95,12 +70,6 @@ public class RealHomeApp extends ApplicationAdapter {
 
 	public CommandManager getCommandManager() {
 		return commandManager;
-	}
-
-	private void initControllers (NotificationManager nm, CommandManager cm, AppModel m) {
-		for (int i = 0; i < controllers.size; i++) {
-			controllers.get(i).setNotificationManager(nm).setCommandManager(cm).setModel(m);
-		}
 	}
 
 	@Override

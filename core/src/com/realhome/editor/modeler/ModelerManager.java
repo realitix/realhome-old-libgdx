@@ -19,7 +19,7 @@ public class ModelerManager implements InputProcessor {
 
 	public ModelerManager(RealHomeApp app) {
 		this.app = app;
-		planModeler = new PlanModeler();
+		planModeler = new PlanModeler(app);
 		action = new Action();
 
 		init();
