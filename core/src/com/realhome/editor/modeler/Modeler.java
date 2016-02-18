@@ -6,8 +6,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.realhome.editor.model.house.House;
 
 public interface Modeler extends Disposable {
-	public void create ();
-
 	public void resize (int width, int height);
 
 	public void render ();
@@ -19,4 +17,6 @@ public interface Modeler extends Disposable {
 	public House getHouse();
 
 	public InputProcessor getInputProcessor();
+
+	public String getName();
 }

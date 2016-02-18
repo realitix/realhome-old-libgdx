@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.RealHomeApp;
+import com.realhome.editor.command.SyncHouseCommand;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.Modeler;
 import com.realhome.editor.modeler.plan.actioner.Actioner;
@@ -34,11 +35,13 @@ import com.realhome.editor.modeler.plan.util.CameraController;
 import com.realhome.editor.modeler.plan.util.PointMapper;
 import com.realhome.editor.modeler.plan.widget.PlanEditMeasureWidget;
 import com.realhome.editor.modeler.plan.widget.PlanEditWallWidget;
+import com.realhome.editor.modeler.plan.widget.WidgetManager;
 
 public class PlanModeler implements Modeler {
 
+	public static String NAME = "PlanModeler";
+
 	private final Array<Renderer> renderers = new Array<Renderer>();
-	private final float VIRTUAL_HEIGHT = 1000; // centimeters
 	private OrthographicCamera camera;
 	private HousePlan housePlan;
 	private House house;
@@ -49,14 +52,14 @@ public class PlanModeler implements Modeler {
 	private Table currentWidget;
 	private PlanInputProcessor inputProcessor;
 	private RealHomeApp app;
+	private WidgetManager widgetManager;
 
 	public PlanModeler (RealHomeApp app) {
 		this.app = app;
-		create();
+		init();
 	}
 
-	@Override
-	public void create () {
+	private void init () {
 		camera = new OrthographicCamera();
 		camera.near = 1;
 		camera.far = 20;
@@ -71,6 +74,7 @@ public class PlanModeler implements Modeler {
 		housePlan = new HousePlan();
 		interactor = new Interactor(this, house, housePlan);
 		inputProcessor = new PlanInputProcessor(this);
+		widgetManager = new WidgetManager(interactor, this);
 
 		initRenderers();
 		initActioners();
@@ -109,7 +113,7 @@ public class PlanModeler implements Modeler {
 	@Override
 	public void resize (int width, int height) {
 		pointMapper.updateViewport(width, height);
-		updateCameraViewport(VIRTUAL_HEIGHT * width / height, VIRTUAL_HEIGHT);
+		updateCameraViewport(PlanConfiguration.World.height * width / height, PlanConfiguration.World.height);
 	}
 
 	private void updateCameraViewport (float viewportWidth, float viewportHeight) {
@@ -155,10 +159,19 @@ public class PlanModeler implements Modeler {
 		return house;
 	}
 
+	@Override
+	public String getName () {
+		return NAME;
+	}
+
 	public void setWidget(Table widget, int posX, int posY) {
 		currentWidget = widget;
 		app.getStage().addActor(currentWidget);
 		currentWidget.setPosition(posX, posY);
+	}
+
+	public void removeWidget() {
+		currentWidget = null;
 	}
 
 	public PointMapper getPointMapper() {
@@ -211,8 +224,9 @@ public class PlanModeler implements Modeler {
 		Vector2 c = pointMapper.screenToWorld(x, y);
 
 		for (Actioner actioner : actioners) {
-			if( actioner.unclick((int) c.x, (int)c.y) )
+			if( actioner.unclick((int) c.x, (int)c.y) ) {
 				return true;
+			}
 		}
 
 		return false;
@@ -220,40 +234,13 @@ public class PlanModeler implements Modeler {
 
 	private boolean locked() {
 		if(currentWidget != null)
-			manageWidget(currentWidget);
+			widgetManager.manageWidget(currentWidget);
 
 		return currentWidget != null;
 	}
 
-	private void manageWidget(Table widget) {
-		if(widget instanceof PlanEditWallWidget) {
-			if(((PlanEditWallWidget) widget).toDelete())
-				interactor.deleteWall(((PlanEditWallWidget) widget).getWall());
-			if(((PlanEditWallWidget) widget).toClose()) {
-				currentWidget = null;
-			}
-		}
-
-		if(widget instanceof PlanEditMeasureWidget) {
-			if(((PlanEditMeasureWidget) widget).toClose()) {
-				currentWidget = null;
-				int value = ((PlanEditMeasureWidget) widget).getValue();
-				int delta = ((PlanEditMeasureWidget) widget).getDelta();
-				MeasurePlan measure = ((PlanEditMeasureWidget) widget).getMeasure();
-
-				switch(value) {
-				case PlanEditMeasureWidget.LEFT:
-					interactor.editSizeWallLeft(measure, delta);
-					break;
-				case PlanEditMeasureWidget.RIGHT:
-					interactor.editSizeWallRight(measure, delta);
-					break;
-				case PlanEditMeasureWidget.CENTER:
-					interactor.editSizeWallCenter(measure, delta);
-					break;
-				}
-			}
-		}
+	public void syncWithAppHouse() {
+		app.getCommandManager().execute(SyncHouseCommand.class, app.getAppModel().getHouse(), this.house);
 	}
 
 	@Override

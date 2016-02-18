@@ -95,6 +95,7 @@ public class Interactor {
 	public Wall addWall(Point point) {
 		Wall result = wallInteractor.addWall(point);
 		update();
+		modeler.syncWithAppHouse();
 		return result;
 	}
 

@@ -29,10 +29,12 @@ public class House {
 	}
 
 	private void syncOut(House target) {
-		for(int i = 0; i < this.floors.size; i++) {
+		int i = 0;
+		while(i < this.floors.size) {
 			Floor sf = this.floors.get(i);
 			Floor tf = target.getFloor(sf);
 			if(tf == null) this.removeFloor(sf);
+			else i++;
 		}
 	}
 

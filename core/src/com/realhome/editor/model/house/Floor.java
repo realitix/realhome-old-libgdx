@@ -38,10 +38,12 @@ public class Floor extends BaseModel {
 	}
 
 	private void syncOut(Floor target) {
-		for(int i = 0; i < this.walls.size; i++) {
+		int i = 0;
+		while(i < this.walls.size) {
 			Wall sw = this.walls.get(i);
 			Wall tw = target.getWall(sw);
 			if(tw == null) this.removeWall(sw);
+			else i++;
 		}
 	}
 
@@ -64,6 +66,15 @@ public class Floor extends BaseModel {
 	public Floor removeWall (Wall wall) {
 		walls.removeValue(wall, true);
 		return this;
+	}
+
+	public boolean hasWall(Wall wall) {
+		for(Wall w : walls) {
+			if(w.equals(wall))
+				return true;
+		}
+
+		return false;
 	}
 
 	@Override

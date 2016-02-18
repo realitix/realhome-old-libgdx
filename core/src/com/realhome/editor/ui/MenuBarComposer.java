@@ -16,6 +16,9 @@ public class MenuBarComposer {
 	private MenuBar menuBar;
 	private MenuItem menuNew;
 	private MenuItem menuOpen;
+	private MenuItem toolAddWall;
+	private MenuItem menuD3;
+	private MenuItem menuPlan;
 
 	public MenuBarComposer () {
 		menuBar = new MenuBar();
@@ -29,6 +32,9 @@ public class MenuBarComposer {
 		file.addItem(new MenuItem(_.g("exit")));
 
 		Menu edit = new Menu(_.g("edit"));
+		edit.addItem(menuD3 = new MenuItem("3D"));
+		edit.addItem(menuPlan = new MenuItem("Plan"));
+		edit.addSeparator();
 		edit.addItem(new MenuItem(_.g("undo")));
 		edit.addItem(new MenuItem(_.g("redo")));
 		edit.addItem(new MenuItem(_.g("preference")));
@@ -41,8 +47,12 @@ public class MenuBarComposer {
 		help.addItem(new MenuItem(_.g("online_help")));
 		help.addItem(new MenuItem(_.g("about")));
 
+		Menu tool = new Menu("Tool");
+		tool.addItem(toolAddWall = new MenuItem("Add wall"));
+
 		menuBar.addMenu(file);
 		menuBar.addMenu(edit);
+		menuBar.addMenu(tool);
 		menuBar.addMenu(share);
 		menuBar.addMenu(help);
 
@@ -59,6 +69,18 @@ public class MenuBarComposer {
 
 	public void addNewListener (ChangeListener listener) {
 		menuNew.addListener(listener);
+	}
+
+	public void addToolAddWallListener (ChangeListener listener) {
+		toolAddWall.addListener(listener);
+	}
+
+	public void addD3Listener (ChangeListener listener) {
+		menuD3.addListener(listener);
+	}
+
+	public void addPlanListener (ChangeListener listener) {
+		menuPlan.addListener(listener);
 	}
 
 	private void padMenus (int pad) {

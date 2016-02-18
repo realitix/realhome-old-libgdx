@@ -50,13 +50,25 @@ public class WallInteractor {
 			computeMeasure(cachedWalls.get(i));
 	}
 
-	private void syncWalls() {
+	public void syncWalls() {
 		Array<Wall> walls = interactor.getHouse().getFloor(interactor.getHousePlan().getFloor()).getWalls();
 		Array<WallPlan> wallsPlan = interactor.getHousePlan().getWalls();
+
+		// Add missing walls
 		for( Wall wall : walls ) {
 			if(!hasWallPlan(wall)) {
 				wallsPlan.add(new WallPlan(wall));
 			}
+		}
+
+		// Remove deleted walls
+		int i = 0;
+		while(i < wallsPlan.size) {
+			WallPlan wallPlan = wallsPlan.get(i);
+			if(!interactor.getHouse().getFloor(interactor.getHousePlan().getFloor()).hasWall(wallPlan.getOrigin()))
+				removeWall(wallPlan);
+			else
+				i++;
 		}
 	}
 
@@ -323,14 +335,16 @@ public class WallInteractor {
 
 	public void removeWall(WallPlan wall) {
 		HousePlan housePlan = interactor.getHousePlan();
-		House house = interactor.getHouse();
 
 		for(MeasurePlan measure : housePlan.getMeasures().get(wall)) {
 			housePlan.getLabels().remove(measure);
 		}
+
 		housePlan.getMeasures().remove(wall);
-		house.getFloor(housePlan.getFloor()).removeWall(wall.getOrigin());
 		housePlan.getWalls().removeValue(wall, true);
+
+		House house = interactor.getHouse();
+		house.getFloor(housePlan.getFloor()).removeWall(wall.getOrigin());
 	}
 
 	public Wall addWall(Point point) {

@@ -5,6 +5,10 @@ import com.badlogic.gdx.math.Vector2;
 
 public class PlanConfiguration {
 
+	public static class World {
+		public static float height = 1000;
+	}
+
 	public static class Arc {
 		public static float size = 120;
 		public static float bubbleSize = 30;
@@ -29,7 +33,7 @@ public class PlanConfiguration {
 	public static class Mask {
 		public static Color color = new Color(1, 1, 1, 1);
 	}
-	
+
 	public static class Measure {
 		public static Color color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
 		public static int gap = 25;
