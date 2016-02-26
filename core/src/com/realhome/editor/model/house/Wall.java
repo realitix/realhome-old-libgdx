@@ -8,12 +8,25 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 
 public class Wall extends BaseModel {
+	public final static int SIDE_BOTTOM = 1;
+	public final static int SIDE_TOP = 2;
+	// Width side at point 0
+	public final static int SIDE_WIDTH0 = 3;
+	// Width side at point 1
+	public final static int SIDE_WIDTH1 = 4;
+	// Normal to direction (vector p0 to p1)
+	public final static int SIDE_LENGTH0 = 5;
+	// InvNormal to direction (vector p0 to p1)
+	public final static int SIDE_LENGTH1 = 6;
+
 	private static final int DEFAULT_WIDTH = 50;
 
 	private int type;
 	private int height;
 	private int width = DEFAULT_WIDTH;
 	private final Point[] points = new Point[2];
+
+	private final IntMap<Material> materials = new IntMap<Material>();
 
 	public Wall () {
 		for (int i = 0; i < points.length; i++) {

@@ -4,6 +4,7 @@ package com.realhome.editor.model.house;
 import com.badlogic.gdx.utils.Array;
 
 public class House {
+	private Array<Wall> tmpWalls = new Array<Wall>();
 	private Array<Floor> floors = new Array<Floor>();
 
 	public House() {}
@@ -61,6 +62,18 @@ public class House {
 	public House removeFloor (Floor floor) {
 		this.floors.removeValue(floor, true);
 		return this;
+	}
+
+	public Array<Wall> getWalls() {
+		tmpWalls.clear();
+		for(int i = 0; i < floors.size; i++) {
+			Floor f = floors.get(i);
+			for(int j = 0; j < f.getWalls().size; j++) {
+				tmpWalls.add(f.getWalls().get(j));
+			}
+		}
+
+		return tmpWalls;
 	}
 
 	@Override
