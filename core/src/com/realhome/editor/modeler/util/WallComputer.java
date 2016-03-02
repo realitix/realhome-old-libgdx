@@ -196,7 +196,7 @@ public class WallComputer {
 	/**
 	 * Get the number of point linked between wall and walls
 	 * @param wall Wall to test
-	 * @parap walls All wall
+	 * @param walls All wall
 	 * @return 0 if no link, 1 if one link, 2 if two links
 	*/
 	public int getNumberLink(Wall wall, Array<Wall> walls) {
@@ -230,5 +230,33 @@ public class WallComputer {
 		if(p0Link || p1Link)
 			return 1;
 		return 0;
+	}
+
+	/**
+	 * Return true if the <pointId> of the <wall> is linked
+	 * @param wall Wall to test
+	 * @param pointId point in the wall (0 or 1)
+	 * @param walls All walls
+	 * @return boolean
+	*/
+	public boolean isPointLinked(Wall wall, int pointId, Array<Wall> walls) {
+		// Get wall point
+		Point point = wall.getPoints()[pointId];
+
+		// Loop through walls
+		for(Wall w : walls) {
+			// Remove source wall
+			if(w.equals(wall))
+				continue;
+
+			// Loop through points
+			for(Point p : w.getPoints()) {
+				// Set the point as linked if equals
+				if(point.equals(p))
+					return true;
+			}
+		}
+
+		return false;
 	}
 }

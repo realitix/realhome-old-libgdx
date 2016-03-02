@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.IntMap;
 
 
 public class Wall extends BaseModel {
@@ -22,7 +23,7 @@ public class Wall extends BaseModel {
 	private static final int DEFAULT_WIDTH = 50;
 
 	private int type;
-	private int height;
+	private int height = 150;
 	private int width = DEFAULT_WIDTH;
 	private final Point[] points = new Point[2];
 

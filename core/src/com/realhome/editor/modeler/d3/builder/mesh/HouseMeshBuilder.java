@@ -1,9 +1,18 @@
+
+package com.realhome.editor.modeler.d3.builder.mesh;
+
+import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.IntArray;
+
 public class HouseMeshBuilder {
 
 	/**
 	 * Class that gives information about the
 	 * mesh. To be used by meshpart.
-	*/
+	 */
 	public static class MeshPartInfo {
 		public Mesh mesh;
 		public int size;
@@ -14,7 +23,7 @@ public class HouseMeshBuilder {
 	private MeshPartInfo meshPartInfo = new MeshPartInfo();
 
 	/* Array used during computation */
-	private float[] vertices = new flaot[100];
+	private float[] vertices = new float[100];
 	private short[] indices = new short[100];
 
 	/* Index offset for vertices and indices */
@@ -29,7 +38,7 @@ public class HouseMeshBuilder {
 
 	/** Construct a new HouseMeshBuilder.
 	 * @param mesh The mesh wich is filled.
-	*/
+	 */
 	public HouseMeshBuilder(Mesh mesh) {
 		this.mesh = mesh;
 	}
@@ -38,7 +47,7 @@ public class HouseMeshBuilder {
 	 * @param vertices List of Vector3 position
 	 * @param indices List of indices
 	 * @return MeshPartInfo Helper to create mesh part
-	*/
+	 */
 	public MeshPartInfo add(Array<Vector3> vertices, IntArray indices) {
 		// Check vectors
 		if(vertices.size == 0 || indices.size == 0)
@@ -56,14 +65,12 @@ public class HouseMeshBuilder {
 		}
 
 		// Loop through indices and add them in mesh
-		for(int index : indices) {
-			this.indices[idIndex++] = (short) index;
-		}
-
-		// Add new vertices and indices to mesh
-		mesh.updateVertices(idMeshVertice, this.vertices, 0, idVertex);
-		mesh.updateIndices(idMeshIndex, this.indices, 0, idIndex);
-
+		/*
+		 * for(int index : indices) { this.indices[idIndex++] = (short) index; }
+		 * 
+		 * // Add new vertices and indices to mesh mesh.updateVertices(idMeshVertice, this.vertices, 0, idVertex);
+		 * mesh.updateIndices(idMeshIndex, this.indices, 0, idIndex);
+		 */
 
 		// Set meshpart infos
 		meshPartInfo.mesh = mesh;

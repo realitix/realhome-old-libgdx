@@ -79,6 +79,7 @@ public class Interactor {
 		overWallInteractor.clear();
 		wallInteractor.removeWall(wall);
 		update();
+		modeler.syncWithAppHouse();
 	}
 
 	public void deleteWall(Wall wall) {
