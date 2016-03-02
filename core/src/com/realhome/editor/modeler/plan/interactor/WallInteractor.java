@@ -12,6 +12,7 @@ import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.LabelPlan;
 import com.realhome.editor.modeler.plan.model.MeasurePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
+import com.realhome.editor.modeler.util.WallComputer;
 
 public class WallInteractor {
 
@@ -25,6 +26,7 @@ public class WallInteractor {
 
 	private final Interactor interactor;
 	private final Array<WallPlan> cachedWalls = new Array<WallPlan>();
+	private final WallComputer computer = new WallComputer();
 
 	public WallInteractor(Interactor interactor) {
 		this.interactor = interactor;
@@ -136,128 +138,8 @@ public class WallInteractor {
 	}
 
 	private void computeWall(WallPlan wall) {
-		if ( wall.getOrigin().isZero() ) {
-			for(Point p : wall.getPoints()) {
-				p.set(wall.getOrigin().getPoints()[0]);
-			}
-			return;
-		}
-
-		for(int i = 0; i < wall.getOrigin().getPoints().length; i++) {
-			Point point = wall.getOrigin().getPoints()[i];
-
-			boolean drawSimpleWall = true;
-
-			// tested walls
-			for(WallPlan wallPlan : interactor.getHousePlan().getWalls()) {
-				if (wallPlan == wall) continue;
-
-				Wall wallTarget = wallPlan.getOrigin();
-
-				// for each points in tested wall
-				for (int j = 0; j < wallTarget.getPoints().length; j++) {
-					// p is the current tested point
-					Point p = wallTarget.getPoints()[j];
-
-					if (p.equals(point) && this.isAngleValid(wall.getOrigin(), wallTarget)) {
-						drawSimpleWall = false;
-						intersectionPoints(wall, wallTarget, i);
-					}
-				}
-			}
-
-			if (drawSimpleWall) {
-				simplePoints(wall, point, i);
-			}
-		}
-	}
-
-	/** Recupere les points extrudé du point en paramètre. */
-	private void simplePoints (WallPlan wall, Point point, int pointPos) {
-		Vector2 direction = getWallDirection(wall.getOrigin());
-
-		int width = wall.getOrigin().getWidth() / 2;
-
-		Vector2 normal = direction.cpy().rotate90(1);
-		normal.scl(width);
-
-		Point point0 = point.cpy();
-		Point point1 = point.cpy();
-
-		point0.add(normal);
-		point1.sub(normal);
-
-		wall.getPoints()[pointPos*2].set(point0);
-		wall.getPoints()[pointPos*2 + 1].set(point1);
-	}
-
-	/** Compute outPoints based on intersection between walls wallTest argument is the wall with common point with currentInPoint
-	 *
-	 * Compute extrusion segments (both sides) of currentInWall Compute extrusion segments (both sides) of wallTest */
-	private void intersectionPoints (WallPlan wall,  Wall wallTest, int pointPos) {
-		Segment[] currentInWallSegments = new Segment[2];
-		currentInWallSegments[0] = getSideSegment(wall.getOrigin(), true);
-		currentInWallSegments[1] = getSideSegment(wall.getOrigin(), false);
-
-		Segment[] wallTestSegments = new Segment[2];
-		wallTestSegments[0] = getSideSegment(wallTest, true);
-		wallTestSegments[1] = getSideSegment(wallTest, false);
-
-		for (int i = 0; i < currentInWallSegments.length; i++) {
-			Point[] intersectionPoints = new Point[2];
-
-			for (int j = 0; j < wallTestSegments.length; j++) {
-				intersectionPoints[j] = getLineIntersection(currentInWallSegments[i], wallTestSegments[j]);
-			}
-
-			wall.getPoints()[pointPos*2 + i].set(intersectionPoints[i]);
-		}
-	}
-
-	/** Return intersection point between two segments */
-	private Point getLineIntersection (Segment s0, Segment s1) {
-		Vector2 intersection = new Vector2();
-		Intersector.intersectLines(s0.point0.x, s0.point0.y, s0.point1.x, s0.point1.y, s1.point0.x, s1.point0.y, s1.point1.x,
-			s1.point1.y, intersection);
-		return new Point(intersection);
-	}
-
-	/** Recupere les points extrudé du cote en paramètre.
-	 * @param side True: left, False: right */
-	private Segment getSideSegment (Wall wall, boolean side) {
-		Vector2 direction = getWallDirection(wall);
-		Vector2 normal = direction.cpy();
-
-		int width = wall.getWidth() / 2;
-
-		if (side)
-			normal.rotate90(1);
-		else
-			normal.rotate90(-1);
-		normal.scl(width);
-
-		Segment result = new Segment();
-		result.point0.set(wall.getPoint0()).add(normal);
-		result.point1.set(wall.getPoint1()).add(normal);
-		return result;
-	}
-
-	private Vector2 getWallDirection (Wall wall) {
-		return wall.getPoint1().dir(wall.getPoint0(), new Vector2());
-	}
-
-	private boolean isAngleValid (Wall sourceWall, Wall targetWall) {
-		Vector2 sourceWallVector = new Vector2();
-		Vector2 targetWallVector = new Vector2();
-
-		sourceWall.dir(sourceWallVector);
-		targetWall.dir(targetWallVector);
-
-		int angle = Math.abs(Math.round(sourceWallVector.angle(targetWallVector)));
-
-		if (angle >= 180 - ANGLE_MAX || angle <= ANGLE_MIN)
-			return false;
-		return true;
+		Array<Wall> walls = interactor.getHouse().getFloor(interactor.getHousePlan().getFloor()).getWalls();
+		computer.extrudeWall(wall.getOrigin(), walls, wall.getPoints());
 	}
 
 	private void computeMeasure(WallPlan wall) {

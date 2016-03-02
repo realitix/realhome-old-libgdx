@@ -1,0 +1,35 @@
+First mesh is for the house
+
+{
+	"meshes": [{
+		"attributes": ["@TODO"],
+		"vertices": [],
+		"parts": [{
+			"id": "wall_[IdWall]_[IdSideWall]",
+			"type": "TRIANGLES",
+			"indices": []
+		}]
+	}],
+	"nodes": [{
+		"id": "house",
+		"children": [{
+			"id": "floor_[IdFloor]",
+			"children": [{
+				"id": "walls",
+				"children": [{
+					"id": "wall_[IdWall]",
+					"parts": [{
+						"meshpartid": "wall_[IdWall]_[IdSideWall]",
+						"materialid": "[IdMaterial]"
+					}, {
+					"id": "walls_top",
+					"parts": [{
+						"meshpartid": "walls_top",
+						"materialid": "[IdMaterial]"
+					}]
+				}]
+			}]
+
+		}]
+	}]
+}
