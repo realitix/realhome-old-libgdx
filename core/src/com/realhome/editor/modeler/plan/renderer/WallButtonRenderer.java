@@ -12,18 +12,21 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallButtonPlan;
+import com.realhome.editor.util.RealShader;
 
 public class WallButtonRenderer implements Renderer {
 	public static final int CHECK = 0;
 	public static final int CANCEL = 1;
-	
+
 	private final Array<Texture> textures = new Array<Texture>();
 	private WallButtonPlan wallButton;
-	private final SpriteBatch batch = new SpriteBatch();
+	private final SpriteBatch batch;
 	private boolean hasWallButton;
 
 	public WallButtonRenderer() {
-		
+
+		batch = new SpriteBatch(1000, RealShader.create("misc/spritebatch"));
+
 		textures.insert(CHECK, new Texture(Gdx.files.internal("icon/check.png"), true));
 		textures.insert(CANCEL, new Texture(Gdx.files.internal("icon/cancel.png"), true));
 

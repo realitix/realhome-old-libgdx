@@ -9,20 +9,18 @@ import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.ArcPlan;
 import com.realhome.editor.modeler.plan.model.HousePlan;
+import com.realhome.editor.util.RealShader;
 
 public class ArcRenderer implements Renderer {
 	private Array<Mesh> meshes = new Array<Mesh>(3);
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "shader/plan/arc_vertex.glsl";
-	private static final String fragmentShader = "shader/plan/arc_fragment.glsl";
 	private float[] vertices;
 	private int id;
 	private boolean hasArc;
@@ -40,10 +38,7 @@ public class ArcRenderer implements Renderer {
 	}
 
 	private void initShader () {
-		String vertex = Gdx.files.internal(vertexShader).readString();
-		String fragment = Gdx.files.internal(fragmentShader).readString();
-		shader = new ShaderProgram(vertex, fragment);
-		if (!shader.isCompiled()) throw new GdxRuntimeException(shader.getLog());
+		shader = RealShader.create("plan/arc");
 	}
 
 	private void initMeshes () {

@@ -6,6 +6,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -17,6 +18,7 @@ import com.realhome.editor.model.house.Floor;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.ModelerManager;
 import com.realhome.editor.ui.UIManager;
+import com.realhome.editor.util.RealShader;
 
 public class RealHomeApp extends ApplicationAdapter {
 	public static final String NAME = "RealHomeApp";
@@ -36,7 +38,8 @@ public class RealHomeApp extends ApplicationAdapter {
 		initModel();
 
 		// Load stage
-		stage = new Stage(new ScreenViewport());
+		SpriteBatch batch = new SpriteBatch(1000, RealShader.create("misc/spritebatch"));
+		stage = new Stage(new ScreenViewport(), batch);
 
 		// Load modeler manager
 		modelerManager = new ModelerManager(this);

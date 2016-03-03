@@ -11,6 +11,7 @@ public class DesktopLauncher {
 		config.samples = 4;
 		config.width = 600;
 		config.height = 600;
+		config.useGL30 = false;
 		new LwjglApplication(new RealHomeApp(), config);
 	}
 }

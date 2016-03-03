@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.LabelPlan;
+import com.realhome.editor.util.RealShader;
 
 public class LabelRenderer implements Renderer {
 	private ObjectMap<Object, LabelPlan> labels;
@@ -29,7 +30,7 @@ public class LabelRenderer implements Renderer {
 		texture.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.Linear);
 
 		bitmapFont = new LabelBitmapFont(Gdx.files.internal("style/plan_font/plan_font.fnt"), new TextureRegion(texture));
-		batch = new SpriteBatch(500, LabelBitmapFont.createDistanceFieldShader());
+		batch = new SpriteBatch(500, RealShader.create("misc/distance_field_font"));
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class LabelRenderer implements Renderer {
 
 				transform.idt().translate(posX, posY, 0).rotate(0, 0, 1, label.getAngle());
 				batch.setTransformMatrix(transform);
-				
+
 				bitmapFont.draw(batch, label.getLabel(), -w, h);
 			}
 			batch.end();

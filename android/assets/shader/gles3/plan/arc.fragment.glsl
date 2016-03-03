@@ -11,7 +11,9 @@ uniform float u_size;
 uniform float u_bubbleSize;
 uniform float u_outlineSize;
 
-varying vec2 v_pos;
+in vec2 v_pos;
+
+out vec4 fragmentColor;
 
 float getDistanceFromLine(vec2 point, vec2 a, vec2 b) {
     float x1 = a.x;
@@ -44,14 +46,14 @@ bool isOutline(float left, float right, float distance) {
 	else if( distance > u_size && distance <= u_size + u_outlineSize) {
 		return true;
 	}
-	
+
 	return false;
 }
 
 bool isPosOutline(float distance) {
 	float left = getDistanceFromLine(v_pos, u_pos, u_posLeft);
 	float right = getDistanceFromLine(v_pos, u_pos, u_posRight);
-	
+
 	return isOutline(left, right, distance);
 }
 
@@ -71,10 +73,10 @@ bool isBubbleOutline(float bubbleDistance) {
 
 void main() {
 	vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
-	
+
 	float distance_line_left = getDistanceFromLine(v_pos, u_pos, u_posLeft);
 	float distance_line_right = getDistanceFromLine(v_pos, u_pos, u_posRight);
-	
+
 	float d = distance(v_pos, u_pos);
 	float d2 = distance(v_pos, u_bubblePos);
 
@@ -91,5 +93,5 @@ void main() {
 		color = u_color;
 	}
 
-	gl_FragColor = color;
+	fragmentColor = color;
 }

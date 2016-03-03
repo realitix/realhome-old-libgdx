@@ -7,7 +7,9 @@ uniform float u_lineSize;
 uniform vec4 u_circleColor;
 uniform vec4 u_lineColor;
 
-varying vec2 v_pos;
+in vec2 v_pos;
+
+out vec4 fragmentColor;
 
 bool inLine() {
 	if( v_pos.x >= u_min.x - u_lineSize &&
@@ -47,7 +49,7 @@ void main() {
 	vec4 color = vec4(0.0);
 	float distanceP1 = distance(v_pos, u_p1);
 	float distanceP2 = distance(v_pos, u_p2);
-	
+
 	// Circle
 	if( distanceP1 <= u_circleSize) {
 		color = u_circleColor;
@@ -62,5 +64,5 @@ void main() {
 		}
 	}
 
-	gl_FragColor = color;
+	fragmentColor = color;
 }

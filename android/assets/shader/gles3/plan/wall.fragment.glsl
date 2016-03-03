@@ -4,7 +4,9 @@ uniform vec4 u_colorBack;
 uniform vec4 u_colorFront;
 uniform float u_lineWidth;
 
-varying vec2 v_uv;
+in vec2 v_uv;
+
+out vec4 fragmentColor;
 
 // http://stackoverflow.com/questions/10301001/perpendicular-on-a-line-segment-from-a-given-point
 float getDistanceFromCenter(vec2 point) {
@@ -30,7 +32,7 @@ float getDistanceFromCenter(vec2 point) {
 
 void main() {
 	const float distanceCenterToCoin = 0.70711;
-	
+
 	vec2 phase = fract(v_uv / u_tile);
 	float distanceFromCenter = getDistanceFromCenter(phase);
 
@@ -47,5 +49,5 @@ void main() {
 		foreground.a *= 1.0 - distanceFromCoin / u_lineWidth;
 	}
 
-	gl_FragColor = mix(background, foreground, foreground.a);
+	fragmentColor = mix(background, foreground, foreground.a);
 }

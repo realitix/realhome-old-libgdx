@@ -1,7 +1,6 @@
 
 package com.realhome.editor.modeler.plan.renderer;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,19 +10,17 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
+import com.realhome.editor.util.RealShader;
 
 public class WallRenderer implements Renderer {
 	private Mesh mesh;
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "shader/plan/wall_vertex.glsl";
-	private static final String fragmentShader = "shader/plan/wall_fragment.glsl";
 	private int id = 0;
 	private final Vector2 min = new Vector2();
 	private final Vector2 max = new Vector2();
@@ -43,10 +40,7 @@ public class WallRenderer implements Renderer {
 	}
 
 	private void initShader () {
-		String vertex = Gdx.files.internal(vertexShader).readString();
-		String fragment = Gdx.files.internal(fragmentShader).readString();
-		shader = new ShaderProgram(vertex, fragment);
-		if (!shader.isCompiled()) throw new GdxRuntimeException(shader.getLog());
+		shader = RealShader.create("plan/wall");
 	}
 
 	private void initMesh () {

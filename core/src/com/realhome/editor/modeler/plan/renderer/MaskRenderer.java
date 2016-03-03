@@ -1,6 +1,5 @@
 package com.realhome.editor.modeler.plan.renderer;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,11 +9,11 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.DelaunayTriangulator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ShortArray;
 import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
+import com.realhome.editor.util.RealShader;
 
 public class MaskRenderer implements Renderer {
 	private Mesh mesh;
@@ -23,8 +22,6 @@ public class MaskRenderer implements Renderer {
 
 	// Shader
 	private ShaderProgram shader;
-	private static final String vertexShader = "shader/plan/mask_vertex.glsl";
-	private static final String fragmentShader = "shader/plan/mask_fragment.glsl";
 
 	private final DelaunayTriangulator triangulator = new DelaunayTriangulator();
 
@@ -39,10 +36,7 @@ public class MaskRenderer implements Renderer {
 	}
 
 	private void initShader() {
-		String vertex = Gdx.files.internal(vertexShader).readString();
-		String fragment = Gdx.files.internal(fragmentShader).readString();
-		shader = new ShaderProgram(vertex, fragment);
-		if (!shader.isCompiled()) throw new GdxRuntimeException(shader.getLog());
+		shader = RealShader.create("plan/mask");
 	}
 
 	private void initMesh() {
