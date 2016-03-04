@@ -20,7 +20,6 @@ import com.realhome.editor.modeler.plan.actioner.WallMovingActioner;
 import com.realhome.editor.modeler.plan.actioner.WallOverActioner;
 import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.HousePlan;
-import com.realhome.editor.modeler.plan.model.MeasurePlan;
 import com.realhome.editor.modeler.plan.renderer.ArcRenderer;
 import com.realhome.editor.modeler.plan.renderer.GridRenderer;
 import com.realhome.editor.modeler.plan.renderer.LabelRenderer;
@@ -29,12 +28,11 @@ import com.realhome.editor.modeler.plan.renderer.MeasureRenderer;
 import com.realhome.editor.modeler.plan.renderer.OverPointRenderer;
 import com.realhome.editor.modeler.plan.renderer.OverWallRenderer;
 import com.realhome.editor.modeler.plan.renderer.Renderer;
+import com.realhome.editor.modeler.plan.renderer.RoomRenderer;
 import com.realhome.editor.modeler.plan.renderer.WallButtonRenderer;
 import com.realhome.editor.modeler.plan.renderer.WallRenderer;
 import com.realhome.editor.modeler.plan.util.CameraController;
 import com.realhome.editor.modeler.plan.util.PointMapper;
-import com.realhome.editor.modeler.plan.widget.PlanEditMeasureWidget;
-import com.realhome.editor.modeler.plan.widget.PlanEditWallWidget;
 import com.realhome.editor.modeler.plan.widget.WidgetManager;
 
 public class PlanModeler implements Modeler {
@@ -90,6 +88,7 @@ public class PlanModeler implements Modeler {
 		renderers.add(new MeasureRenderer());
 		renderers.add(new LabelRenderer());
 		renderers.add(new WallButtonRenderer());
+		renderers.add(new RoomRenderer());
 
 		for(Renderer renderer : renderers) {
 			renderer.init(housePlan);

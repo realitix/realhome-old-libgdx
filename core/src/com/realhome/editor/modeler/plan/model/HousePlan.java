@@ -17,7 +17,9 @@ public class HousePlan {
 	private final WallButtonPlan wallButton = new WallButtonPlan();
 	private WallPlan selectedWall;
 	private Point selectedPoint;
-	
+
+	public final Array<RoomPlan> rooms = new Array<RoomPlan>();
+
 	public WallButtonPlan getWallButton() {
 		return wallButton;
 	}

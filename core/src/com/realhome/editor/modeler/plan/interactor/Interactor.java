@@ -8,9 +8,11 @@ import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.PlanModeler;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.MeasurePlan;
+import com.realhome.editor.modeler.plan.model.RoomPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 import com.realhome.editor.modeler.plan.widget.PlanEditMeasureWidget;
 import com.realhome.editor.modeler.plan.widget.PlanEditWallWidget;
+import com.realhome.editor.modeler.util.RoomComputer;
 
 public class Interactor {
 	private final PlanModeler modeler;
@@ -147,5 +149,21 @@ public class Interactor {
 	public void update() {
 		wallInteractor.compute();
 		outlineInteractor.compute();
+
+		// @TODO test to delete
+		RoomComputer c = new RoomComputer();
+		Array<Array<Point>> rooms = c.getRooms(house.getWalls());
+
+		housePlan.rooms.clear();
+		for(Array<Point> room : rooms) {
+			RoomPlan r = new RoomPlan();
+
+			for(Point p : room) {
+				r.points.add(p);
+			}
+
+			housePlan.rooms.add(r);
+		}
+
 	}
 }

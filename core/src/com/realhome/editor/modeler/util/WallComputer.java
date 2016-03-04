@@ -32,7 +32,7 @@ public class WallComputer {
 	 * Length: p0-p2, p1,p3
 	 * Width: p0-p1, p2-p3
 	 */
-	public void extrudeWall(Wall sourceWall, Array<Wall> walls, Point[] resultPoints) {
+	public Point[] extrudeWall(Wall sourceWall, Array<Wall> walls, Point[] resultPoints) {
 		// Valid resultPoints length
 		if(resultPoints.length != 4) {
 			throw new GdxRuntimeException("resultPoints must contain 4 points");
@@ -43,7 +43,7 @@ public class WallComputer {
 			for(int i = 0; i < 4; i++) {
 				resultPoints[i] = new Point(sourceWall.getPoints()[0]);
 			}
-			return ;
+			return resultPoints;
 		}
 
 		// We compute result point by point, so loop through sourceWall points
@@ -76,6 +76,8 @@ public class WallComputer {
 
 			i++;
 		}
+
+		return resultPoints;
 	}
 
 	/** Compute resultPoints based on intersection between sourceWall and targetWall.
