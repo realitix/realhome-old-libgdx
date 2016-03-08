@@ -24,6 +24,7 @@ public class Interactor {
 	private final ArcInteractor arcInteractor;
 	private final OutlineInteractor outlineInteractor;
 	private final MeasureInteractor measureInteractor;
+	private final RoomInteractor roomInteractor;
 
 	public Interactor(PlanModeler modeler, House house, HousePlan housePlan) {
 		this.modeler = modeler;
@@ -35,6 +36,7 @@ public class Interactor {
 		wallInteractor = new WallInteractor(this);
 		outlineInteractor = new OutlineInteractor(this);
 		measureInteractor = new MeasureInteractor(this);
+		roomInteractor = new RoomInteractor(this);
 	}
 
 	public void selectPoint(Point point) {
@@ -149,21 +151,6 @@ public class Interactor {
 	public void update() {
 		wallInteractor.compute();
 		outlineInteractor.compute();
-
-		// @TODO test to delete
-		RoomComputer c = new RoomComputer();
-		Array<Array<Point>> rooms = c.getRooms(house.getWalls());
-
-		housePlan.rooms.clear();
-		for(Array<Point> room : rooms) {
-			RoomPlan r = new RoomPlan();
-
-			for(Point p : room) {
-				r.points.add(p);
-			}
-
-			housePlan.rooms.add(r);
-		}
-
+		roomInteractor.compute();
 	}
 }

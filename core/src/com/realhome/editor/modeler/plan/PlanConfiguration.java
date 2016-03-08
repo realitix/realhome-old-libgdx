@@ -34,6 +34,10 @@ public class PlanConfiguration {
 		public static Color color = new Color(1, 1, 1, 1);
 	}
 
+	public static class Room {
+		public static Color color = new Color(0, 0.3f, 0, 1);
+	}
+
 	public static class Measure {
 		public static Color color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
 		public static int gap = 25;

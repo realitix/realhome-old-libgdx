@@ -68,4 +68,52 @@ public class RoomComputer {
 			points[i] = new Point();
 		return points;
 	}
+
+	/** Compute area of the array of points
+	 * see http://www.mathopenref.com/coordpolygonarea2.html
+	*/
+	public float computeArea(Array<Point> points) {
+		float area = 0;
+		int j = points.size - 1;
+
+		for( int i = 0; i < points.size; i++) {
+			Point p0 = points.get(i);
+			Point p1 = points.get(j);
+
+			area += (p1.x + p0.x) * (p1.y - p0.y);
+			j = i;
+		}
+
+		return Math.abs(area);
+	}
+
+	/**
+	 * Return true if the polygon is convex
+	 * Point must be clockwise or counter-clockwise
+	 * see http://stackoverflow.com/questions/471962/how-do-determine-if-a-polygon-is-complex-convex-nonconvex
+	 * @param points Polygon
+	*/
+	public boolean isConvex(Array<Point> polygon) {
+		if( polygon.size < 4 )
+			return true;
+
+		boolean sign = false;
+		int n = polygon.size;
+
+		for( int i = 0; i < n; i++ ) {
+			int dx1 = polygon.get((i+2) % n).x - polygon.get((i+1) % n).x;
+			int dy1 = polygon.get((i+2) % n).y - polygon.get((i+1) % n).y;
+			int dx2 = polygon.get(i).x - polygon.get((i+1) % n).x;
+			int dy2 = polygon.get(i).y - polygon.get((i+1) % n).y;
+
+			float zcrossproduct = dx1*dy2 - dy1*dx2;
+
+			if (i == 0)
+				sign = zcrossproduct>0;
+			else if( sign != (zcrossproduct > 0) )
+				return false;
+		}
+
+		return true;
+	}
 }
