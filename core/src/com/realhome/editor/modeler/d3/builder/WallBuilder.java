@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g3d.model.MeshPart;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.model.NodePart;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder.VertexInfo;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Floor;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.util.WallComputer;
 
@@ -131,7 +131,7 @@ public class WallBuilder {
 	 * @param wall Wall to create
 	 * @param walls All walls
 	 * @return array of faces
-	*/
+	 */
 	private Array<WallFace> getWallFaces(Wall wall, Array<Wall> walls) {
 		// Init faces array
 		Array<WallFace> faces = new Array<WallFace>();
@@ -180,7 +180,7 @@ public class WallBuilder {
 			new VertexInfo().set(points[4], null, null, null),
 			new VertexInfo().set(points[6], null, null, null),
 			new VertexInfo().set(points[2], null, null, null)
-		);
+			);
 
 		faces.add(new WallFace(part, new Material(ColorAttribute.createDiffuse(Color.GREEN))));
 
@@ -191,7 +191,7 @@ public class WallBuilder {
 			new VertexInfo().set(points[3], null, null, null),
 			new VertexInfo().set(points[7], null, null, null),
 			new VertexInfo().set(points[5], null, null, null)
-		);
+			);
 
 		faces.add(new WallFace(part, new Material(ColorAttribute.createDiffuse(Color.BLUE))));
 
@@ -202,11 +202,11 @@ public class WallBuilder {
 	 * @param wall Wall to compute
 	 * @param walls All floor's wall
 	 * @return array of Vector3
-	*/
+	 */
 	private Vector3[] get3dVectors(Wall wall, Array<Wall> walls) {
 		// Compute result points
-		Point[] resultPoints = new Point[4];
-		for(int i = 0; i < 4; i++) resultPoints[i] = new Point();
+		Vector2[] resultPoints = new Vector2[4];
+		for(int i = 0; i < 4; i++) resultPoints[i] = new Vector2();
 
 		computer.extrudeWall(wall, walls, resultPoints);
 
@@ -214,7 +214,7 @@ public class WallBuilder {
 		Vector3[] points = new Vector3[8];
 
 		for(int i = 0; i < resultPoints.length; i++) {
-			Point p = resultPoints[i];
+			Vector2 p = resultPoints[i];
 
 			points[i] = new Vector3().set(p.x, p.y, 0); // Bottom
 			points[i+4] = new Vector3().set(p.x, p.y, wall.getHeight()); // Top

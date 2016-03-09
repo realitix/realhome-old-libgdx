@@ -1,14 +1,14 @@
 package com.realhome.editor.modeler.plan.model;
 
-import com.realhome.editor.model.house.Point;
+import com.badlogic.gdx.math.Vector2;
 
 public class LabelPlan {
 	private Object origin;
-	private Point position = new Point();
+	private Vector2 position = new Vector2();
 	private float angle;
 	private String label;
 
-	public LabelPlan(Object origin, String label, Point position) {
+	public LabelPlan(Object origin, String label, Vector2 position) {
 		this(origin, label, position, 0);
 	}
 
@@ -16,18 +16,18 @@ public class LabelPlan {
 		this(origin, label, x, y, 0);
 	}
 
-	public LabelPlan(Object origin, String label, Point position, float angle) {
+	public LabelPlan(Object origin, String label, Vector2 position, float angle) {
 		this(origin, label, position.x, position.y, angle);
 	}
 
-	public LabelPlan(Object origin, String label, int x, int y, float angle) {
+	public LabelPlan(Object origin, String label, float x, float y, float angle) {
 		this.origin = origin;
 		this.label = label;
 		this.position.set(x, y);
 		this.angle = angle;
 	}
 
-	public Point getPosition () {
+	public Vector2 getPosition () {
 		return position;
 	}
 
@@ -35,12 +35,12 @@ public class LabelPlan {
 		return angle;
 	}
 
-	public LabelPlan setPosition (int x, int y) {
+	public LabelPlan setPosition (float x, float y) {
 		this.position.set(x, y);
 		return this;
 	}
 
-	public LabelPlan setPosition (Point p) {
+	public LabelPlan setPosition (Vector2 p) {
 		return setPosition(p.x, p.y);
 	}
 

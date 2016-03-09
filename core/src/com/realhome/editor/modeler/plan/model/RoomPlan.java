@@ -1,14 +1,14 @@
 package com.realhome.editor.modeler.plan.model;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.model.house.Point;
 
 public class RoomPlan {
-	private Array<Point> points = new Array<Point>();
-	private Point center = new Point();
+	private Array<Vector2> points = new Array<Vector2>();
+	private Vector2 center = new Vector2();
 	private float area;
 
-	public Array<Point> getPoints() {
+	public Array<Vector2> getPoints() {
 		return points;
 	}
 
@@ -16,7 +16,7 @@ public class RoomPlan {
 		center.set(x, y);
 	}
 
-	public Point getCenter() {
+	public Vector2 getCenter() {
 		return center;
 	}
 

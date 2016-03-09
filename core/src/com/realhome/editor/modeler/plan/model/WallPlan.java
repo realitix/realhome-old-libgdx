@@ -2,7 +2,7 @@
 package com.realhome.editor.modeler.plan.model;
 
 import com.badlogic.gdx.math.Intersector;
-import com.realhome.editor.model.house.Point;
+import com.badlogic.gdx.math.Vector2;
 import com.realhome.editor.model.house.Wall;
 
 public class WallPlan {
@@ -13,7 +13,7 @@ public class WallPlan {
 	 * Length: p0-p2, p1,p3
 	 * Width: p0-p1, p2-p3
 	 */
-	private final Point[] points = new Point[4];
+	private final Vector2[] points = new Vector2[4];
 	private int type;
 	private Wall origin;
 
@@ -24,7 +24,7 @@ public class WallPlan {
 
 	public WallPlan () {
 		for (int i = 0; i < points.length; i++) {
-			points[i] = new Point();
+			points[i] = new Vector2();
 		}
 	}
 
@@ -56,11 +56,11 @@ public class WallPlan {
 		return this;
 	}
 
-	public Point[] getPoints() {
+	public Vector2[] getPoints() {
 		return points;
 	}
 
-	public boolean pointInside(int x, int y) {
+	public boolean pointInside(float x, float y) {
 		if(Intersector.isPointInTriangle(
 			x, y,
 			points[0].x, points[0].y,
@@ -76,12 +76,12 @@ public class WallPlan {
 		return false;
 	}
 
-	public Point pointInWallPoint(int x, int y) {
+	public Vector2 pointInWallPoint(int x, int y) {
 		int width = origin.getWidth() / 2;
 
 		for(int i = 0; i < origin.getPoints().length; i++) {
-			int xPoint = origin.getPoints()[i].x;
-			int yPoint = origin.getPoints()[i].y;
+			float xPoint = origin.getPoints()[i].x;
+			float yPoint = origin.getPoints()[i].y;
 
 			if( x >= xPoint - width && x <= xPoint + width && y >= yPoint - width && y <= yPoint + width)
 				return origin.getPoints()[i];

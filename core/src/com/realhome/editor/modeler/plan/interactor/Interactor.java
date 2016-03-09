@@ -3,16 +3,13 @@ package com.realhome.editor.modeler.plan.interactor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.House;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.PlanModeler;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.MeasurePlan;
-import com.realhome.editor.modeler.plan.model.RoomPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 import com.realhome.editor.modeler.plan.widget.PlanEditMeasureWidget;
 import com.realhome.editor.modeler.plan.widget.PlanEditWallWidget;
-import com.realhome.editor.modeler.util.RoomComputer;
 
 public class Interactor {
 	private final PlanModeler modeler;
@@ -39,9 +36,9 @@ public class Interactor {
 		roomInteractor = new RoomInteractor(this);
 	}
 
-	public void selectPoint(Point point) {
-		pointInteractor.select(point);
-		arcInteractor.select(point);
+	public void selectPoint(Vector2 Vector2) {
+		pointInteractor.select(Vector2);
+		arcInteractor.select(Vector2);
 	}
 
 	public void selectWall(WallPlan wall) {
@@ -97,14 +94,14 @@ public class Interactor {
 		deleteWall(wallPlan);
 	}
 
-	public Wall addWall(Point point) {
-		Wall result = wallInteractor.addWall(point);
+	public Wall addWall(Vector2 Vector2) {
+		Wall result = wallInteractor.addWall(Vector2);
 		update();
 		modeler.syncWithAppHouse();
 		return result;
 	}
 
-	public void setWallButton(int type, int x, int y, int width) {
+	public void setWallButton(int type, float x, float y, int width) {
 		housePlan.getWallButton().set(type, x, y, width);
 	}
 
@@ -116,14 +113,14 @@ public class Interactor {
 		overWallInteractor.over(wall);
 	}
 
-	public void overPoint(Point point) {
-		pointInteractor.over(point);
-		arcInteractor.over(point);
+	public void overPoint(Vector2 Vector2) {
+		pointInteractor.over(Vector2);
+		arcInteractor.over(Vector2);
 	}
 
-	public void movePoints(Point[] points, int x, int y) {
-		for(Point point : points) {
-			movePoint(point, x, y);
+	public void movePoints(Vector2[] points, float x, float y) {
+		for(Vector2 Vector2 : points) {
+			movePoint(Vector2, x, y);
 		}
 		wallInteractor.compute(points[0]);
 		outlineInteractor.compute();
@@ -132,12 +129,12 @@ public class Interactor {
 		overWallInteractor.compute();
 	}
 
-	public void movePoints(Array<Point> points, int x, int y) {
-		movePoints((Point[])points.toArray(Point.class), x, y);
+	public void movePoints(Array<Vector2> points, float x, float y) {
+		movePoints((Vector2[])points.toArray(Vector2.class), x, y);
 	}
 
-	private void movePoint(Point point, int x, int y) {
-		point.set(x, y);
+	private void movePoint(Vector2 Vector2, float x, float y) {
+		Vector2.set(x, y);
 	}
 
 	public HousePlan getHousePlan() {

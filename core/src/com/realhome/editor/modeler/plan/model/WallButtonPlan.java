@@ -2,12 +2,13 @@ package com.realhome.editor.modeler.plan.model;
 
 public class WallButtonPlan {
 	private int type = -1;
-	private int x, y, width;
+	private float x, y;
+	private int width;
 
-	public void set(int type, int x, int y, int width) {
+	public void set(int type, float x2, float y2, int width) {
 		this.type = type;
-		this.x = x;
-		this.y = y;
+		this.x = x2;
+		this.y = y2;
 		this.width = width;
 	}
 
@@ -15,11 +16,11 @@ public class WallButtonPlan {
 		return type;
 	}
 
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 

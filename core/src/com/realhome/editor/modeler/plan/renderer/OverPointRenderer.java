@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.realhome.editor.model.house.Point;
+import com.badlogic.gdx.math.Vector2;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.OverPointPlan;
@@ -54,7 +54,7 @@ public class OverPointRenderer implements Renderer {
 
 		// Compute vertices
 		id = 0;
-		Point[] points = overPointPlan.getPoints();
+		Vector2[] points = overPointPlan.getPoints();
 
 		if(points == null) {
 			hasPoint = false;
@@ -75,7 +75,7 @@ public class OverPointRenderer implements Renderer {
 		mesh.setVertices(vertices, 0, 12);
 	}
 
-	private void vertice (Point point) {
+	private void vertice (Vector2 point) {
 		vertices[id + 0] = point.x;
 		vertices[id + 1] = point.y;
 		id += 2;

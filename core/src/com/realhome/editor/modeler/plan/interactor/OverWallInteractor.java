@@ -1,7 +1,6 @@
 package com.realhome.editor.modeler.plan.interactor;
 
 import com.badlogic.gdx.math.Vector2;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.model.OverWallPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
@@ -29,7 +28,7 @@ public class OverWallInteractor {
 
 	public void compute() {
 		OverWallPlan overWall = interactor.getHousePlan().getOverWall();
-		Point[] points = overWall.getPoints();
+		Vector2[] points = overWall.getPoints();
 
 		if(overWall.getOrigin() == null)
 			return;
@@ -47,7 +46,7 @@ public class OverWallInteractor {
 		direction.scl(width);
 
 		for(int i = 0; i < wall.getPoints().length; i++) {
-			Point p = wall.getPoints()[i];
+			Vector2 p = wall.getPoints()[i];
 			points[i*2].set(p).add(normal).sub(direction);
 			points[i*2+1].set(p).add(normal2).sub(direction);
 
@@ -57,7 +56,7 @@ public class OverWallInteractor {
 
 	public void clear() {
 		OverWallPlan overWall = interactor.getHousePlan().getOverWall();
-		Point[] points = overWall.getPoints();
+		Vector2[] points = overWall.getPoints();
 
 		overWall.setOrigin(null);
 

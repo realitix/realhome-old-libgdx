@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.model.MeasurePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
@@ -58,7 +57,7 @@ public class MeasureEditActioner extends BaseActioner {
 		return Intersector.isPointInPolygon(polygon, lastLocation);
 	}
 
-	private Vector2 ptv(Point p) {
+	private Vector2 ptv(Vector2 p) {
 		Vector2 result = new Vector2();
 		result.set(p.x, p.y);
 		return result;

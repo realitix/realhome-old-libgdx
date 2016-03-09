@@ -4,8 +4,8 @@ import java.util.Comparator;
 import java.util.Stack;
 import java.util.TreeSet;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class OutlineInteractor {
@@ -17,19 +17,19 @@ public class OutlineInteractor {
 	}
 
 	public void compute() {
-		Array<Point> points = getWallsPoints();
-		Array<Point> outlinePoints = interactor.getHousePlan().getOutlinePoints();
+		Array<Vector2> points = getWallsPoints();
+		Array<Vector2> outlinePoints = interactor.getHousePlan().getOutlinePoints();
 
 		outlinePoints.clear();
-		if(points.size > 0)
-			outlinePoints.addAll(GrahamScan.getConvexHull(points));
+		//if(points.size > 0)
+		//outlinePoints.addAll(GrahamScan.getConvexHull(points));
 	}
 
-	private Array<Point> getWallsPoints() {
-		Array<Point> points = new Array<Point>();
+	private Array<Vector2> getWallsPoints() {
+		Array<Vector2> points = new Array<Vector2>();
 		for(WallPlan w : interactor.getHousePlan().getWalls()) {
-			for(Point p : w.getPoints()) {
-				points.add(new Point(p));
+			for(Vector2 p : w.getPoints()) {
+				points.add(new Vector2(p));
 			}
 		}
 
@@ -39,16 +39,16 @@ public class OutlineInteractor {
 	private static class GrahamScan {
 		private static enum Turn { CLOCKWISE, COUNTER_CLOCKWISE, COLLINEAR }
 
-		private static boolean areAllCollinear(Array<Point> points) {
+		private static boolean areAllCollinear(Array<Vector2> points) {
 			if(points.size < 2) {
 				return true;
 			}
 
-			final Point a = points.get(0);
-			final Point b = points.get(1);
+			final Vector2 a = points.get(0);
+			final Vector2 b = points.get(1);
 
 			for(int i = 2; i < points.size; i++) {
-				Point c = points.get(i);
+				Vector2 c = points.get(i);
 
 				if(getTurn(a, b, c) != Turn.COLLINEAR) {
 					return false;
@@ -57,8 +57,8 @@ public class OutlineInteractor {
 			return true;
 		}
 
-		public static Array<Point> getConvexHull(Array<Point> points) throws IllegalArgumentException {
-			Array<Point> sorted = new Array<Point>(getSortedPointSet(points));
+		public static Array<Vector2> getConvexHull(Array<Vector2> points) throws IllegalArgumentException {
+			Array<Vector2> sorted = new Array<Vector2>(getSortedPointSet(points));
 
 			if(sorted.size < 3) {
 				sorted.clear();
@@ -72,14 +72,14 @@ public class OutlineInteractor {
 				//throw new IllegalArgumentException("cannot create a convex hull from collinear points");
 			}
 
-			Stack<Point> stack = new Stack<Point>();
+			Stack<Vector2> stack = new Stack<Vector2>();
 			stack.push(sorted.get(0));
 			stack.push(sorted.get(1));
 
 			for (int i = 2; i < sorted.size; i++) {
-				Point head = sorted.get(i);
-				Point middle = stack.pop();
-				Point tail = stack.peek();
+				Vector2 head = sorted.get(i);
+				Vector2 middle = stack.pop();
+				Vector2 tail = stack.peek();
 
 				Turn turn = getTurn(tail, middle, head);
 
@@ -100,19 +100,19 @@ public class OutlineInteractor {
 			// close the hull
 			stack.push(sorted.get(0));
 
-			Array<Point> result = new Array<Point>();
-			for(Point point : stack) {
+			Array<Vector2> result = new Array<Vector2>();
+			for(Vector2 point : stack) {
 				result.add(point);
 			}
 
 			return result;
 		}
 
-		private static Point getLowestPoint(Array<Point> points) {
-			Point lowest = points.get(0);
+		private static Vector2 getLowestPoint(Array<Vector2> points) {
+			Vector2 lowest = points.get(0);
 
 			for(int i = 1; i < points.size; i++) {
-				Point temp = points.get(i);
+				Vector2 temp = points.get(i);
 				if(temp.y < lowest.y || (temp.y == lowest.y && temp.x < lowest.x)) {
 					lowest = temp;
 				}
@@ -120,12 +120,12 @@ public class OutlineInteractor {
 			return lowest;
 		}
 
-		private static Array<Point> getSortedPointSet(Array<Point> points) {
-			final Point lowest = getLowestPoint(points);
+		private static Array<Vector2> getSortedPointSet(Array<Vector2> points) {
+			final Vector2 lowest = getLowestPoint(points);
 
-			TreeSet<Point> set = new TreeSet<Point>(new Comparator<Point>() {
+			TreeSet<Vector2> set = new TreeSet<Vector2>(new Comparator<Vector2>() {
 				@Override
-				public int compare(Point a, Point b) {
+				public int compare(Vector2 a, Vector2 b) {
 
 					if(a == b || a.equals(b)) {
 						return 0;
@@ -142,7 +142,7 @@ public class OutlineInteractor {
 						return 1;
 					}
 					else {
-						// collinear with the 'lowest' point, let the point closest to it come first
+						// collinear with the 'lowest' Vector2, let the Vector2 closest to it come first
 
 						// use longs to guard against int-over/underflow
 						double distanceA = Math.sqrt((((long)lowest.x - a.x) * ((long)lowest.x - a.x)) +
@@ -164,14 +164,14 @@ public class OutlineInteractor {
 				set.add(points.get(i));
 			}
 
-			Array<Point> result = new Array<Point>();
-			for(Point point : set) {
+			Array<Vector2> result = new Array<Vector2>();
+			for(Vector2 point : set) {
 				result.add(point);
 			}
 			return result;
 		}
 
-		private static Turn getTurn(Point a, Point b, Point c) {
+		private static Turn getTurn(Vector2 a, Vector2 b, Vector2 c) {
 
 			// use longs to guard against int-over/underflow
 			long bax = (long)b.x - (long)a.x;

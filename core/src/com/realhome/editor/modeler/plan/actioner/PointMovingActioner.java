@@ -2,18 +2,16 @@ package com.realhome.editor.modeler.plan.actioner;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
-import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class PointMovingActioner extends BaseActioner {
 	public static final String NAME = "PointMovingActioner";
 
-	private final Point tmp = new Point();
+	private final Vector2 tmp = new Vector2();
 	private final Vector2 lastLocation = new Vector2();
 	private final Vector2 delta = new Vector2();
-	private final Array<Point> tmpPoints = new Array<Point>();
+	private final Array<Vector2> tmpPoints = new Array<Vector2>();
 
 	@Override
 	public String getName() {
@@ -33,22 +31,22 @@ public class PointMovingActioner extends BaseActioner {
 	}
 
 	private void movePointDelta(int x, int y) {
-		Point sp = interactor.getHousePlan().getSelectedPoint();
+		Vector2 sp = interactor.getHousePlan().getSelectedPoint();
 
 		tmpPoints.clear();
 		tmpPoints.add(sp);
 
 		for(WallPlan wallPlan : interactor.getHousePlan().getWalls()) {
 			Wall wall = wallPlan.getOrigin();
-			for(Point point : wall.getPoints()) {
+			for(Vector2 point : wall.getPoints()) {
 				if(point != sp && point.equals(sp)) {
 					tmpPoints.add(point);
 				}
 			}
 		}
 
-		int posX = tmpPoints.get(0).x + x;
-		int posY = tmpPoints.get(0).y + y;
+		int posX = (int)(tmpPoints.get(0).x + x);
+		int posY = (int)(tmpPoints.get(0).y + y);
 		interactor.movePoints(tmpPoints, posX, posY);
 	}
 
@@ -58,7 +56,7 @@ public class PointMovingActioner extends BaseActioner {
 		lastLocation.set(x, y);
 
 		for(WallPlan wall : interactor.getHousePlan().getWalls()) {
-			Point point = wall.pointInWallPoint(x, y);
+			Vector2 point = wall.pointInWallPoint(x, y);
 			if( point != null ) {
 				interactor.selectPoint(point);
 				return true;

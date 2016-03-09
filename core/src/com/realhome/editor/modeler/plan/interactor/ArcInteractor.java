@@ -2,7 +2,6 @@ package com.realhome.editor.modeler.plan.interactor;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.ArcPlan;
@@ -16,14 +15,14 @@ public class ArcInteractor {
 		this.interactor = interactor;
 	}
 
-	public void select(Point point) {
+	public void select(Vector2 Vector2) {
 		clear();
-		if(point != null) computeSelectedPointArc(point);
+		if(Vector2 != null) computeSelectedPointArc(Vector2);
 	}
 
-	public void over(Point point) {
-		if(point != null) {
-			computeOverPointArc(point);
+	public void over(Vector2 Vector2) {
+		if(Vector2 != null) {
+			computeOverPointArc(Vector2);
 		}
 		else {
 			clear();
@@ -45,18 +44,18 @@ public class ArcInteractor {
 	}
 
 	/**
-	 * We add arc to all walls wich intersect point
-	 * @param point
+	 * We add arc to all walls wich intersect Vector2
+	 * @param Vector2
 	 */
-	public void computeSelectedPointArc(Point point) {
+	public void computeSelectedPointArc(Vector2 Vector2) {
 		Array<Wall> linkedWalls = new Array<Wall>();
-		Array<Point> points = new Array<Point>();
+		Array<Vector2> points = new Array<Vector2>();
 
 		// Find linked walls
 		for(WallPlan wallPlan : interactor.getHousePlan().getWalls()) {
 			Wall wall = wallPlan.getOrigin();
 
-			if(wall.getPoints()[0].equals(point) || wall.getPoints()[1].equals(point)) {
+			if(wall.getPoints()[0].equals(Vector2) || wall.getPoints()[1].equals(Vector2)) {
 				linkedWalls.add(wall);
 			}
 		}
@@ -67,7 +66,7 @@ public class ArcInteractor {
 				Wall targetWall = wallPlan.getOrigin();
 				if(targetWall == sourceWall) continue;
 
-				for(Point p : sourceWall.getPoints()) {
+				for(Vector2 p : sourceWall.getPoints()) {
 					if(p.equals(targetWall.getPoints()[0]) || p.equals(targetWall.getPoints()[1])) {
 						if(!points.contains(p, false))
 							points.add(p);
@@ -76,37 +75,37 @@ public class ArcInteractor {
 			}
 		}
 
-		for(Point p : points) {
+		for(Vector2 p : points) {
 			interactor.getHousePlan().getArcs().add(compute(new ArcPlan().setOrigin(p)));
 		}
 	}
 
 	/**
-	 * If point is an intersection, we add an arc
-	 * @param point
+	 * If Vector2 is an intersection, we add an arc
+	 * @param Vector2
 	 */
-	public void computeOverPointArc(Point point) {
+	public void computeOverPointArc(Vector2 Vector2) {
 		clear();
 
-		Wall pointWall = getWallForPoint(point);
+		Wall pointWall = getWallForPoint(Vector2);
 
 		for(int i = 0; i < interactor.getHousePlan().getWalls().size; i++) {
 			WallPlan wallPlan = interactor.getHousePlan().getWalls().get(i);
 			Wall wall = wallPlan.getOrigin();
 			if(wall == pointWall) continue;
 
-			Point linkedPoint = wall.getLinkedPoint(pointWall);
-			if(linkedPoint != null && linkedPoint.equals(point)) {
-				interactor.getHousePlan().getArcs().add(compute(new ArcPlan().setOrigin(point)));
+			Vector2 linkedPoint = wall.getLinkedPoint(pointWall);
+			if(linkedPoint != null && linkedPoint.equals(Vector2)) {
+				interactor.getHousePlan().getArcs().add(compute(new ArcPlan().setOrigin(Vector2)));
 			}
 		}
 	}
 
-	private Wall getWallForPoint(Point point) {
+	private Wall getWallForPoint(Vector2 Vector2) {
 		for(WallPlan wallPlan : interactor.getHousePlan().getWalls()) {
 			Wall wall = wallPlan.getOrigin();
-			for(Point p : wall.getPoints()) {
-				if(p.equals(point))
+			for(Vector2 p : wall.getPoints()) {
+				if(p.equals(Vector2))
 					return wall;
 			}
 		}
@@ -115,7 +114,7 @@ public class ArcInteractor {
 	}
 
 	public ArcPlan compute(ArcPlan arc) {
-		Point sourcePoint = arc.getOrigin();
+		Vector2 sourcePoint = arc.getOrigin();
 		Array<Wall> linkedWalls = new Array<Wall>();
 
 		for(WallPlan wallPlanTarget : interactor.getHousePlan().getWalls()) {
@@ -132,8 +131,8 @@ public class ArcInteractor {
 		for(int i = 0; i < 2; i++) {
 			Wall w = linkedWalls.get(i);
 
-			// Compute external point
-			Point p = w.getPoints()[0];
+			// Compute external Vector2
+			Vector2 p = w.getPoints()[0];
 			if(w.getPoints()[0].equals(sourcePoint))
 				p = w.getPoints()[1];
 
@@ -144,7 +143,7 @@ public class ArcInteractor {
 		Vector2 dirBis = dirs[0].cpy().add(dirs[1]).nor();
 
 		// Compute points
-		Point[] points = arc.getPoints();
+		Vector2[] points = arc.getPoints();
 		points[0].set(sourcePoint);
 		points[1].set(sourcePoint).add(dirs[0]);
 		points[3].set(sourcePoint).add(dirs[1]);
@@ -153,7 +152,7 @@ public class ArcInteractor {
 		// Compute label
 		int angle = Math.abs((int)dirs[0].angle(dirs[1]));
 		String labelStr = Integer.toString(angle)+Character.toString((char)0x00B0);
-		Point anglePos = new Point();
+		Vector2 anglePos = new Vector2();
 		anglePos.set(sourcePoint).add(dirBis.cpy().scl(PlanConfiguration.Arc.size));
 
 		if(interactor.getHousePlan().getLabels().containsKey(arc)) {
@@ -165,7 +164,7 @@ public class ArcInteractor {
 			interactor.getHousePlan().getLabels().put(arc, new LabelPlan(arc, labelStr, anglePos));
 		}
 
-		// Compute bubble point
+		// Compute bubble Vector2
 		arc.getBubblePoint().set(sourcePoint).add(dirBis.cpy().scl(PlanConfiguration.Arc.size));
 
 		return arc;

@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.ArcPlan;
 import com.realhome.editor.modeler.plan.model.HousePlan;
@@ -25,7 +25,7 @@ public class ArcRenderer implements Renderer {
 	private int id;
 	private boolean hasArc;
 	private Array<ArcPlan> arcs;
-	private final ObjectMap<ArcPlan, Point[]> pointsMap = new ObjectMap<ArcPlan, Point[]>(3);
+	private final ObjectMap<ArcPlan, Vector2[]> pointsMap = new ObjectMap<ArcPlan, Vector2[]>(3);
 
 	public ArcRenderer () {
 		initShader();
@@ -59,7 +59,7 @@ public class ArcRenderer implements Renderer {
 		// Compute vertices
 		for( int i = 0; i < arcs.size; i++) {
 			id = 0;
-			Point[] points = arcs.get(i).getPoints();
+			Vector2[] points = arcs.get(i).getPoints();
 			pointsMap.put(arcs.get(i), points);
 
 			// First triangle
@@ -76,7 +76,7 @@ public class ArcRenderer implements Renderer {
 		}
 	}
 
-	private void vertice (Point point) {
+	private void vertice (Vector2 point) {
 		vertices[id + 0] = point.x;
 		vertices[id + 1] = point.y;
 		id += 2;
@@ -100,11 +100,11 @@ public class ArcRenderer implements Renderer {
 			shader.setUniformf("u_outlineSize", PlanConfiguration.Arc.outlineSize);
 
 			for(int i = 0; i < arcs.size; i++) {
-				Point[] points = pointsMap.get(arcs.get(i));
-				Point p = points[0];
-				Point pLeft = points[1];
-				Point pRight = points[3];
-				Point bubblePoint = arcs.get(i).getBubblePoint();
+				Vector2[] points = pointsMap.get(arcs.get(i));
+				Vector2 p = points[0];
+				Vector2 pLeft = points[1];
+				Vector2 pRight = points[3];
+				Vector2 bubblePoint = arcs.get(i).getBubblePoint();
 
 				shader.setUniformf("u_pos", p.x, p.y);
 				shader.setUniformf("u_posLeft", pLeft.x, pLeft.y);

@@ -4,16 +4,16 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
+import com.realhome.editor.util.math.GeometryUtils;
 
 public class WallComputer {
 
 	/** Helper class to define segment
 	 */
 	static private class Segment {
-		public Point point0 = new Point();
-		public Point point1 = new Point();
+		public Vector2 point0 = new Vector2();
+		public Vector2 point1 = new Vector2();
 	}
 
 	// Min and Max angle to valid angle between two walls
@@ -21,7 +21,7 @@ public class WallComputer {
 	private final static int ANGLE_MIN = 1;
 
 	/**
-	 * Compute wall extrusion point and set it in resultPoints.
+	 * Compute wall extrusion Vector2 and set it in resultPoints.
 	 * @param sourceWall Wall to compute
 	 * @param walls All walls in the house
 	 * @param resultPoints array where result is put in. Filled with 4 points!
@@ -32,35 +32,35 @@ public class WallComputer {
 	 * Length: p0-p2, p1,p3
 	 * Width: p0-p1, p2-p3
 	 */
-	public Point[] extrudeWall(Wall sourceWall, Array<Wall> walls, Point[] resultPoints) {
+	public Vector2[] extrudeWall(Wall sourceWall, Array<Wall> walls, Vector2[] resultPoints) {
 		// Valid resultPoints length
 		if(resultPoints.length != 4) {
 			throw new GdxRuntimeException("resultPoints must contain 4 points");
 		}
 
-		// If sourceWall is zero, we set resultPoints to the same point
+		// If sourceWall is zero, we set resultPoints to the same Vector2
 		if( sourceWall.isZero() ) {
 			for(int i = 0; i < 4; i++) {
-				resultPoints[i] = new Point(sourceWall.getPoints()[0]);
+				resultPoints[i] = new Vector2(sourceWall.getPoints()[0]);
 			}
 			return resultPoints;
 		}
 
-		// We compute result point by point, so loop through sourceWall points
+		// We compute result Vector2 by Vector2, so loop through sourceWall points
 		int i = 0;
-		for(Point sourcePoint : sourceWall.getPoints()) {
+		for(Vector2 sourcePoint : sourceWall.getPoints()) {
 			// If there is no intersection, we compute a simple extrusion
 			boolean isSimpleExtrusion = true;
 
-			// We loop through all walls to find matching point with current point
+			// We loop through all walls to find matching Vector2 with current Vector2
 			for(Wall targetWall : walls) {
 				// We can"t check source wall against itself
 				if (sourceWall == targetWall) continue;
 
 				// We loop through target wall points now
-				for (Point targetPoint : targetWall.getPoints()) {
+				for (Vector2 targetPoint : targetWall.getPoints()) {
 
-					// If we find a linked point and the angle between the walls is not too small,
+					// If we find a linked Vector2 and the angle between the walls is not too small,
 					// we compute the extrusion points with linked wall method.
 					if (targetPoint.equals(sourcePoint) && isAngleValid(sourceWall, targetWall)) {
 						isSimpleExtrusion = false;
@@ -69,7 +69,7 @@ public class WallComputer {
 				}
 			}
 
-			// If there is no linked point, we simply extrude the wall
+			// If there is no linked Vector2, we simply extrude the wall
 			if (isSimpleExtrusion) {
 				simpleExtrusion(sourceWall, sourcePoint, i, resultPoints);
 			}
@@ -86,7 +86,7 @@ public class WallComputer {
 	 * @param pointPos index to fill in oresultPoints
 	 * @param resultPoints array to fill with result
 	 */
-	private void intersectionPoints (Wall sourceWall,  Wall targetWall, int pointPos, Point[] resultPoints) {
+	private void intersectionPoints (Wall sourceWall,  Wall targetWall, int pointPos, Vector2[] resultPoints) {
 		Segment[] currentInWallSegments = new Segment[2];
 		currentInWallSegments[0] = getSideSegment(sourceWall, true);
 		currentInWallSegments[1] = getSideSegment(sourceWall, false);
@@ -96,7 +96,7 @@ public class WallComputer {
 		wallTestSegments[1] = getSideSegment(targetWall, false);
 
 		for (int i = 0; i < currentInWallSegments.length; i++) {
-			Point[] intersectionPoints = new Point[2];
+			Vector2[] intersectionPoints = new Vector2[2];
 
 			for (int j = 0; j < wallTestSegments.length; j++) {
 				intersectionPoints[j] = getLineIntersection(currentInWallSegments[i], wallTestSegments[j]);
@@ -106,7 +106,7 @@ public class WallComputer {
 		}
 	}
 
-	/** Get translated point of the wall (compared to normal of direction).
+	/** Get translated Vector2 of the wall (compared to normal of direction).
 	 * @param wall Wall to take direction
 	 * @param side Side to extrude normal : True=left, False=right
 	 */
@@ -129,15 +129,15 @@ public class WallComputer {
 		return result;
 	}
 
-	/** Return intersection point between two segments.
+	/** Return intersection Vector2 between two segments.
 	 * @param s0 First segment
 	 * @param s1 Second segment
 	 */
-	private Point getLineIntersection (Segment s0, Segment s1) {
+	private Vector2 getLineIntersection (Segment s0, Segment s1) {
 		Vector2 intersection = new Vector2();
 		Intersector.intersectLines(s0.point0.x, s0.point0.y, s0.point1.x, s0.point1.y, s1.point0.x, s1.point0.y, s1.point1.x,
 			s1.point1.y, intersection);
-		return new Point(intersection);
+		return new Vector2(intersection);
 	}
 
 	/**
@@ -162,11 +162,11 @@ public class WallComputer {
 	/** Simply extrude wall by its width.
 	 *
 	 * @param Wall wall to extrude
-	 * @param Point point to extrude in wall
+	 * @param Vector2 Vector2 to extrude in wall
 	 * @param pointPos index to fill in oresultPoints
 	 * @param resultPoints array to fill with result
 	 */
-	private void simpleExtrusion (Wall wall, Point point, int pointPos, Point[] resultPoints) {
+	private void simpleExtrusion (Wall wall, Vector2 Vector2, int pointPos, Vector2[] resultPoints) {
 		// Get wall informations
 		Vector2 direction = getWallDirection(wall);
 		int width = wall.getWidth() / 2;
@@ -176,8 +176,8 @@ public class WallComputer {
 		normal.scl(width);
 
 		// Copy the two new create points
-		Point point0 = point.cpy();
-		Point point1 = point.cpy();
+		Vector2 point0 = Vector2.cpy();
+		Vector2 point1 = Vector2.cpy();
 
 		// Extrude the two new points
 		point0.add(normal);
@@ -192,21 +192,21 @@ public class WallComputer {
 	 * @param Wall to compute direction
 	 */
 	private Vector2 getWallDirection (Wall wall) {
-		return wall.getPoints()[1].dir(wall.getPoints()[0], new Vector2());
+		return GeometryUtils.dir(wall.getPoints()[1], wall.getPoints()[0], new Vector2());
 	}
 
 	/**
-	 * Get the number of point linked between wall and walls
+	 * Get the number of Vector2 linked between wall and walls
 	 * @param wall Wall to test
 	 * @param walls All wall
 	 * @return 0 if no link, 1 if one link, 2 if two links
-	*/
+	 */
 	public int getNumberLink(Wall wall, Array<Wall> walls) {
 		// Get wall points
-		Point p0 = wall.getPoints()[0];
-		Point p1 = wall.getPoints()[1];
+		Vector2 p0 = wall.getPoints()[0];
+		Vector2 p1 = wall.getPoints()[1];
 
-		// Init point link
+		// Init Vector2 link
 		boolean p0Link = false;
 		boolean p1Link = false;
 
@@ -217,8 +217,8 @@ public class WallComputer {
 				continue;
 
 			// Loop through points
-			for(Point p : w.getPoints()) {
-				// Set the point as linked if equals
+			for(Vector2 p : w.getPoints()) {
+				// Set the Vector2 as linked if equals
 				if(p0.equals(p))
 					p0Link = true;
 				if(p1.equals(p))
@@ -237,13 +237,13 @@ public class WallComputer {
 	/**
 	 * Return true if the <pointId> of the <wall> is linked
 	 * @param wall Wall to test
-	 * @param pointId point in the wall (0 or 1)
+	 * @param pointId Vector2 in the wall (0 or 1)
 	 * @param walls All walls
 	 * @return boolean
-	*/
+	 */
 	public boolean isPointLinked(Wall wall, int pointId, Array<Wall> walls) {
-		// Get wall point
-		Point point = wall.getPoints()[pointId];
+		// Get wall Vector2
+		Vector2 Vector2 = wall.getPoints()[pointId];
 
 		// Loop through walls
 		for(Wall w : walls) {
@@ -252,9 +252,9 @@ public class WallComputer {
 				continue;
 
 			// Loop through points
-			for(Point p : w.getPoints()) {
-				// Set the point as linked if equals
-				if(point.equals(p))
+			for(Vector2 p : w.getPoints()) {
+				// Set the Vector2 as linked if equals
+				if(Vector2.equals(p))
 					return true;
 			}
 		}

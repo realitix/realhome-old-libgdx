@@ -1,13 +1,12 @@
 package com.realhome.editor.model.house;
 
-import com.badlogic.gdx.math.Vector2;
 
-public class Point {
+public class PointBackup {
 	// coords in centimeters
 	public int x;
 	public int y;
 
-	public Point() {
+	/*public Point() {
 
 	}
 
@@ -42,7 +41,7 @@ public class Point {
 	 * Direction vector
 	 * Point p to Point this
 	 */
-	public Vector2 dir(Point p, Vector2 out) {
+	/*public Vector2 dir(Point p, Vector2 out) {
 		return dir(p , out, true);
 	}
 
@@ -86,5 +85,5 @@ public class Point {
 		if (x != other.x) return false;
 		if (y != other.y) return false;
 		return true;
-	}
+	}*/
 }

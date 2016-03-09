@@ -3,24 +3,22 @@ package com.realhome.editor.modeler.plan.actioner;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
-import com.realhome.editor.modeler.plan.interactor.Interactor;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class WallMovingActioner extends BaseActioner {
 	public static final String NAME = "WallMovingActioner";
 
-	private final Point tmp = new Point();
+	private final Vector2 tmp = new Vector2();
 	private final Vector2 lastLocation = new Vector2();
 	private final Vector2 delta = new Vector2();
-	private Array<Point> cachedPoints = new Array<Point>();
+	private Array<Vector2> cachedPoints = new Array<Vector2>();
 
 	@Override
 	public String getName() {
 		return NAME;
 	}
-	
+
 	@Override
 	public boolean move (int x, int y) {
 		if(interactor.getHousePlan().getSelectedWall() == null)
@@ -42,12 +40,12 @@ public class WallMovingActioner extends BaseActioner {
 		int result = 0;
 
 		Wall wallSource = interactor.getHousePlan().getSelectedWall().getOrigin();
-		for(Point sourcePoint : wallSource.getPoints()) {
+		for(Vector2 sourcePoint : wallSource.getPoints()) {
 			for(WallPlan w : interactor.getHousePlan().getWalls()) {
 				Wall wallTarget = w.getOrigin();
 				if ( wallTarget == wallSource ) continue;
 
-				for(Point targetPoint : wallTarget.getPoints()) {
+				for(Vector2 targetPoint : wallTarget.getPoints()) {
 					if(sourcePoint.equals(targetPoint))
 						result++;
 				}
@@ -80,21 +78,21 @@ public class WallMovingActioner extends BaseActioner {
 			return;
 		}
 
-		Point[] virtualPoints = {
-			new Point(wallSource.getPoints()[0]),
-			new Point(wallSource.getPoints()[1])};
+		Vector2[] virtualPoints = {
+			new Vector2(wallSource.getPoints()[0]),
+			new Vector2(wallSource.getPoints()[1])};
 
 		// Move virtual points
-		for(Point p : virtualPoints) p.add(x, y);
+		for(Vector2 p : virtualPoints) p.add(x, y);
 
 		// Find linked walls
-		for(Point sourcePoint : wallSource.getPoints()) {
+		for(Vector2 sourcePoint : wallSource.getPoints()) {
 			for(int i = 0; i < interactor.getHousePlan().getWalls().size; i++) {
 				WallPlan w = interactor.getHousePlan().getWalls().get(i);
 				Wall wallTarget = w.getOrigin();
 				if ( wallTarget == wallSource ) continue;
 
-				for(Point targetPoint : wallTarget.getPoints()) {
+				for(Vector2 targetPoint : wallTarget.getPoints()) {
 					if(sourcePoint.equals(targetPoint)) {
 						Vector2 intersection = new Vector2();
 						Intersector.intersectLines(
@@ -109,7 +107,7 @@ public class WallMovingActioner extends BaseActioner {
 
 						// If only one common point, we add the same delta to the other one
 						if( nbCorners == 1 ) {
-							Point otherPoint = (wallSource.getPoints()[0] == sourcePoint) ? wallSource.getPoints()[1] : wallSource.getPoints()[0];
+							Vector2 otherPoint = (wallSource.getPoints()[0] == sourcePoint) ? wallSource.getPoints()[1] : wallSource.getPoints()[0];
 							cachedPoints.clear();
 							cachedPoints.add(otherPoint);
 							interactor.movePoints(cachedPoints, otherPoint.x - (sourcePoint.x - posX), otherPoint.y - (sourcePoint.y - posY));

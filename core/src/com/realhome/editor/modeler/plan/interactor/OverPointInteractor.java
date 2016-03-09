@@ -1,7 +1,6 @@
 package com.realhome.editor.modeler.plan.interactor;
 
 import com.badlogic.gdx.math.Vector2;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.model.OverPointPlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
@@ -13,13 +12,13 @@ public class OverPointInteractor {
 		this.interactor = interactor;
 	}
 
-	public void select(Point point) {
-		interactor.getHousePlan().setSelectedPoint(point);
+	public void select(Vector2 Vector2) {
+		interactor.getHousePlan().setSelectedPoint(Vector2);
 	}
 
-	public void over(Point point) {
-		if(point != null) {
-			interactor.getHousePlan().setOverPoint(point);
+	public void over(Vector2 Vector2) {
+		if(Vector2 != null) {
+			interactor.getHousePlan().setOverPoint(Vector2);
 			compute();
 		}
 		else {
@@ -29,8 +28,8 @@ public class OverPointInteractor {
 
 	public void compute() {
 		OverPointPlan overPoint = interactor.getHousePlan().getOverPoint();
-		Point[] points = overPoint.getPoints();
-		Point origin = overPoint.getOrigin();
+		Vector2[] points = overPoint.getPoints();
+		Vector2 origin = overPoint.getOrigin();
 
 		if(origin == null) return;
 
@@ -42,7 +41,7 @@ public class OverPointInteractor {
 		for(WallPlan wallPlan : interactor.getHousePlan().getWalls()) {
 			Wall wall = wallPlan.getOrigin();
 
-			for(Point p : wall.getPoints()) {
+			for(Vector2 p : wall.getPoints()) {
 				if(p.equals(origin)) {
 					width = wall.getWidth() / 2;
 				}
@@ -61,7 +60,7 @@ public class OverPointInteractor {
 	public void clear() {
 		OverPointPlan overPoint = interactor.getHousePlan().getOverPoint();
 		overPoint.setOrigin(null);
-		Point[] points = overPoint.getPoints();
+		Vector2[] points = overPoint.getPoints();
 
 		for(int i = 0; i < points.length; i++) {
 			points[i].set(0, 0);

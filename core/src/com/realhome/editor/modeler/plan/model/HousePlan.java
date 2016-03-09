@@ -1,14 +1,14 @@
 
 package com.realhome.editor.modeler.plan.model;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.realhome.editor.model.house.Point;
 
 public class HousePlan {
 	private int floor;
 	private final Array<WallPlan> walls = new Array<WallPlan>();
-	private final Array<Point> outlinePoints = new Array<Point>();
+	private final Array<Vector2> outlinePoints = new Array<Vector2>();
 	private final Array<ArcPlan> arcs = new Array<ArcPlan>();
 	private final Array<RoomPlan> rooms = new Array<RoomPlan>();
 	private final ObjectMap<WallPlan, Array<MeasurePlan>> measures = new ObjectMap<WallPlan, Array<MeasurePlan>>();
@@ -17,7 +17,7 @@ public class HousePlan {
 	private final OverPointPlan overPoint = new OverPointPlan();
 	private final WallButtonPlan wallButton = new WallButtonPlan();
 	private WallPlan selectedWall;
-	private Point selectedPoint;
+	private Vector2 selectedPoint;
 
 	public WallButtonPlan getWallButton() {
 		return wallButton;
@@ -32,12 +32,12 @@ public class HousePlan {
 		return selectedWall;
 	}
 
-	public HousePlan setSelectedPoint(Point point) {
-		this.selectedPoint = point;
+	public HousePlan setSelectedPoint(Vector2 Vector2) {
+		this.selectedPoint = Vector2;
 		return this;
 	}
 
-	public Point getSelectedPoint() {
+	public Vector2 getSelectedPoint() {
 		return selectedPoint;
 	}
 
@@ -50,8 +50,8 @@ public class HousePlan {
 		return this.overWall;
 	}
 
-	public HousePlan setOverPoint(Point point) {
-		this.overPoint.setOrigin(point);
+	public HousePlan setOverPoint(Vector2 Vector2) {
+		this.overPoint.setOrigin(Vector2);
 		return this;
 	}
 
@@ -72,7 +72,7 @@ public class HousePlan {
 		return this;
 	}
 
-	public Array<Point> getOutlinePoints () {
+	public Array<Vector2> getOutlinePoints () {
 		return outlinePoints;
 	}
 

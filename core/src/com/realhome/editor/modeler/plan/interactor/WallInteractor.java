@@ -1,11 +1,9 @@
 package com.realhome.editor.modeler.plan.interactor;
 
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.realhome.editor.model.house.House;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
@@ -17,8 +15,8 @@ import com.realhome.editor.modeler.util.WallComputer;
 public class WallInteractor {
 
 	static private class Segment {
-		public Point point0 = new Point();
-		public Point point1 = new Point();
+		public Vector2 point0 = new Vector2();
+		public Vector2 point1 = new Vector2();
 	}
 
 	private final static int ANGLE_MAX = 14;
@@ -38,11 +36,11 @@ public class WallInteractor {
 	}
 
 	/**
-	 * Update all walls containing point in parameter
-	 * @param point
+	 * Update all walls containing Vector2 in parameter
+	 * @param Vector2
 	 */
-	public void compute(Point point) {
-		initCachedWalls(point);
+	public void compute(Vector2 Vector2) {
+		initCachedWalls(Vector2);
 
 		// Compute walls, then compute measure
 		for(int i = 0; i < cachedWalls.size; i++)
@@ -85,14 +83,14 @@ public class WallInteractor {
 	}
 
 	/**
-	 * Select linked wall (to the point)
+	 * Select linked wall (to the Vector2)
 	 * And add linked to linked wall to
 	 */
-	private void initCachedWalls(Point point) {
+	private void initCachedWalls(Vector2 Vector2) {
 		cachedWalls.clear();
 
-		// If point null, we take all walls
-		if(point == null) {
+		// If Vector2 null, we take all walls
+		if(Vector2 == null) {
 			for(WallPlan wallPlan : interactor.getHousePlan().getWalls()) {
 				cachedWalls.add(wallPlan);
 			}
@@ -102,8 +100,8 @@ public class WallInteractor {
 		// Directly linked walls
 		for(WallPlan wallPlan : interactor.getHousePlan().getWalls()) {
 			Wall wall = wallPlan.getOrigin();
-			for(Point p : wall.getPoints()) {
-				if(p.equals(point)) {
+			for(Vector2 p : wall.getPoints()) {
+				if(p.equals(Vector2)) {
 					cachedWalls.add(wallPlan);
 				}
 			}
@@ -118,7 +116,7 @@ public class WallInteractor {
 			}
 		}
 
-		// Remove wall if the two point are equals
+		// Remove wall if the two Vector2 are equals
 		/*for(int i = 0; i < cachedWalls.size; i++) {
 			if(cachedWalls.get(i).getOrigin().isZero()) {
 				cachedWalls.removeIndex(i);
@@ -127,8 +125,8 @@ public class WallInteractor {
 	}
 
 	private boolean isWallsLinked(WallPlan wall0, WallPlan wall1) {
-		for(Point pointSource : wall0.getOrigin().getPoints()) {
-			for(Point pointTarget : wall1.getOrigin().getPoints()) {
+		for(Vector2 pointSource : wall0.getOrigin().getPoints()) {
+			for(Vector2 pointTarget : wall1.getOrigin().getPoints()) {
 				if(pointSource.equals(pointTarget)) {
 					return true;
 				}
@@ -159,12 +157,12 @@ public class WallInteractor {
 		computeMeasure(findedMeasures.get(1), wall.getPoints()[3], wall.getPoints()[1]);
 	}
 
-	private void computeMeasure(MeasurePlan measure, Point point0, Point point1) {
+	private void computeMeasure(MeasurePlan measure, Vector2 point0, Vector2 point1) {
 		Vector2 dir = new Vector2(point1.x, point1.y).sub(point0.x, point0.y);
 		int size = (int)dir.len();
 		Vector2 normal = dir.nor().cpy().rotate90(1).scl(10);
 		measure.setSize(size);
-		Array<Point> measurePoints = measure.getPoints();
+		Array<Vector2> measurePoints = measure.getPoints();
 
 		// Left line
 		measurePoints.get(0).set(point0).add(normal);
@@ -203,7 +201,7 @@ public class WallInteractor {
 		if(angleLabel > 90 && angleLabel < 270)
 			angleLabel = (angleLabel + 180) % 360;
 
-		Point labelPosition = new Point(point0)
+		Vector2 labelPosition = new Vector2(point0)
 		.add(dir.cpy().scl(size/2))
 		.add(normal.cpy().nor().scl(PlanConfiguration.Measure.labelOffset));
 
@@ -229,7 +227,7 @@ public class WallInteractor {
 		house.getFloor(housePlan.getFloor()).removeWall(wall.getOrigin());
 	}
 
-	public Wall addWall(Point point) {
+	public Wall addWall(Vector2 point) {
 		HousePlan housePlan = interactor.getHousePlan();
 		House house = interactor.getHouse();
 

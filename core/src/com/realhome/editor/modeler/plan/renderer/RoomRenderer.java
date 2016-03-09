@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.RoomPlan;
@@ -57,7 +57,7 @@ public class RoomRenderer implements Renderer {
 		mesh.setVertices(vertices, 0 , id);
 	}
 
-	private void line(Point p1, Point p2) {
+	private void line(Vector2 p1, Vector2 p2) {
 		vertices[id++] = p1.x;
 		vertices[id++] = p1.y;
 		vertices[id++] = p2.x;

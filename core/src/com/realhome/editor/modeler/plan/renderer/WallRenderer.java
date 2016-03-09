@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.WallPlan;
@@ -60,7 +59,7 @@ public class WallRenderer implements Renderer {
 		// Compute vertices
 		id = 0;
 		for (int i = 0; i < walls.size; i++) {
-			Point[] points = walls.get(i).getPoints();
+			Vector2[] points = walls.get(i).getPoints();
 
 			// First triangle
 			vertice(vertices, points[0]);
@@ -77,7 +76,7 @@ public class WallRenderer implements Renderer {
 		mesh.setVertices(vertices, 0, id);
 	}
 
-	private void vertice (float[] vertices, Point point) {
+	private void vertice (float[] vertices, Vector2 point) {
 		vertices[id + 0] = point.x;
 		vertices[id + 1] = point.y;
 		vertices[id + 2] = uvX(point.x);
@@ -91,9 +90,9 @@ public class WallRenderer implements Renderer {
 		max.set(mi, mi);
 
 		for (int i = 0; i < walls.size; i++) {
-			Point[] points = walls.get(i).getPoints();
+			Vector2[] points = walls.get(i).getPoints();
 			for (int j = 0; j < points.length; j++) {
-				Point p = points[j];
+				Vector2 p = points[j];
 				if (p.x < min.x) min.x = p.x;
 				if (p.x > max.x) max.x = p.x;
 				if (p.y < min.y) min.y = p.y;

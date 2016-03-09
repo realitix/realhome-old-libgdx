@@ -6,6 +6,7 @@ import java.util.Arrays;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntMap;
+import com.realhome.editor.util.math.GeometryUtils;
 
 
 public class Wall extends BaseModel {
@@ -25,13 +26,13 @@ public class Wall extends BaseModel {
 	private int type;
 	private int height = 150;
 	private int width = DEFAULT_WIDTH;
-	private final Point[] points = new Point[2];
+	private final Vector2[] points = new Vector2[2];
 
 	private final IntMap<Material> materials = new IntMap<Material>();
 
 	public Wall () {
 		for (int i = 0; i < points.length; i++) {
-			points[i] = new Point();
+			points[i] = new Vector2();
 		}
 	}
 
@@ -50,7 +51,7 @@ public class Wall extends BaseModel {
 	}
 
 	public Vector2 dir(Vector2 out, boolean normalized) {
-		return getPoint1().dir(getPoint0(), out, normalized);
+		return GeometryUtils.dir(getPoint1(), getPoint0(), out, normalized);
 	}
 
 	public Wall sync(Wall target) {
@@ -86,34 +87,34 @@ public class Wall extends BaseModel {
 		return width;
 	}
 
-	public Point[] getPoints () {
+	public Vector2[] getPoints () {
 		return points;
 	}
 
-	public Point getPoint0 () {
+	public Vector2 getPoint0 () {
 		return points[0];
 	}
 
-	public Wall setPoint0 (Point point0) {
+	public Wall setPoint0 (Vector2 point0) {
 		this.points[0].set(point0);
 		return this;
 	}
 
-	public Wall setPoint0 (int x, int y) {
+	public Wall setPoint0 (float x, float y) {
 		this.points[0].set(x, y);
 		return this;
 	}
 
-	public Point getPoint1 () {
+	public Vector2 getPoint1 () {
 		return points[1];
 	}
 
-	public Wall setPoint1 (Point point1) {
+	public Wall setPoint1 (Vector2 point1) {
 		this.points[1].set(point1);
 		return this;
 	}
 
-	public Wall setPoint1 (int x, int y) {
+	public Wall setPoint1 (float x, float y) {
 		this.points[1].set(x, y);
 		return this;
 	}
@@ -133,7 +134,7 @@ public class Wall extends BaseModel {
 		return false;
 	}
 
-	public Point getLinkedPoint (Wall other) {
+	public Vector2 getLinkedPoint (Wall other) {
 		if (other.points[0].equals(points[0]) || other.points[0].equals(points[1]))
 			return other.points[0];
 		if (other.points[1].equals(points[0]) || other.points[1].equals(points[1]))

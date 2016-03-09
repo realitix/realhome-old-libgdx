@@ -1,7 +1,6 @@
 package com.realhome.editor.modeler.plan.actioner;
 
-import com.realhome.editor.model.house.Point;
-import com.realhome.editor.modeler.plan.interactor.Interactor;
+import com.badlogic.gdx.math.Vector2;
 import com.realhome.editor.modeler.plan.model.WallPlan;
 
 public class PointOverActioner extends BaseActioner {
@@ -21,7 +20,7 @@ public class PointOverActioner extends BaseActioner {
 
 		for(WallPlan wall : interactor.getHousePlan().getWalls()) {
 			int w = wall.getOrigin().getWidth() /2;
-			for(Point point : wall.getOrigin().getPoints()) {
+			for(Vector2 point : wall.getOrigin().getPoints()) {
 				if( x <= point.x + w && x >= point.x - w && y <= point.y + w && y >= point.y - w) {
 					if( interactor.getHousePlan().getOverPoint().getOrigin() != point ) {
 						interactor.overPoint(point);

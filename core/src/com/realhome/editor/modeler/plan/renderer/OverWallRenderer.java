@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.OverWallPlan;
@@ -69,7 +68,7 @@ public class OverWallRenderer implements Renderer {
 
 		// Compute vertices
 		id = 0;
-		Point[] points = overWallPlan.getPoints();
+		Vector2[] points = overWallPlan.getPoints();
 
 		// First triangle
 		vertice(points[0]);
@@ -86,7 +85,7 @@ public class OverWallRenderer implements Renderer {
 	}
 
 	private void computeLimit () {
-		Point[] points = cachedWall.getOrigin().getPoints();
+		Vector2[] points = cachedWall.getOrigin().getPoints();
 		float m1 = 99999999, m2 = -99999999;
 
 		min.set(m1, m1);
@@ -100,7 +99,7 @@ public class OverWallRenderer implements Renderer {
 		}
 	}
 
-	private void vertice (Point point) {
+	private void vertice (Vector2 point) {
 		vertices[id + 0] = point.x;
 		vertices[id + 1] = point.y;
 		id += 2;
@@ -113,7 +112,7 @@ public class OverWallRenderer implements Renderer {
 		if (hasWall) {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 
-			Point[] points = cachedWall.getOrigin().getPoints();
+			Vector2[] points = cachedWall.getOrigin().getPoints();
 			shader.begin();
 			shader.setUniformMatrix("u_projViewTrans", camera.combined);
 			shader.setUniformf("u_p1", points[0].x, points[0].y);

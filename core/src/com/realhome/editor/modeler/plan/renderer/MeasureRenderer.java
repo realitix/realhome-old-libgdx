@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.realhome.editor.model.house.Point;
 import com.realhome.editor.modeler.plan.PlanConfiguration;
 import com.realhome.editor.modeler.plan.model.HousePlan;
 import com.realhome.editor.modeler.plan.model.MeasurePlan;
@@ -48,7 +48,7 @@ public class MeasureRenderer implements Renderer {
 		int id = 0;
 		for(ObjectMap.Entry<WallPlan, Array<MeasurePlan>> e: measures) {
 			for (MeasurePlan measure : e.value) {
-				for(Point point : measure.getPoints()) {
+				for(Vector2 point : measure.getPoints()) {
 					vertices[id++] = point.x;
 					vertices[id++] = point.y;
 				}
