@@ -8,7 +8,8 @@ import com.badlogic.gdx.utils.ObjectMap;
 public class HousePlan {
 	private int floor;
 	private final Array<WallPlan> walls = new Array<WallPlan>();
-	private final Array<Vector2> outlinePoints = new Array<Vector2>();
+	// array of polygons
+	private final Array<Array<Vector2>> outlinePolygons = new Array<Array<Vector2>>();
 	private final Array<ArcPlan> arcs = new Array<ArcPlan>();
 	private final Array<RoomPlan> rooms = new Array<RoomPlan>();
 	private final ObjectMap<WallPlan, Array<MeasurePlan>> measures = new ObjectMap<WallPlan, Array<MeasurePlan>>();
@@ -72,8 +73,8 @@ public class HousePlan {
 		return this;
 	}
 
-	public Array<Vector2> getOutlinePoints () {
-		return outlinePoints;
+	public Array<Array<Vector2>> getOutlinePolygons () {
+		return outlinePolygons;
 	}
 
 	public HousePlan removeWall (WallPlan wall) {
@@ -103,7 +104,6 @@ public class HousePlan {
 			result += wall.toString()+"\n";
 		}
 
-		result += "Outline: "+outlinePoints+"\n";
 		return result;
 	}
 

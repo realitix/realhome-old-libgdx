@@ -17,7 +17,7 @@ import com.realhome.editor.util.RealShader;
 
 public class MaskRenderer implements Renderer {
 	private Mesh mesh;
-	private Array<Vector2> points;
+	private Array<Array<Vector2>> polygons;
 	private float[] vertices;
 
 	// Shader
@@ -32,7 +32,7 @@ public class MaskRenderer implements Renderer {
 
 	@Override
 	public void init(HousePlan housePlan) {
-		points = housePlan.getOutlinePoints();
+		polygons = housePlan.getOutlinePolygons();
 	}
 
 	private void initShader() {
@@ -49,35 +49,42 @@ public class MaskRenderer implements Renderer {
 		// Create variables for triangulation
 		FloatArray floatPoints = new FloatArray();
 		ShortArray triangles = null;
+		int sum = 0;
 
-		// Add points in FloatArray
-		for(int i = 0; i < points.size; i++) {
-			floatPoints.add(points.get(i).x);
-			floatPoints.add(points.get(i).y);
-		}
+		for(Array<Vector2> polygon : polygons) {
+			floatPoints.clear();
 
-		// Triangulate
-		triangles = triangulator.computeTriangles(floatPoints, false);
+			// Add points in FloatArray
+			for(int i = 0; i < polygon.size; i++) {
+				floatPoints.add(polygon.get(i).x);
+				floatPoints.add(polygon.get(i).y);
+			}
 
-		// Compute vertices
-		for (int i = 0; i < triangles.size; i += 3) {
-			int p1 = triangles.get(i) * 2;
-			int p2 = triangles.get(i + 1) * 2;
-			int p3 = triangles.get(i + 2) * 2;
+			// Triangulate
+			triangles = triangulator.computeTriangles(floatPoints, false);
 
-			int id = i*2;
-			vertices[id] = floatPoints.get(p1);
-			vertices[id+1] = floatPoints.get(p1 + 1);
+			// Compute vertices
+			for (int i = 0; i < triangles.size; i += 3) {
+				int p1 = triangles.get(i) * 2;
+				int p2 = triangles.get(i + 1) * 2;
+				int p3 = triangles.get(i + 2) * 2;
 
-			vertices[id+2] = floatPoints.get(p2);
-			vertices[id+3] = floatPoints.get(p2 + 1);
+				int id = i*2;
+				vertices[sum+id] = floatPoints.get(p1);
+				vertices[sum+id+1] = floatPoints.get(p1 + 1);
 
-			vertices[id+4] = floatPoints.get(p3);
-			vertices[id+5] = floatPoints.get(p3 + 1);
+				vertices[sum+id+2] = floatPoints.get(p2);
+				vertices[sum+id+3] = floatPoints.get(p2 + 1);
+
+				vertices[sum+id+4] = floatPoints.get(p3);
+				vertices[sum+id+5] = floatPoints.get(p3 + 1);
+			}
+
+			sum += triangles.size*2;
 		}
 
 		// Set vertices in mesh
-		mesh.setVertices(vertices, 0, triangles.size*2);
+		mesh.setVertices(vertices, 0, sum);
 	}
 
 	@Override

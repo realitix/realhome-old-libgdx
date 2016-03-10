@@ -3,60 +3,46 @@ package com.realhome.editor.modeler.util;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Wall;
-import com.realhome.editor.util.clipper.Clipper.ClipType;
-import com.realhome.editor.util.clipper.Clipper.PolyFillType;
-import com.realhome.editor.util.clipper.Clipper.PolyType;
-import com.realhome.editor.util.clipper.DefaultClipper;
-import com.realhome.editor.util.clipper.Path;
-import com.realhome.editor.util.clipper.Paths;
-import com.realhome.editor.util.clipper.Point.LongPoint;
+import com.realhome.editor.util.math.PolygonUtils;
 
 public class RoomComputer {
 
 
 	private WallComputer wallComputer = new WallComputer();
+	private PolygonUtils polygonUtils = new PolygonUtils();
 
 	public Array<Array<Vector2>> getRooms(Array<Wall> walls) {
-		Paths subjects = new Paths(walls.size);
+		Array<Array<Vector2>> polygons = getPolygonsFromWalls(walls);
+		return polygonUtils.getHoles(polygons);
+	}
+
+	public Array<Array<Vector2>> getOutlines(Array<Wall> walls) {
+		Array<Array<Vector2>> polygons = getPolygonsFromWalls(walls);
+		return polygonUtils.getOutline(polygons);
+	}
+
+	private Array<Array<Vector2>> getPolygonsFromWalls(Array<Wall> walls) {
+		Array<Array<Vector2>> polygons = new Array<Array<Vector2>>();
 
 		for(int i = 0; i < walls.size; i++) {
 			// Compute extruded points
 			Wall wall = walls.get(i);
 			Vector2[] points = wallComputer.extrudeWall(wall, walls, newPoints());
 
-			// Init Path
-			Path path = new Path(4);
+			// Init polygon
+			Array<Vector2> polygon = new Array<Vector2>(4);
 
-			// Add points to create path
-			path.add(new LongPoint((int)points[0].x, (int)points[0].y));
-			path.add(new LongPoint((int)points[1].x, (int)points[1].y));
-			path.add(new LongPoint((int)points[3].x, (int)points[3].y));
-			path.add(new LongPoint((int)points[2].x, (int)points[2].y));
+			// Add points to create polygon
+			polygon.add(points[0]);
+			polygon.add(points[1]);
+			polygon.add(points[3]);
+			polygon.add(points[2]);
 
-			// Add path to paths
-			subjects.add(path);
+			// Add polygon to polygons
+			polygons.add(polygon);
 		}
 
-		// Use clipper to generate room
-		// We can't use PolyTree because it crash
-		Paths solution = new Paths();
-		DefaultClipper clipper = new DefaultClipper();
-		clipper.addPaths(subjects, PolyType.SUBJECT, true);
-		clipper.execute(ClipType.UNION, solution, PolyFillType.POSITIVE, PolyFillType.EVEN_ODD);
-
-		Array<Array<Vector2>> rooms = new Array<Array<Vector2>>();
-		for(Path path : solution) {
-			// return false for a hole
-			if(!path.orientation()) {
-				Array<Vector2> room = new Array<Vector2>();
-				for(LongPoint p : path) {
-					room.add(new Vector2((int)p.getX(), (int)p.getY()));
-				}
-				rooms.add(room);
-			}
-		}
-
-		return rooms;
+		return polygons;
 	}
 
 	/**
