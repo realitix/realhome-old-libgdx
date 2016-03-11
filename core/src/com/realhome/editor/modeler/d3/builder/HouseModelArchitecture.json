@@ -21,15 +21,24 @@ First mesh is for the house
 					"parts": [{
 						"meshpartid": "wall_[IdWall]_[IdSideWall]",
 						"materialid": "[IdMaterial]"
-					}, {
+					}]
+				}, {
 					"id": "walls_top",
 					"parts": [{
 						"meshpartid": "walls_top",
 						"materialid": "[IdMaterial]"
 					}]
 				}]
+			}, {
+				"id": "rooms",
+				"children": [{
+					"id": "room_[IdRoom]",
+					"parts": [{
+						"meshpartid": "room_[IdRoom]",
+						"materialid": "[IdMaterial]"
+					}]
+				}]
 			}]
-
 		}]
 	}]
 }

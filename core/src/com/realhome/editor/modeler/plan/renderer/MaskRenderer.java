@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.DelaunayTriangulator;
+import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
@@ -23,7 +23,7 @@ public class MaskRenderer implements Renderer {
 	// Shader
 	private ShaderProgram shader;
 
-	private final DelaunayTriangulator triangulator = new DelaunayTriangulator();
+	private final EarClippingTriangulator triangulator = new EarClippingTriangulator();
 
 	public MaskRenderer() {
 		initShader();
@@ -61,7 +61,7 @@ public class MaskRenderer implements Renderer {
 			}
 
 			// Triangulate
-			triangles = triangulator.computeTriangles(floatPoints, false);
+			triangles = triangulator.computeTriangles(floatPoints);
 
 			// Compute vertices
 			for (int i = 0; i < triangles.size; i += 3) {

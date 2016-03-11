@@ -29,6 +29,28 @@ public class PolygonUtils {
 		return area;
 	}
 
+	/**
+	 * Get center of polygon
+	 * Polygon must be convex
+	*/
+	public static Vector2 getPolygonCenter(Array<Vector2> polygon) {
+		float minX = 999999999, minY = 999999999,
+		maxX = -999999999, maxY = -999999999;
+
+		for(Vector2 point : polygon) {
+			if(point.x < minX)
+				minX = point.x;
+			if(point.y < minY)
+				minY = point.y;
+			if(point.x > maxX)
+				maxX = point.x;
+			if(point.y > maxY)
+				maxY = point.y;
+		}
+
+		return new Vector2(minX + (maxX-minX) / 2, minY + (maxY-minY) / 2);
+	}
+
 	/*
 	 * Returns an array of polygons (outline)
 	 * @param polygons Array of polygons

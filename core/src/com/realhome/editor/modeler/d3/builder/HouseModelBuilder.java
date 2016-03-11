@@ -28,6 +28,7 @@ public class HouseModelBuilder {
 	private IntArray indices = new IntArray();
 
 	private WallBuilder wallBuilder;
+	private RoomBuilder roomBuilder;
 
 	public HouseModelBuilder(House house, Model houseModel) {
 		this.house = house;
@@ -36,6 +37,7 @@ public class HouseModelBuilder {
 		builder = new MeshBuilder();
 
 		wallBuilder = new WallBuilder(this);
+		roomBuilder = new RoomBuilder(this);
 	}
 
 	public void sync() {
@@ -45,6 +47,7 @@ public class HouseModelBuilder {
 			GL20.GL_TRIANGLES);
 
 		wallBuilder.sync();
+		roomBuilder.sync();
 
 		// End meshbuilder
 		builder.end(houseModel.meshes.get(0));
