@@ -1,5 +1,7 @@
 package com.realhome.editor.modeler.plan.interactor;
 
+import java.text.DecimalFormat;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.modeler.plan.model.LabelPlan;
@@ -47,10 +49,9 @@ public class RoomInteractor {
 			}
 
 			// Display room area at center of best partition
-			float areaMeters = maxArea / 10000f;
-			String areaMeters = Float.toString(maxArea / 10000f)+"m";
+			String areaMeters = new DecimalFormat("#.##").format(maxArea / 10000f)+" m"+Character.toString((char)0x00B2);
 			Vector2 center = PolygonUtils.getPolygonCenter(bestPartition);
-			LabelPlan label = new LabelPlan(room, Float.toString(maxArea), center);
+			LabelPlan label = new LabelPlan(room, areaMeters, center);
 			interactor.getHousePlan().getLabels().put(room, label);
 		}
 	}

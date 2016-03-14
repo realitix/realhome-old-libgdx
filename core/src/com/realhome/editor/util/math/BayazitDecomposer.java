@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 public class BayazitDecomposer {
 
 	public static final float EPSILON = 1.192092896e-07f;
-	public static int maxPolygonVertices = 8;
+	public static int maxPolygonVertices = 100;
 
 	public static Vector2 cross(Vector2 a, float s) {
 		return new Vector2(s * a.y, -s * a.x);
@@ -32,6 +32,11 @@ public class BayazitDecomposer {
 	 *  unless it is over Settings.MaxPolygonVertices.
 	 *  Precondition: Counter Clockwise polygon */
 	public static Array<Array<Vector2>> convexPartition(Array<Vector2> vertices) {
+		// If vertices is lower than 3 vertices, we remove it
+		if(vertices.size < 3) {
+			vertices.clear();
+		}
+
 		// We force it to CCW as it is a precondition in this algorithm.
 		// vertices.ForceCounterClockWise();
 		if(PolygonUtils.isClockwise(vertices))

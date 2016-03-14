@@ -104,7 +104,7 @@ public class PolygonUtils {
 	}
 
 	public static boolean isClockwise(Array<Vector2> points) {
-		return ( points.size < 4 || computeArea(points) < 0 );
+		return ( points.size < 4 || computeArea(points) > 0 );
 	}
 
 
