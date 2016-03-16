@@ -31,7 +31,7 @@ public class RealHomeApp extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		VisUI.load(Gdx.files.internal("style/uiskin.json"));
+		VisUI.load();
 		VisUI.setDefaultTitleAlign(Align.center);
 
 		// Create base app model

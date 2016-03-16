@@ -17,37 +17,42 @@ public class RealShader {
 	private RealShader() {
 	}
 
+	public static ShaderProgram create(String shaderName) {
+		return RealShader.create(shaderName, "");
+	}
+
 	/**
 	 * Create shader program compatible with gles version
 	 */
-	public static ShaderProgram create(String shaderName) {
+	public static ShaderProgram create(String shaderName, String prefix) {
+		configureShaderProgram();
+
 		ShaderProgram shader = new ShaderProgram(
-			getShader(shaderName + VERTEX),
-			getShader(shaderName + FRAGMENT)
+			prefix + getShaderPlatform(shaderName + VERTEX),
+			prefix + getShaderPlatform(shaderName + FRAGMENT)
 			);
 
 		if (!shader.isCompiled())
-			throw new GdxRuntimeException(shader.getLog());
+			throw new GdxRuntimeException(shaderName + " :" + shader.getLog());
 
 		return shader;
 	}
 
-	/**
-	 * Get the platform shader and add the version
-	 */
-	public static String getShader(String shaderName) {
-		String shader = getShaderPlatform(shaderName);
+	private static void configureShaderProgram() {
+		if(ShaderProgram.prependVertexCode.isEmpty()) {
+			String version = null;
+			if( Gdx.graphics.isGL30Available() && Gdx.app.getType() == ApplicationType.Desktop )
+				version = "#version 330\n";
+			if( Gdx.graphics.isGL30Available() && Gdx.app.getType() != ApplicationType.Desktop )
+				version = "#version 300 es\n";
+			if( !Gdx.graphics.isGL30Available() && Gdx.app.getType() == ApplicationType.Desktop )
+				version = "#version 120\n";
+			if( !Gdx.graphics.isGL30Available() && Gdx.app.getType() != ApplicationType.Desktop )
+				version = "#version 100\n";
 
-		if( Gdx.graphics.isGL30Available() && Gdx.app.getType() == ApplicationType.Desktop )
-			return "#version 330\n" + shader;
-		if( Gdx.graphics.isGL30Available() && Gdx.app.getType() != ApplicationType.Desktop )
-			return "#version 300 es\n" + shader;
-		if( !Gdx.graphics.isGL30Available() && Gdx.app.getType() == ApplicationType.Desktop )
-			return "#version 120\n" + shader;
-		if( !Gdx.graphics.isGL30Available() && Gdx.app.getType() != ApplicationType.Desktop )
-			return "#version 100\n" + shader;
-
-		return null;
+			ShaderProgram.prependVertexCode = version;
+			ShaderProgram.prependFragmentCode = version;
+		}
 	}
 
 	/**

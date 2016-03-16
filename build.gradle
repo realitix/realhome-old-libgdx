@@ -18,11 +18,12 @@ allprojects {
     version = '1.0'
     ext {
         appName = "realhome"
-        gdxVersion = '1.7.1'
+        gdxVersion = '1.9.2'
         roboVMVersion = '1.9.0'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.6.0'
         aiVersion = '1.6.0'
+        visuiVersion = '1.0.1'
     }
 
     repositories {
@@ -38,9 +39,14 @@ project(":desktop") {
 
     dependencies {
         compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        /*
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        */
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        /*
+        Not working with lwjgl3
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        */
     }
 }
 
@@ -94,7 +100,7 @@ project(":core") {
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.kotcrab.vis:vis-ui:0.9.2"
+        compile "com.kotcrab.vis:vis-ui:$visuiVersion"
     }
 }
 

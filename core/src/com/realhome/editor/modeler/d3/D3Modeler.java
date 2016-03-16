@@ -83,7 +83,9 @@ public class D3Modeler implements Modeler {
 	@Override
 	public void render () {
 		((FirstPersonController )inputProcessor).update();
-		renderer.render(modelInstance, camera, environment);
+		renderer.begin(camera);
+		renderer.render(modelInstance, environment);
+		renderer.end();
 	}
 
 	@Override
