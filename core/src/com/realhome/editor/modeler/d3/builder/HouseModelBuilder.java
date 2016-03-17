@@ -43,7 +43,8 @@ public class HouseModelBuilder {
 	public void sync() {
 		// begin meshbuilder
 		builder.begin(new VertexAttributes(
-			new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE)),
+			new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+			new VertexAttribute(Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE)),
 			GL20.GL_TRIANGLES);
 
 		wallBuilder.sync();

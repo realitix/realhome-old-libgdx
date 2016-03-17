@@ -1,4 +1,4 @@
-package com.realhome.editor.modeler.d3.renderer.pbr;
+package com.realhome.editor.modeler.d3.renderer.pbr.shader;
 
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.model.NodePart;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder.VertexInfo;
 import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ShortArray;
@@ -74,6 +75,9 @@ public class RoomBuilder {
 		FloatArray floatPoints = new FloatArray();
 		ShortArray triangles = null;
 
+		// Init normal
+		Vector3 normal = new Vector3(0, 0, 1);
+
 		// Add points in FloatArray
 		for(int i = 0; i < room.size; i++) {
 			floatPoints.add(room.get(i).x);
@@ -102,9 +106,9 @@ public class RoomBuilder {
 
 
 			builder.getBuilder().triangle(
-				new VertexInfo().setPos(triangle.get(0).x, triangle.get(0).y, 0),
-				new VertexInfo().setPos(triangle.get(1).x, triangle.get(1).y, 0),
-				new VertexInfo().setPos(triangle.get(2).x, triangle.get(2).y, 0)
+				new VertexInfo().setPos(triangle.get(0).x, triangle.get(0).y, 0).setNor(normal),
+				new VertexInfo().setPos(triangle.get(1).x, triangle.get(1).y, 0).setNor(normal),
+				new VertexInfo().setPos(triangle.get(2).x, triangle.get(2).y, 0).setNor(normal)
 				);
 		}
 

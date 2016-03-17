@@ -31,6 +31,7 @@ public class RealHomeApp extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+		//System.out.println(Gdx.gl.glGetString(GL20.GL_VERSION) );
 		VisUI.load();
 		VisUI.setDefaultTitleAlign(Align.center);
 

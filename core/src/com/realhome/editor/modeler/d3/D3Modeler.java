@@ -10,12 +10,14 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.utils.FirstPersonCameraController;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.realhome.editor.RealHomeApp;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.Modeler;
-import com.realhome.editor.modeler.d3.input.FirstPersonController;
 import com.realhome.editor.modeler.d3.interactor.Interactor;
+import com.realhome.editor.modeler.d3.renderer.D3Renderer;
+import com.realhome.editor.modeler.d3.renderer.legacy.LegacyRenderer;
 import com.realhome.editor.modeler.d3.renderer.pbr.PbrRenderer;
 
 public class D3Modeler implements Modeler {
@@ -24,10 +26,10 @@ public class D3Modeler implements Modeler {
 
 	private House house;
 	private Model houseModel;
-	private InputProcessor inputProcessor;
+	private FirstPersonCameraController inputProcessor;
 	private RealHomeApp app;
 	private Interactor interactor;
-	private PbrRenderer renderer;
+	private D3Renderer renderer;
 	private PerspectiveCamera camera;
 	private ModelInstance modelInstance;
 	private Environment environment;
@@ -43,10 +45,16 @@ public class D3Modeler implements Modeler {
 
 		house = new House();
 		//inputProcessor = new D3InputProcessor(this);
-		inputProcessor = new FirstPersonController(camera);
+		inputProcessor = new FirstPersonCameraController(camera);
+		inputProcessor.setVelocity(100);
+		inputProcessor.setDegreesPerPixel(0.5f);
 
 		interactor = new Interactor(this, house, houseModel);
-		renderer = new PbrRenderer();
+
+		if(Gdx.graphics.isGL30Available())
+			renderer = new PbrRenderer();
+		else
+			renderer = new LegacyRenderer();
 		environment = new Environment();
 	}
 
@@ -56,7 +64,8 @@ public class D3Modeler implements Modeler {
 
 		// Add house mesh inside model
 		Mesh houseMesh = new Mesh(true, D3Configuration.houseMesh.maxVertices, D3Configuration.houseMesh.maxIndices,
-			new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE));
+			new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+			new VertexAttribute(Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE));
 		houseModel.meshes.add(houseMesh);
 		houseModel.manageDisposable(houseMesh);
 	}
@@ -82,7 +91,7 @@ public class D3Modeler implements Modeler {
 
 	@Override
 	public void render () {
-		((FirstPersonController )inputProcessor).update();
+		inputProcessor.update();
 		renderer.begin(camera);
 		renderer.render(modelInstance, environment);
 		renderer.end();

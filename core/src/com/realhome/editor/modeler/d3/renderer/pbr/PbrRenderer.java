@@ -2,17 +2,17 @@ package com.realhome.editor.modeler.d3.renderer.pbr;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL30;
-import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
-import com.badlogic.gdx.utils.Array;
-import com.realhome.editor.util.RealShader;
+import com.realhome.editor.modeler.d3.renderer.D3Renderer;
+import com.realhome.editor.modeler.d3.renderer.pbr.mrt.MrtFrameBuffer;
+import com.realhome.editor.modeler.d3.renderer.pbr.shader.MrtShaderProvider;
+import com.realhome.editor.modeler.d3.renderer.pbr.shader.PbrShader;
 
-public class PbrRenderer {
+public class PbrRenderer implements D3Renderer {
 
 	private ModelBatch batch;
 	private MrtFrameBuffer mrt;
@@ -26,16 +26,19 @@ public class PbrRenderer {
 		pbrShader = new PbrShader(context, mrt);
 	}
 
+	@Override
 	public void begin(Camera camera) {
 		mrt.begin();
 		context.begin();
 		batch.begin(camera);
 	}
 
+	@Override
 	public void render(ModelInstance instance, Environment environment) {
 		batch.render(instance, environment);
 	}
 
+	@Override
 	public void end() {
 		batch.end();
 		mrt.end();

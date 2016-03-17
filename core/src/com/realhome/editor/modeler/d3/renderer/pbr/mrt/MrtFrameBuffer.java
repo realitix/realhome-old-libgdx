@@ -1,4 +1,4 @@
-package com.realhome.editor.modeler.d3.renderer.pbr;
+package com.realhome.editor.modeler.d3.renderer.pbr.mrt;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -17,13 +17,13 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.Disposable;
 
-class MrtFrameBuffer implements Disposable {
+public class MrtFrameBuffer implements Disposable {
 
 	/** the frame buffers **/
 	private final static Map<Application, Array<MrtFrameBuffer>> buffers = new HashMap<Application, Array<MrtFrameBuffer>>();
 
 	/** the color buffer texture **/
-	private Array<Texture> colorTextures;
+	private Array<Texture> colorTextures = new Array<Texture>();
 	private Texture depthTexture;
 
 	/** the default framebuffer handle, a.k.a screen. */
@@ -43,9 +43,10 @@ class MrtFrameBuffer implements Disposable {
 	private final FloatBuffer clearBuffer = BufferUtils.newFloatBuffer(4);
 	private final FloatBuffer clearDepthBuffer = BufferUtils.newFloatBuffer(1);
 
-	MrtFrameBuffer (int width, int height) {
+	public MrtFrameBuffer (int width, int height) {
 		this.width = width;
 		this.height = height;
+		initGBuffers();
 		build();
 
 		clearDepthBuffer.position(0);
@@ -53,6 +54,16 @@ class MrtFrameBuffer implements Disposable {
 		clearDepthBuffer.position(0);
 
 		addManagedFrameBuffer(Gdx.app, this);
+	}
+
+	private void initGBuffers() {
+		// GBuffer0 contains diffuse
+		colorTextures.add(createTexture(GL30.GL_RGBA8, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE));
+
+		/* GBuffer1
+		 * ARGB2101010 format: World space normal (RGB), unused (A)
+		 */
+		colorTextures.add(createTexture(GL30.GL_RGB10_A2, GL30.GL_RGBA, GL30.GL_UNSIGNED_INT_2_10_10_10_REV));
 	}
 
 	private Texture createTexture (int internalformat, int format, int type) {
@@ -90,11 +101,6 @@ class MrtFrameBuffer implements Disposable {
 		depthTexture = createTexture(GL30.GL_DEPTH_COMPONENT32F, GL30.GL_DEPTH_COMPONENT, GL30.GL_FLOAT);
 		gl.glFramebufferTexture2D(GL20.GL_FRAMEBUFFER, GL20.GL_DEPTH_ATTACHMENT, GL20.GL_TEXTURE_2D,
 			depthTexture.getTextureObjectHandle(), 0);
-
-		colorTextures = new Array<Texture>();
-
-		// Diffuse
-		colorTextures.add(createTexture(GL30.GL_RGBA8, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE));
 
 		IntBuffer buffer = BufferUtils.newIntBuffer(colorTextures.size);
 		for(int i = 0; i < colorTextures.size; i++) {
@@ -164,7 +170,9 @@ class MrtFrameBuffer implements Disposable {
 		setFrameBufferViewport();
 
 		// Clear gbuffer0
-		Gdx.gl30.glClearBufferfv(GL30.GL_COLOR, 0, clearBuffer(0, 0, 0, 0));
+		Gdx.gl30.glClearBufferfv(GL30.GL_COLOR, 0, clearBuffer(1, 1, 1, 1));
+		// Clear gbuffer1
+		Gdx.gl30.glClearBufferfv(GL30.GL_COLOR, 1, clearBuffer(0.5f, 0.5f, 0.5f, 1));
 
 		// Clear depth
 		Gdx.gl30.glClearBufferfv(GL30.GL_DEPTH, 0, clearDepthBuffer);

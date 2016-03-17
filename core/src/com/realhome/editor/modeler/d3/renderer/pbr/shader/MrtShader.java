@@ -1,4 +1,4 @@
-package com.realhome.editor.modeler.d3.renderer.pbr;
+package com.realhome.editor.modeler.d3.renderer.pbr.shader;
 
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
@@ -6,7 +6,7 @@ import com.realhome.editor.util.RealShader;
 
 public class MrtShader extends DefaultShader {
 
-	private static String mrtShader = "d3/mrt";
+	private static String mrtShader = "d3/pbr/mrt";
 
 	public MrtShader (final Renderable renderable) {
 		this(renderable, new Config());
