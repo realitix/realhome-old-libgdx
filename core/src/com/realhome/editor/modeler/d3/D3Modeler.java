@@ -65,7 +65,9 @@ public class D3Modeler implements Modeler {
 		// Add house mesh inside model
 		Mesh houseMesh = new Mesh(true, D3Configuration.houseMesh.maxVertices, D3Configuration.houseMesh.maxIndices,
 			new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
-			new VertexAttribute(Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE));
+			new VertexAttribute(Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
+			new VertexAttribute(Usage.Tangent, 3, ShaderProgram.TANGENT_ATTRIBUTE),
+			new VertexAttribute(Usage.BiNormal, 3, ShaderProgram.BINORMAL_ATTRIBUTE));
 		houseModel.meshes.add(houseMesh);
 		houseModel.manageDisposable(houseMesh);
 	}

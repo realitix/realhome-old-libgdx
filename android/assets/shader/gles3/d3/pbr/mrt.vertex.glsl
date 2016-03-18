@@ -1,17 +1,33 @@
 uniform mat4 u_projViewTrans;
 uniform mat4 u_worldTrans;
-uniform vec4 u_diffuseColor;
 uniform mat3 u_normalMatrix;
+uniform vec4 u_uvTransform;
 
 in vec3 a_position;
+in vec2 a_texCoord;
 in vec3 a_normal;
+in vec3 a_tangent;
+in vec3 a_binormal;
 
 out vec3 v_normal;
-out vec4 v_color;
+out vec3 v_tangent;
+out vec3 v_binormal;
+out vec2 v_uv;
 
 void main() {
-	v_color = u_diffuseColor;
+	v_uv = u_uvTransform.xy + a_texCoord * u_uvTransform.zw;
+
+	/*
+	 * We must multiply normal with normalMatrix because
+	 * worldTrans matrix doesn't preserver normal if scaled.
+	 * Worldtrans preserves tangent but we apply normalMatrix
+	 * to stay consistent. I don't know for binormal so I apply
+	 * normalMatrix too.
+	 * see http://www.lighthouse3d.com/tutorials/glsl-12-tutorial/the-normal-matrix/
+	*/
 	v_normal = normalize(u_normalMatrix * a_normal);
+	v_tangent = normalize(u_normalMatrix * a_tangent);
+	v_binormal = normalize(u_normalMatrix * a_binormal);
 
 	vec4 pos = u_worldTrans * vec4(a_position, 1.0);
 

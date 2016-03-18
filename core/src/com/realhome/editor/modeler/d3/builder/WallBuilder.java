@@ -7,13 +7,12 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.model.MeshPart;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.model.NodePart;
-import com.badlogic.gdx.graphics.g3d.utils.MeshBuilder;
-import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder.VertexInfo;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Floor;
 import com.realhome.editor.model.house.Wall;
+import com.realhome.editor.modeler.d3.builder.RealMeshBuilder.RealVertexInfo;
 import com.realhome.editor.modeler.util.WallComputer;
 import com.realhome.editor.util.math.GeometryUtils;
 
@@ -116,11 +115,8 @@ public class WallBuilder {
 			// Compute 3d points
 			Vector3[] points = get3dVectors(wall, walls);
 
-			// Compute normal
-			Vector3 normal = GeometryUtils.triangleNormal(points[4], points[6], points[5]);
-
 			// Create vertices
-			buildRect(builder.getBuilder(), points[4], points[5], points[7], points[6], normal);
+			buildRect(builder.getBuilder(), points[4], points[5], points[7], points[6]);
 		}
 
 		// Add meshPart in node
@@ -156,19 +152,16 @@ public class WallBuilder {
 		// Create side faces for p0 and p1 if not linked
 		MeshPart part = null;
 		String wallId = wallId(wall);
-		Vector3 normal = null;
 
 		if(!p0linked) {
 			part = builder.getBuilder().part(wallId + "0", GL20.GL_TRIANGLES);
-			normal = GeometryUtils.triangleNormal(points[0], points[4], points[1]);
-			buildRect(builder.getBuilder(), points[0], points[1], points[5], points[4], normal);
+			buildRect(builder.getBuilder(), points[0], points[1], points[5], points[4]);
 			faces.add(new WallFace(part, new Material(ColorAttribute.createDiffuse(Color.RED))));
 		}
 
 		if(!p1linked) {
 			part = builder.getBuilder().part(wallId + "1", GL20.GL_TRIANGLES);
-			normal = GeometryUtils.triangleNormal(points[6], points[2], points[3]);
-			buildRect(builder.getBuilder(), points[2], points[6], points[7], points[3], normal);
+			buildRect(builder.getBuilder(), points[3], points[2], points[6], points[7]);
 			faces.add(new WallFace(part, new Material(ColorAttribute.createDiffuse(Color.YELLOW))));
 		}
 
@@ -176,26 +169,44 @@ public class WallBuilder {
 
 		// Left side
 		part = builder.getBuilder().part(wallId + "2", GL20.GL_TRIANGLES);
-		normal = GeometryUtils.triangleNormal(points[0], points[2], points[4]);
-		buildRect(builder.getBuilder(), points[0], points[4], points[6], points[2], normal);
+		buildRect(builder.getBuilder(), points[2], points[0], points[4], points[6]);
 		faces.add(new WallFace(part, new Material(ColorAttribute.createDiffuse(Color.GREEN))));
 
 		// Right side
 		part = builder.getBuilder().part(wallId + "3", GL20.GL_TRIANGLES);
-		normal = GeometryUtils.triangleNormal(points[3], points[1], points[7]);
-		buildRect(builder.getBuilder(), points[1], points[3], points[7], points[5], normal);
+		buildRect(builder.getBuilder(), points[1], points[3], points[7], points[5]);
 		faces.add(new WallFace(part, new Material(ColorAttribute.createDiffuse(Color.BLUE))));
 
 		return faces;
 	}
 
-	private void buildRect(MeshBuilder builder, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 normal) {
-		builder.rect(
-			new VertexInfo().set(p0, normal, null, null),
-			new VertexInfo().set(p1, normal, null, null),
-			new VertexInfo().set(p2, normal, null, null),
-			new VertexInfo().set(p3, normal, null, null)
-			);
+	/**
+	 * Vectors must be CCW
+	 * p0 bottom left
+	 * p1 bottom right
+	 * p2 top right
+	 * p3 top left
+	 */
+	private void buildRect(RealMeshBuilder builder, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3) {
+		// Create vertex infos
+		RealVertexInfo v0 = new RealVertexInfo().setPos(p0).setUV(new Vector2(0, 0));
+		RealVertexInfo v1 = new RealVertexInfo().setPos(p1).setUV(new Vector2(1, 0));
+		RealVertexInfo v2 = new RealVertexInfo().setPos(p2).setUV(new Vector2(1, 1));
+		RealVertexInfo v3 = new RealVertexInfo().setPos(p3).setUV(new Vector2(0, 1));
+
+		// Compute normal, tangent and binormal
+		Vector3 normal = GeometryUtils.normal(p0, p1, p2, new Vector3());
+		Vector3 tangent = GeometryUtils.tangent(v2.position, v2.uv, v0.position, v0.uv, v1.position, v1.uv, new Vector3());
+		Vector3 binormal = GeometryUtils.binormal(v2.position, v2.uv, v0.position, v0.uv, v1.position, v1.uv, new Vector3());
+
+		// Set normal, tangent, binormal in vertex infos
+		v0.setNor(normal).setTan(tangent).setBin(binormal);
+		v1.setNor(normal).setTan(tangent).setBin(binormal);
+		v2.setNor(normal).setTan(tangent).setBin(binormal);
+		v3.setNor(normal).setTan(tangent).setBin(binormal);
+
+		// Build the rectangle
+		builder.rect(v0, v1, v2, v3);
 	}
 
 	/** Compute 3d points of wall

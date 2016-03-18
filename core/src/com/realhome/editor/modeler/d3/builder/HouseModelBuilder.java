@@ -1,12 +1,8 @@
 package com.realhome.editor.modeler.d3.builder;
 
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.VertexAttribute;
-import com.badlogic.gdx.graphics.VertexAttributes;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.utils.MeshBuilder;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
@@ -21,7 +17,7 @@ public class HouseModelBuilder {
 
 	/* Helper to build the mesh */
 	//private final HouseMeshBuilder builder;
-	private final MeshBuilder builder;
+	private final RealMeshBuilder builder;
 
 	/* Tmp variables */
 	private Array<Vector3> vertices = new Array<Vector3>();
@@ -34,7 +30,7 @@ public class HouseModelBuilder {
 		this.house = house;
 		this.houseModel = houseModel;
 		//builder = new HouseMeshBuilder(houseModel.meshes.get(0));
-		builder = new MeshBuilder();
+		builder = new RealMeshBuilder();
 
 		wallBuilder = new WallBuilder(this);
 		roomBuilder = new RoomBuilder(this);
@@ -42,10 +38,7 @@ public class HouseModelBuilder {
 
 	public void sync() {
 		// begin meshbuilder
-		builder.begin(new VertexAttributes(
-			new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
-			new VertexAttribute(Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE)),
-			GL20.GL_TRIANGLES);
+		builder.begin(houseModel.meshes.get(0).getVertexAttributes(), GL20.GL_TRIANGLES);
 
 		wallBuilder.sync();
 		roomBuilder.sync();
@@ -62,7 +55,7 @@ public class HouseModelBuilder {
 		return house;
 	}
 
-	public MeshBuilder getBuilder() {
+	public RealMeshBuilder getBuilder() {
 		return builder;
 	}
 

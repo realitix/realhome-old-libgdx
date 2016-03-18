@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.model.MeshPart;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.model.NodePart;
-import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder.VertexInfo;
 import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ShortArray;
 import com.realhome.editor.model.house.Floor;
+import com.realhome.editor.modeler.d3.builder.RealMeshBuilder.RealVertexInfo;
 import com.realhome.editor.modeler.util.RoomComputer;
 import com.realhome.editor.util.math.PolygonUtils;
 
@@ -106,9 +106,9 @@ public class RoomBuilder {
 
 
 			builder.getBuilder().triangle(
-				new VertexInfo().setPos(triangle.get(0).x, triangle.get(0).y, 0).setNor(normal),
-				new VertexInfo().setPos(triangle.get(1).x, triangle.get(1).y, 0).setNor(normal),
-				new VertexInfo().setPos(triangle.get(2).x, triangle.get(2).y, 0).setNor(normal)
+				new RealVertexInfo().setPos(triangle.get(0).x, triangle.get(0).y, 0).setNor(normal),
+				new RealVertexInfo().setPos(triangle.get(1).x, triangle.get(1).y, 0).setNor(normal),
+				new RealVertexInfo().setPos(triangle.get(2).x, triangle.get(2).y, 0).setNor(normal)
 				);
 		}
 
