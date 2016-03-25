@@ -2,6 +2,7 @@ package com.realhome.editor.modeler.d3.builder;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.TextureArray;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.model.MeshPart;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Floor;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.d3.builder.RealMeshBuilder.RealVertexInfo;
+import com.realhome.editor.modeler.d3.renderer.pbr.util.TextureArrayAttribute;
 import com.realhome.editor.modeler.util.WallComputer;
 import com.realhome.editor.util.math.GeometryUtils;
 
@@ -153,16 +155,24 @@ public class WallBuilder {
 		MeshPart part = null;
 		String wallId = wallId(wall);
 
+		// @TODO TEST
+		TextureArray textureArray = new TextureArray(
+			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/albedo.png",
+			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/normal.png",
+			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/roughness.png",
+			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/metalness.png");
+		Material test = new Material(new TextureArrayAttribute(TextureArrayAttribute.Textures, textureArray));
+
 		if(!p0linked) {
 			part = builder.getBuilder().part(wallId + "0", GL20.GL_TRIANGLES);
 			buildRect(builder.getBuilder(), points[0], points[1], points[5], points[4]);
-			faces.add(new WallFace(part, new Material(ColorAttribute.createDiffuse(Color.RED))));
+			faces.add(new WallFace(part, test));
 		}
 
 		if(!p1linked) {
 			part = builder.getBuilder().part(wallId + "1", GL20.GL_TRIANGLES);
 			buildRect(builder.getBuilder(), points[3], points[2], points[6], points[7]);
-			faces.add(new WallFace(part, new Material(ColorAttribute.createDiffuse(Color.YELLOW))));
+			faces.add(new WallFace(part, test));
 		}
 
 		// Create sides
@@ -170,12 +180,12 @@ public class WallBuilder {
 		// Left side
 		part = builder.getBuilder().part(wallId + "2", GL20.GL_TRIANGLES);
 		buildRect(builder.getBuilder(), points[2], points[0], points[4], points[6]);
-		faces.add(new WallFace(part, new Material(ColorAttribute.createDiffuse(Color.GREEN))));
+		faces.add(new WallFace(part, test));
 
 		// Right side
 		part = builder.getBuilder().part(wallId + "3", GL20.GL_TRIANGLES);
 		buildRect(builder.getBuilder(), points[1], points[3], points[7], points[5]);
-		faces.add(new WallFace(part, new Material(ColorAttribute.createDiffuse(Color.BLUE))));
+		faces.add(new WallFace(part, test));
 
 		return faces;
 	}

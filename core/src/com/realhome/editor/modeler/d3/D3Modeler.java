@@ -63,8 +63,9 @@ public class D3Modeler implements Modeler {
 		houseModel = new Model();
 
 		// Add house mesh inside model
-		Mesh houseMesh = new Mesh(true, D3Configuration.houseMesh.maxVertices, D3Configuration.houseMesh.maxIndices,
+		Mesh houseMesh = new Mesh(true, D3Configuration.HouseMesh.maxVertices, D3Configuration.HouseMesh.maxIndices,
 			new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+			new VertexAttribute(Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE),
 			new VertexAttribute(Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE),
 			new VertexAttribute(Usage.Tangent, 3, ShaderProgram.TANGENT_ATTRIBUTE),
 			new VertexAttribute(Usage.BiNormal, 3, ShaderProgram.BINORMAL_ATTRIBUTE));
@@ -74,8 +75,8 @@ public class D3Modeler implements Modeler {
 
 	private void initCamera() {
 		camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		camera.near = 100;
-		camera.far = 2000;
+		camera.near = D3Configuration.Camera.near;
+		camera.far = D3Configuration.Camera.far;
 		camera.position.set(200, 0, 0);
 		camera.lookAt(0,0,0);
 		camera.up.set(0,0,1);

@@ -18,6 +18,7 @@ public class PbrRenderer implements D3Renderer {
 	private MrtFrameBuffer mrt;
 	private PbrShader pbrShader;
 	private RenderContext context;
+	private Camera camera;
 
 	public PbrRenderer() {
 		context = new RenderContext(new DefaultTextureBinder(DefaultTextureBinder.ROUNDROBIN));
@@ -28,6 +29,7 @@ public class PbrRenderer implements D3Renderer {
 
 	@Override
 	public void begin(Camera camera) {
+		this.camera = camera;
 		mrt.begin();
 		context.begin();
 		batch.begin(camera);
@@ -44,7 +46,7 @@ public class PbrRenderer implements D3Renderer {
 		mrt.end();
 
 		// Render to screen
-		pbrShader.render();
+		pbrShader.render(camera);
 
 		context.end();
 	}

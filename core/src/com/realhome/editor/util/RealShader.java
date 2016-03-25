@@ -10,6 +10,8 @@ public class RealShader {
 
 	private static final String GLES2 = "shader/gles2/";
 	private static final String GLES3 = "shader/gles3/";
+	private static final String INCLUDE = "shader/include/";
+	private static final String INCLUDE_EXT = ".glsl";
 	private static final String VERTEX = ".vertex.glsl";
 	private static final String FRAGMENT = ".fragment.glsl";
 
@@ -28,14 +30,30 @@ public class RealShader {
 		configureShaderProgram();
 
 		ShaderProgram shader = new ShaderProgram(
-			prefix + getShaderPlatform(shaderName + VERTEX),
-			prefix + getShaderPlatform(shaderName + FRAGMENT)
+			prefix + getShader(shaderName + VERTEX),
+			prefix + getShader(shaderName + FRAGMENT)
 			);
 
-		if (!shader.isCompiled())
-			throw new GdxRuntimeException(shaderName + " :" + shader.getLog());
+		if (!shader.isCompiled()) {
+			String error = shaderName + " : \n";
+			error += shader.getLog() + "\n\n\n";
+			error += "====== VERTEX SHADER ======\n\n";
+			error += codeWithLineNumber(shader.getVertexShaderSource());
+			error += "====== FRAGMENT SHADER ======\n\n";
+			error += codeWithLineNumber(shader.getFragmentShaderSource());
+			throw new GdxRuntimeException(error);
+		}
 
 		return shader;
+	}
+
+	private static String codeWithLineNumber(String code) {
+		String result = "";
+		String[] lines = code.split("\n");
+		int lineNumber = 1;
+		for(String line : lines)
+			result += (lineNumber++) + " " + line + "\n";
+		return result;
 	}
 
 	private static void configureShaderProgram() {
@@ -57,6 +75,28 @@ public class RealShader {
 
 	/**
 	 * Return the shader String
+	 * Include shader if #include exists
+	 */
+	public static String getShader(String shaderName) {
+		StringBuilder result = new StringBuilder();
+		String shader = getShaderPlatform(shaderName);
+		String[] lines = shader.split("\n");
+
+		for( String line : lines ) {
+			if( line.contains("#include") ) {
+				String include = Gdx.files.internal(INCLUDE + line.substring(9) + INCLUDE_EXT).readString();
+				result.append("\n").append(include).append("\n");
+			}
+			else {
+				result.append(line).append("\n");
+			}
+		}
+
+		return result.toString();
+	}
+
+	/**
+	 * Return the shader String
 	 * If it's a gles2 shader, check if file exist, if not,
 	 * it tries to convert the gles3 to gles2
 	 */
@@ -65,15 +105,15 @@ public class RealShader {
 		if( !Gdx.graphics.isGL30Available() ) {
 			FileHandle file = Gdx.files.internal(GLES2 + shaderName);
 			if( file.exists() ) {
-				return file.readString();
+				return file.readString("UTF-8");
 			}
 
 			// If not exit, convert gles 3 to gles2
-			return convert3To2(Gdx.files.internal(GLES3 + shaderName).readString());
+			return convert3To2(Gdx.files.internal(GLES3 + shaderName).readString("UTF-8"));
 		}
 
 		// GLES 3 shader
-		return Gdx.files.internal(GLES3 + shaderName).readString();
+		return Gdx.files.internal(GLES3 + shaderName).readString("UTF-8");
 	}
 
 	public static String convert3To2(String code) {
