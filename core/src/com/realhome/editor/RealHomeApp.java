@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -16,6 +17,7 @@ import com.realhome.editor.common.pattern.command.CommandManager;
 import com.realhome.editor.model.AppModel;
 import com.realhome.editor.model.house.Floor;
 import com.realhome.editor.model.house.House;
+import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.ModelerManager;
 import com.realhome.editor.ui.UIManager;
 import com.realhome.editor.util.RealShader;
@@ -57,7 +59,9 @@ public class RealHomeApp extends ApplicationAdapter {
 
 	private void initModel() {
 		appModel = new AppModel();
-		appModel.setHouse(new House().addFloor(new Floor()));
+		Floor floor = new Floor();
+		floor.addWall(new Wall().setPoint0(new Vector2()).setPoint1(new Vector2(100, 0)));
+		appModel.setHouse(new House().addFloor(floor));
 	}
 
 	public Stage getStage() {

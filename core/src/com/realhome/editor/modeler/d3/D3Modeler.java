@@ -77,8 +77,8 @@ public class D3Modeler implements Modeler {
 		camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.near = D3Configuration.Camera.near;
 		camera.far = D3Configuration.Camera.far;
-		camera.position.set(200, 0, 0);
-		camera.lookAt(0,0,0);
+		camera.position.set(-200, 0, 100);
+		camera.lookAt(0,0,100);
 		camera.up.set(0,0,1);
 		camera.update();
 	}

@@ -1,4 +1,5 @@
-uniform mat4 u_projViewTrans;
+uniform mat4 u_projTrans;
+uniform mat4 u_viewTrans;
 uniform mat4 u_worldTrans;
 uniform mat3 u_normalMatrix;
 uniform vec4 u_uvTransform;
@@ -33,10 +34,13 @@ void main() {
 	v_tangent = normalize(u_normalMatrix * a_tangent);
 	v_binormal = normalize(u_normalMatrix * a_binormal);
 
-	vec4 pos = u_worldTrans * vec4(a_position, 1.0);
+	vec4 worldPos = u_worldTrans * vec4(a_position, 1.0);
+	vec4 viewPos = u_viewTrans * worldPos;
 
 	// Compute linear z
-	v_depth = (pos.z - u_cameraNear) / (u_cameraFar - u_cameraNear);
+	// We take -z because it's the view matrix
+	// http://www.codinglabs.net/article_world_view_projection_matrix.aspx
+	v_depth = (-viewPos.z - u_cameraNear) / (u_cameraFar - u_cameraNear);
 
-	gl_Position = u_projViewTrans * pos;
+	gl_Position = u_projTrans * viewPos;
 }
