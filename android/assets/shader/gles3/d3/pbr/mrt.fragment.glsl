@@ -16,6 +16,7 @@ in float v_depth;
 
 layout(location = 0) out vec4 gbuffer0;
 layout(location = 1) out vec4 gbuffer1;
+layout(location = 2) out vec4 gbuffer2;
 
 #include depth_functions
 
@@ -23,6 +24,8 @@ void main() {
 	// Fetch parameters
 	vec3 albedo = texture(u_textures, vec3(v_uv, 0.0)).rgb;
 	vec3 normal = texture(u_textures, vec3(v_uv, 1.0)).rgb;
+	float roughness = texture(u_textures, vec3(v_uv, 2.0)).r;
+	float metalness = texture(u_textures, vec3(v_uv, 3.0)).r;
 
 	// Compute normal in world space
 	mat3 tbn = mat3(v_tangent, v_binormal, v_normal);
@@ -30,8 +33,9 @@ void main() {
 
 
 	// Fill the g-buffers
-	gbuffer0 = vec4(texture(u_textures, vec3(v_uv, 3.0)).a, 0.0, 0.0, 1.0);
+	gbuffer0 = vec4(albedo, metalness);
 	gbuffer1 = vec4(normal, 1.0);
+	gbuffer2 = vec4(roughness, 0.0, 0.0, 0.0);
 
 	/**
 	 * Overwrite FragDepth in fragment shader

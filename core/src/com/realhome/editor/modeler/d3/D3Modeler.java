@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.FirstPersonCameraController;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.realhome.editor.RealHomeApp;
@@ -55,7 +56,8 @@ public class D3Modeler implements Modeler {
 			renderer = new PbrRenderer();
 		else
 			renderer = new LegacyRenderer();
-		environment = new Environment();
+
+		environment = new Environment().add(new DirectionalLight().setColor(0.5f, 0.5f, 0.5f, 1).setDirection(0.5f, 0.5f, 0.5f));
 	}
 
 	private void initModel() {

@@ -16,15 +16,17 @@ public class PbrRenderer implements D3Renderer {
 
 	private ModelBatch batch;
 	private MrtFrameBuffer mrt;
-	private PbrShader pbrShader;
+	private PbrShader2 pbrShader;
 	private RenderContext context;
 	private Camera camera;
+	private QuadRenderable quadRenderable;
 
-	public PbrRenderer() {
+	public PbrRenderer(Environment environment) {
 		context = new RenderContext(new DefaultTextureBinder(DefaultTextureBinder.ROUNDROBIN));
 		mrt = new MrtFrameBuffer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch = new ModelBatch(context, new MrtShaderProvider());
-		pbrShader = new PbrShader(context, mrt);
+		quadRenderable = new QuadRenderable(mrt, environment);
+		pbrShader = new PbrShader2(quadRenderable);
 	}
 
 	@Override
@@ -46,7 +48,9 @@ public class PbrRenderer implements D3Renderer {
 		mrt.end();
 
 		// Render to screen
-		pbrShader.render(camera);
+		pbrShader.begin(camera, context);
+		pbrShader.render(quadRenderable);
+		pbrShader.end();
 
 		context.end();
 	}

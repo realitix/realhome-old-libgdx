@@ -82,13 +82,14 @@ vec3 conservativeDiffuse(vec3 albedo, vec3 specularCoefficient) {
  * lightDir is not the light direction but the point-light vector
 */
 vec3 computeLightContribution(vec3 normal, vec3 lightDir, vec3 viewDir, vec3 albedo, vec3 lightColor, float metallic, float roughness) {
-	vec3 half = normalize(lightDir + viewDir);
+	// Word "half" reserved, so halfDir
+	vec3 halfDir = normalize(lightDir + viewDir);
 
 	float NdotL = clamp(dot(normal, lightDir), 0.0, 1.0);
 	float NdotV = clamp(dot(normal, viewDir), 0.0, 1.0);
-	float NdotH = clamp(dot(normal, half), 0.0, 1.0);
-	float VdotH = clamp(dot(viewDir, half), 0.0, 1.0);
-	float HdotL = clamp(dot(half, lightDir), 0.0, 1.0);
+	float NdotH = clamp(dot(normal, halfDir), 0.0, 1.0);
+	float VdotH = clamp(dot(viewDir, halfDir), 0.0, 1.0);
+	float HdotL = clamp(dot(halfDir, lightDir), 0.0, 1.0);
 	float LdotV = clamp(dot(lightDir, viewDir), 0.0, 1.0);
 	float alpha = max(0.0001, roughness * roughness); // Testsquare
 

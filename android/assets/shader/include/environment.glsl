@@ -4,7 +4,6 @@
 	struct DirectionalLight {
 		vec3 color;
 		vec3 direction;
-		float intensity;
 	};
 
 	uniform DirectionalLight u_dirLights[numDirectionalLights];

@@ -22,6 +22,7 @@ public class PbrShader {
 	private int u_gbuffer0;
 	private int u_gbuffer1;
 	private int u_gbuffer2;
+	private int u_gbufferDepth;
 	private int u_cameraFar;
 	private int u_cameraNear;
 	private int u_cameraPosition;
@@ -37,6 +38,7 @@ public class PbrShader {
 		u_gbuffer0 = program.fetchUniformLocation("u_gbuffer0", false);
 		u_gbuffer1 = program.fetchUniformLocation("u_gbuffer1", false);
 		u_gbuffer2 = program.fetchUniformLocation("u_gbuffer2", false);
+		u_gbufferDepth = program.fetchUniformLocation("u_gbufferDepth", false);
 		u_cameraFar = program.fetchUniformLocation("u_cameraFar", false);
 		u_cameraNear = program.fetchUniformLocation("u_cameraNear", false);
 		u_cameraPosition = program.fetchUniformLocation("u_cameraPosition", false);
@@ -78,7 +80,9 @@ public class PbrShader {
 		// GBuffer1
 		program.setUniformi(u_gbuffer1, context.textureBinder.bind(mrt.getColorTexture(1)));
 		// GBuffer2
-		program.setUniformi(u_gbuffer2, context.textureBinder.bind(mrt.getDepthTexture()));
+		program.setUniformi(u_gbuffer2, context.textureBinder.bind(mrt.getColorTexture(2)));
+		// GBufferDepth
+		program.setUniformi(u_gbufferDepth, context.textureBinder.bind(mrt.getDepthTexture()));
 	}
 
 	public void render(Camera camera) {

@@ -57,13 +57,16 @@ public class MrtFrameBuffer implements Disposable {
 	}
 
 	private void initGBuffers() {
-		// GBuffer0 contains diffuse
+		// GBuffer0 contains albedo and metallic
 		colorTextures.add(createTexture(GL30.GL_RGBA8, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE));
 
 		/* GBuffer1
 		 * ARGB2101010 format: World space normal (RGB), unused (A)
 		 */
 		colorTextures.add(createTexture(GL30.GL_RGB10_A2, GL30.GL_RGBA, GL30.GL_UNSIGNED_INT_2_10_10_10_REV));
+
+		// GBuffer2 contains roughness
+		colorTextures.add(createTexture(GL30.GL_RGBA8, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE));
 	}
 
 	private Texture createTexture (int internalformat, int format, int type) {
