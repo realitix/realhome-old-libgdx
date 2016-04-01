@@ -1,6 +1,6 @@
 package com.realhome.editor.modeler.d3.renderer.pbr.util;
 
-import com.badlogic.gdx.graphics.TextureArray;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Attribute;
 import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
 import com.badlogic.gdx.utils.GdxRuntimeException;

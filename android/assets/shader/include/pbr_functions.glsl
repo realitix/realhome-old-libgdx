@@ -17,8 +17,8 @@ float distributionGGX(float NdotH, float alpha) {
 }
 
 /* Sub function of geometryGGX */
-float subGeometryGGX(float dot, float alpha) {
-	float d = (1.0 - dot * dot) / (dot * dot);
+float subGeometryGGX(float Ndot, float alpha) {
+	float d = (1.0 - Ndot * Ndot) / (Ndot * Ndot);
 	return 2.0 / (1.0 + sqrt(1.0 + alpha * alpha * d));
 }
 
@@ -95,8 +95,9 @@ vec3 computeLightContribution(vec3 normal, vec3 lightDir, vec3 viewDir, vec3 alb
 
 	// Compute diffuse and specular
 	vec3 specularCoefficient = cookTorrance(albedo, NdotH, NdotL, NdotV, VdotH, alpha, metallic);
+	specularCoefficient = vec3(0.0);
+
 	vec3 diffuseCoefficient = conservativeDiffuse(albedo, specularCoefficient);
 
-	// TODO: Valid the NdotL
 	return lightColor * NdotL * (specularCoefficient + diffuseCoefficient);
 }

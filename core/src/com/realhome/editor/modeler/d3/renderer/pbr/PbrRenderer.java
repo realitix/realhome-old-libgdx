@@ -11,12 +11,13 @@ import com.realhome.editor.modeler.d3.renderer.D3Renderer;
 import com.realhome.editor.modeler.d3.renderer.pbr.mrt.MrtFrameBuffer;
 import com.realhome.editor.modeler.d3.renderer.pbr.shader.MrtShaderProvider;
 import com.realhome.editor.modeler.d3.renderer.pbr.shader.PbrShader;
+import com.realhome.editor.modeler.d3.renderer.pbr.util.QuadRenderable;
 
 public class PbrRenderer implements D3Renderer {
 
 	private ModelBatch batch;
 	private MrtFrameBuffer mrt;
-	private PbrShader2 pbrShader;
+	private PbrShader pbrShader;
 	private RenderContext context;
 	private Camera camera;
 	private QuadRenderable quadRenderable;
@@ -26,7 +27,8 @@ public class PbrRenderer implements D3Renderer {
 		mrt = new MrtFrameBuffer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch = new ModelBatch(context, new MrtShaderProvider());
 		quadRenderable = new QuadRenderable(mrt, environment);
-		pbrShader = new PbrShader2(quadRenderable);
+		pbrShader = new PbrShader(quadRenderable);
+		pbrShader.init();
 	}
 
 	@Override

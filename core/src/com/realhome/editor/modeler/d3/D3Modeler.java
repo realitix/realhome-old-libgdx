@@ -52,12 +52,16 @@ public class D3Modeler implements Modeler {
 
 		interactor = new Interactor(this, house, houseModel);
 
+		environment = new Environment()
+			//.add(new DirectionalLight().setColor(1, 1, 1, 1).setDirection(0.5f, 0.5f, 0.5f))
+			.add(new DirectionalLight().setColor(1, 1, 1, 1).setDirection(0.5f, 0.5f, 0.5f));
+
 		if(Gdx.graphics.isGL30Available())
-			renderer = new PbrRenderer();
+			renderer = new PbrRenderer(environment);
 		else
 			renderer = new LegacyRenderer();
 
-		environment = new Environment().add(new DirectionalLight().setColor(0.5f, 0.5f, 0.5f, 1).setDirection(0.5f, 0.5f, 0.5f));
+
 	}
 
 	private void initModel() {

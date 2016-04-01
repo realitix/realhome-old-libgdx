@@ -176,6 +176,8 @@ public class MrtFrameBuffer implements Disposable {
 		Gdx.gl30.glClearBufferfv(GL30.GL_COLOR, 0, clearBuffer(1, 1, 1, 1));
 		// Clear gbuffer1
 		Gdx.gl30.glClearBufferfv(GL30.GL_COLOR, 1, clearBuffer(0.5f, 0.5f, 0.5f, 1));
+		// Clear gbuffer2
+		Gdx.gl30.glClearBufferfv(GL30.GL_COLOR, 2, clearBuffer(0, 0, 0, 0));
 
 		// Clear depth
 		Gdx.gl30.glClearBufferfv(GL30.GL_DEPTH, 0, clearDepthBuffer);

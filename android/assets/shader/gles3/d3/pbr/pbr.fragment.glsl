@@ -27,7 +27,7 @@ out vec4 fragmentColor;
 void main() {
 	// Albedo
 	vec3 albedo = texture(u_gbuffer0, v_uv).rgb;
-	// Normal in view space
+	// Normal in world space
 	vec3 normal = texture(u_gbuffer1, v_uv).rgb;
 	// Roughness
 	float roughness = texture(u_gbuffer2, v_uv).r;
@@ -42,19 +42,21 @@ void main() {
 	// Computed light
 	vec3 finalLight = vec3(0.0);
 
-	toto
-
 	#ifdef lightingFlag
 		#if numDirectionalLights > 0
-			for (int i = 0; i < numDirectionalLights; i++) {
+			/*for (int i = 0; i < numDirectionalLights; i++) {
 				vec3 lightDir = -u_dirLights[i].direction;
 				vec3 lightContribution = computeLightContribution(normal, lightDir, viewDir, albedo, u_dirLights[i].color, metallic, roughness);
 				finalLight += lightContribution;
-			}
+			}*/
+
+			vec3 lightDir = normalize(-u_dirLights[0].direction);
+			vec3 lightContribution = computeLightContribution(normal, lightDir, viewDir, albedo, u_dirLights[0].color, metallic, roughness);
+			finalLight += normal;
 		#endif
 
 		#if numPointLights > 0
-			for (int i = 0; i < numPointLights; i++) {
+			/*for (int i = 0; i < numPointLights; i++) {
 				vec3 lightToPosition = u_pointLights[i].position - position;
 				vec3 lightDir = normalize(lightToPosition);
 				vec3 lightContribution = computeLightContribution(normal, lightDir, viewDir, albedo, u_pointLights[i].color, metallic, roughness);
@@ -63,11 +65,11 @@ void main() {
 				float falloff = u_pointLights[i].intensity / (1.0 + squareDistance);
 
 				finalLight += lightContribution * falloff;
-			}
+			}*/
 		#endif
 
 		#if numSpotLights > 0
-			for (int i = 0; i < numSpotLights; i++) {
+			/*for (int i = 0; i < numSpotLights; i++) {
 				vec3 lightToPosition = u_spotLights[i].position - position;
 				vec3 lightDir = normalize(lightToPosition);
 
@@ -83,7 +85,7 @@ void main() {
 
 					finalLight += lightContribution * falloff * spotEffect;
 				}
-			}
+			}*/
 		#endif
 
 	#endif
