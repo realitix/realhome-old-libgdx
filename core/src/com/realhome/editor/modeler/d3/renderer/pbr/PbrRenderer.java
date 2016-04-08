@@ -5,13 +5,22 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.Renderable;
+import com.badlogic.gdx.graphics.g3d.Shader;
+import com.badlogic.gdx.graphics.g3d.attributes.DepthTestAttribute;
+import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
+import com.badlogic.gdx.graphics.g3d.utils.Debug3dRenderer;
+import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
+import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
+import com.badlogic.gdx.graphics.g3d.utils.RenderableShapeBuilder;
 import com.realhome.editor.modeler.d3.renderer.D3Renderer;
 import com.realhome.editor.modeler.d3.renderer.pbr.mrt.MrtFrameBuffer;
 import com.realhome.editor.modeler.d3.renderer.pbr.shader.MrtShaderProvider;
 import com.realhome.editor.modeler.d3.renderer.pbr.shader.PbrShader;
 import com.realhome.editor.modeler.d3.renderer.pbr.util.QuadRenderable;
+import com.realhome.editor.util.RealShader;
 
 public class PbrRenderer implements D3Renderer {
 
@@ -29,6 +38,8 @@ public class PbrRenderer implements D3Renderer {
 		quadRenderable = new QuadRenderable(mrt, environment);
 		pbrShader = new PbrShader(quadRenderable);
 		pbrShader.init();
+
+
 	}
 
 	@Override

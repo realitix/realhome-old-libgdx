@@ -16,10 +16,12 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.realhome.editor.RealHomeApp;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.Modeler;
+import com.realhome.editor.modeler.d3.input.FirstPersonController;
 import com.realhome.editor.modeler.d3.interactor.Interactor;
 import com.realhome.editor.modeler.d3.renderer.D3Renderer;
 import com.realhome.editor.modeler.d3.renderer.legacy.LegacyRenderer;
 import com.realhome.editor.modeler.d3.renderer.pbr.PbrRenderer;
+import com.realhome.editor.modeler.d3.util.D3Debugger;
 
 public class D3Modeler implements Modeler {
 
@@ -27,13 +29,14 @@ public class D3Modeler implements Modeler {
 
 	private House house;
 	private Model houseModel;
-	private FirstPersonCameraController inputProcessor;
+	private FirstPersonController inputProcessor;
 	private RealHomeApp app;
 	private Interactor interactor;
 	private D3Renderer renderer;
 	private PerspectiveCamera camera;
 	private ModelInstance modelInstance;
 	private Environment environment;
+	private D3Debugger debugger;
 
 	public D3Modeler (RealHomeApp app) {
 		this.app = app;
@@ -46,7 +49,7 @@ public class D3Modeler implements Modeler {
 
 		house = new House();
 		//inputProcessor = new D3InputProcessor(this);
-		inputProcessor = new FirstPersonCameraController(camera);
+		inputProcessor = new FirstPersonController(camera);
 		inputProcessor.setVelocity(100);
 		inputProcessor.setDegreesPerPixel(0.5f);
 
@@ -54,14 +57,15 @@ public class D3Modeler implements Modeler {
 
 		environment = new Environment()
 			//.add(new DirectionalLight().setColor(1, 1, 1, 1).setDirection(0.5f, 0.5f, 0.5f))
-			.add(new DirectionalLight().setColor(1, 1, 1, 1).setDirection(0.5f, 0.5f, 0.5f));
+			.add(new DirectionalLight().setColor(0.5f, 0.5f, 0.5f, 1).setDirection(0.5f, 0.5f, 0.5f));
 
 		if(Gdx.graphics.isGL30Available())
 			renderer = new PbrRenderer(environment);
 		else
 			renderer = new LegacyRenderer();
 
-
+		debugger = new D3Debugger();
+		((FirstPersonController)inputProcessor).addListener(debugger);
 	}
 
 	private void initModel() {
@@ -104,6 +108,8 @@ public class D3Modeler implements Modeler {
 		renderer.begin(camera);
 		renderer.render(modelInstance, environment);
 		renderer.end();
+
+		debugger.debug(camera, modelInstance);
 	}
 
 	@Override

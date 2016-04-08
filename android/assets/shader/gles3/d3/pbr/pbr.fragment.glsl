@@ -29,6 +29,7 @@ void main() {
 	vec3 albedo = texture(u_gbuffer0, v_uv).rgb;
 	// Normal in world space
 	vec3 normal = texture(u_gbuffer1, v_uv).rgb;
+	normal = normalize(2.0 * normal - 1.0);
 	// Roughness
 	float roughness = texture(u_gbuffer2, v_uv).r;
 	// Metallic
@@ -52,7 +53,7 @@ void main() {
 
 			vec3 lightDir = normalize(-u_dirLights[0].direction);
 			vec3 lightContribution = computeLightContribution(normal, lightDir, viewDir, albedo, u_dirLights[0].color, metallic, roughness);
-			finalLight += normal;
+			finalLight += lightContribution;
 		#endif
 
 		#if numPointLights > 0

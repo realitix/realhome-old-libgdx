@@ -8,29 +8,33 @@
 uniform sampler2DArray u_textures;
 uniform float u_cameraFar;
 
-in vec3 v_normal;
-in vec3 v_tangent;
-in vec3 v_binormal;
+in mat3 v_tbn;
 in vec2 v_uv;
 in float v_depth;
+in vec3 v_tangentCameraPosition;
+in vec3 v_tangentPosition;
 
 layout(location = 0) out vec4 gbuffer0;
 layout(location = 1) out vec4 gbuffer1;
 layout(location = 2) out vec4 gbuffer2;
 
 #include depth_functions
+#include parallax
 
 void main() {
+	vec3 viewDir = normalize(v_tangentCameraPosition - v_tangentPosition);
+	float heightScale = 1;
+	vec2 uv = parallaxMapping(v_uv, viewDir, u_textures, heightScale);
+
 	// Fetch parameters
-	vec3 albedo = texture(u_textures, vec3(v_uv, 0.0)).rgb;
-	vec3 normal = texture(u_textures, vec3(v_uv, 1.0)).rgb;
-	float roughness = texture(u_textures, vec3(v_uv, 2.0)).a;
-	float metallic = texture(u_textures, vec3(v_uv, 3.0)).a;
+	vec3 albedo = texture(u_textures, vec3(uv, 0.0)).rgb;
+	vec3 normal = texture(u_textures, vec3(uv, 1.0)).rgb;
+	float roughness = texture(u_textures, vec3(uv, 2.0)).a;
+	float metallic = texture(u_textures, vec3(uv, 3.0)).a;
 
 	// Compute normal in world space
-	mat3 tbn = mat3(v_tangent, v_binormal, v_normal);
-	normal = normalize(2.0 * normal - 1.0) * tbn;
-
+	normal = v_tbn * normalize(2.0 * normal - 1.0); // Pass in world space
+	normal = 0.5 * normal + 0.5; // Clamp to 0,1. Don't Normalize!
 
 	// Fill the g-buffers
 	gbuffer0 = vec4(albedo, metallic);

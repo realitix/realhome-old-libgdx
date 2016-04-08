@@ -160,7 +160,8 @@ public class WallBuilder {
 			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/albedo.png",
 			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/normal.png",
 			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/roughness.png",
-			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/metalness.png");
+			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/metalness.png",
+			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/height.png");
 		Material test = new Material(new TextureArrayAttribute(TextureArrayAttribute.Textures, textureArray));
 
 		if(!p0linked) {
