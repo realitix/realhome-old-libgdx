@@ -1,10 +1,17 @@
 package com.realhome.editor.modeler.d3.builder;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.TextureArray;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.model.MeshPart;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.model.NodePart;
@@ -14,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Floor;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.d3.builder.RealMeshBuilder.RealVertexInfo;
+import com.realhome.editor.modeler.d3.renderer.pbr.util.RealTextureAttribute;
 import com.realhome.editor.modeler.d3.renderer.pbr.util.TextureArrayAttribute;
 import com.realhome.editor.modeler.util.WallComputer;
 import com.realhome.editor.util.math.GeometryUtils;
@@ -156,13 +164,24 @@ public class WallBuilder {
 		String wallId = wallId(wall);
 
 		// @TODO TEST
-		TextureArray textureArray = new TextureArray(
-			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/albedo.png",
-			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/normal.png",
-			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/roughness.png",
-			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/metalness.png",
-			"material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/height.png");
-		Material test = new Material(new TextureArrayAttribute(TextureArrayAttribute.Textures, textureArray));
+		Texture albedo = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/albedo.png"), true);
+		albedo.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
+		Texture normal = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/normal.png"), true);
+		normal.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
+
+		Texture roughness = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/roughness.png"));
+
+		Texture metalness = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/metalness.png"));
+
+		Texture displacement = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/displacement.png"), true);
+		displacement.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
+
+		Material test = new Material(
+			new TextureAttribute(RealTextureAttribute.Albedo, albedo),
+			new TextureAttribute(RealTextureAttribute.Normal, normal),
+			new TextureAttribute(RealTextureAttribute.Roughness, roughness),
+			new TextureAttribute(RealTextureAttribute.Metalness, metalness),
+			new TextureAttribute(RealTextureAttribute.Displacement, displacement));
 
 		if(!p0linked) {
 			part = builder.getBuilder().part(wallId + "0", GL20.GL_TRIANGLES);

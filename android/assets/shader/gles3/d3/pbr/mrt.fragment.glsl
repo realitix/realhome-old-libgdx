@@ -4,8 +4,14 @@
  * 1 = normal (rgb)
  * 2 = roughness (a)
  * 3 = metalness (a)
+ * 4 = displacement (a)
 */
-uniform sampler2DArray u_textures;
+uniform sampler2D u_albedoTexture;
+uniform sampler2D u_normalTexture;
+uniform sampler2D u_roughnessTexture;
+uniform sampler2D u_metalnessTexture;
+uniform sampler2D u_displacementTexture;
+
 uniform float u_cameraFar;
 
 in mat3 v_tbn;
@@ -24,13 +30,15 @@ layout(location = 2) out vec4 gbuffer2;
 void main() {
 	vec3 viewDir = normalize(v_tangentCameraPosition - v_tangentPosition);
 	float heightScale = 1;
-	vec2 uv = parallaxMapping(v_uv, viewDir, u_textures, heightScale);
+	float displacement = texture(u_displacementTexture, v_uv).r;
+	vec2 uv = parallaxMapping(v_uv, viewDir, heightScale);
 
+	uv = v_uv;
 	// Fetch parameters
-	vec3 albedo = texture(u_textures, vec3(uv, 0.0)).rgb;
-	vec3 normal = texture(u_textures, vec3(uv, 1.0)).rgb;
-	float roughness = texture(u_textures, vec3(uv, 2.0)).a;
-	float metallic = texture(u_textures, vec3(uv, 3.0)).a;
+	vec3 albedo = texture(u_albedoTexture, uv).rgb;
+	vec3 normal = texture(u_normalTexture, uv).rgb;
+	float roughness = texture(u_roughnessTexture, uv).r;
+	float metallic = texture(u_metalnessTexture, uv).a;
 
 	// Compute normal in world space
 	normal = v_tbn * normalize(2.0 * normal - 1.0); // Pass in world space

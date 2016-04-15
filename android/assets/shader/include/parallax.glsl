@@ -1,11 +1,6 @@
-float sampleHeight(sampler2DArray textures, vec2 uv) {
-    float h = texture(textures, vec3(uv, 4.0)).r;
-    return 1.0 - h;
-}
-
 //http://learnopengl.com/#!Advanced-Lighting/Parallax-Mapping
 // viewDir in tangent space
-vec2 parallaxMapping(vec2 texCoords, vec3 viewDir, sampler2DArray textures, float heightScale) {
+vec2 parallaxMapping(vec2 texCoords, vec3 viewDir, float heightScale) {
     // number of depth layers
     const float minLayers = 10;
     const float maxLayers = 20;
@@ -23,13 +18,13 @@ vec2 parallaxMapping(vec2 texCoords, vec3 viewDir, sampler2DArray textures, floa
 
     // get initial values
     vec2  currentTexCoords     = texCoords;
-    float currentDepthMapValue = sampleHeight(textures, currentTexCoords);
+    float currentDepthMapValue = texture(u_displacementTexture, currentTexCoords).r;
 
     while(currentLayerDepth < currentDepthMapValue) {
         // shift texture coordinates along direction of P
         currentTexCoords -= deltaTexCoords;
         // get depthmap value at current texture coordinates
-        currentDepthMapValue = sampleHeight(textures, currentTexCoords);
+        currentDepthMapValue = texture(u_displacementTexture, currentTexCoords).r;
         // get depth of next layer
         currentLayerDepth += layerDepth;
     }
@@ -40,7 +35,7 @@ vec2 parallaxMapping(vec2 texCoords, vec3 viewDir, sampler2DArray textures, floa
 
     // get depth after and before collision for linear interpolation
     float afterDepth  = currentDepthMapValue - currentLayerDepth;
-    float beforeDepth = sampleHeight(textures, prevTexCoords) - currentLayerDepth + layerDepth;
+    float beforeDepth = texture(u_displacementTexture, prevTexCoords).r - currentLayerDepth + layerDepth;
 
     // interpolation of texture coordinates
     float weight = afterDepth / (afterDepth - beforeDepth);

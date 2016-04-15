@@ -41,7 +41,7 @@ void main() {
 	// Direction from camera to pixel in world space
 	vec3 viewDir = normalize(u_cameraPosition - position);
 	// Computed light
-	vec3 finalLight = vec3(0.0);
+	vec3 finalLight = vec3(roughness);
 
 	#ifdef lightingFlag
 		#if numDirectionalLights > 0
@@ -53,7 +53,7 @@ void main() {
 
 			vec3 lightDir = normalize(-u_dirLights[0].direction);
 			vec3 lightContribution = computeLightContribution(normal, lightDir, viewDir, albedo, u_dirLights[0].color, metallic, roughness);
-			finalLight += lightContribution;
+			//finalLight += lightContribution;
 		#endif
 
 		#if numPointLights > 0
@@ -92,4 +92,5 @@ void main() {
 	#endif
 
 	fragmentColor = vec4(finalLight, 1.0);
+	//fragmentColor = vec4(finalLight, 1.0);
 }

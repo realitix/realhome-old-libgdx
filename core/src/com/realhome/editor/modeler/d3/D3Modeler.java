@@ -109,7 +109,7 @@ public class D3Modeler implements Modeler {
 		renderer.render(modelInstance, environment);
 		renderer.end();
 
-		debugger.debug(camera, modelInstance);
+		//debugger.debug(camera, modelInstance);
 	}
 
 	@Override
