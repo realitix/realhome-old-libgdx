@@ -41,7 +41,7 @@ void main() {
 	// Direction from camera to pixel in world space
 	vec3 viewDir = normalize(u_cameraPosition - position);
 	// Computed light
-	vec3 finalLight = vec3(roughness);
+	vec3 finalLight = vec3(texture(u_gbuffer2, v_uv).g);
 
 	#ifdef lightingFlag
 		#if numDirectionalLights > 0

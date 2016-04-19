@@ -28,12 +28,12 @@ layout(location = 2) out vec4 gbuffer2;
 #include parallax
 
 void main() {
-	vec3 viewDir = normalize(v_tangentCameraPosition - v_tangentPosition);
+	vec3 tangentViewDir = normalize(v_tangentCameraPosition - v_tangentPosition);
 	float heightScale = 1;
 	float displacement = texture(u_displacementTexture, v_uv).r;
-	vec2 uv = parallaxMapping(v_uv, viewDir, heightScale);
+	//vec2 uv = parallaxMapping(v_uv, tangentViewDir, heightScale);
 
-	uv = v_uv;
+	vec2 uv = v_uv;
 	// Fetch parameters
 	vec3 albedo = texture(u_albedoTexture, uv).rgb;
 	vec3 normal = texture(u_normalTexture, uv).rgb;

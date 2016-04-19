@@ -3,12 +3,9 @@ package com.realhome.editor.modeler.d3.builder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.TextureArray;
-import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
@@ -22,7 +19,6 @@ import com.realhome.editor.model.house.Floor;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.d3.builder.RealMeshBuilder.RealVertexInfo;
 import com.realhome.editor.modeler.d3.renderer.pbr.util.RealTextureAttribute;
-import com.realhome.editor.modeler.d3.renderer.pbr.util.TextureArrayAttribute;
 import com.realhome.editor.modeler.d3.util.GrayscaleTextureData;
 import com.realhome.editor.modeler.util.WallComputer;
 import com.realhome.editor.util.math.GeometryUtils;
@@ -41,8 +37,8 @@ public class WallBuilder {
 		}
 	}
 
-	private HouseModelBuilder builder;
-	private WallComputer computer;
+	private final HouseModelBuilder builder;
+	private final WallComputer computer;
 
 	public WallBuilder(HouseModelBuilder builder) {
 		this.builder = builder;
@@ -167,21 +163,36 @@ public class WallBuilder {
 		// @TODO TEST
 		Texture albedo = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/albedo.png"), true);
 		albedo.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
+		albedo.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		
 		Texture normal = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/normal.png"), true);
 		normal.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
+		normal.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
 		Texture roughness = new Texture(new GrayscaleTextureData(
-			Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/roughness.png"), null,
-			null, false));
+			Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/roughness.png"),
+			null,	null, true));
+		roughness.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
+		roughness.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		
 
-		Texture metalness = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/metalness.png"));
+		Texture metalness = new Texture(new GrayscaleTextureData(
+			Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/metalness.png"),
+			null, null, true));
+		metalness.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
+		metalness.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
-		Texture displacement = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/displacement.png"), true);
+		Texture displacement = new Texture(new GrayscaleTextureData(
+			Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/displacement.png"),
+			null, null, true));
 		displacement.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
+		displacement.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
 
+		TextureAttribute albedoAttribute = new TextureAttribute(RealTextureAttribute.Albedo, albedo);
+		albedoAttribute.scaleV = -1;
 		Material test = new Material(
-			new TextureAttribute(RealTextureAttribute.Albedo, albedo),
+			albedoAttribute,
 			new TextureAttribute(RealTextureAttribute.Normal, normal),
 			new TextureAttribute(RealTextureAttribute.Roughness, roughness),
 			new TextureAttribute(RealTextureAttribute.Metalness, metalness),

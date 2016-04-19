@@ -20,8 +20,7 @@ out vec3 v_tangentCameraPosition;
 out vec3 v_tangentPosition;
 
 void main() {
-	//v_uv = u_uvTransform.xy + a_texCoord * u_uvTransform.zw;
-	v_uv = a_texCoord;
+	v_uv = u_uvTransform.xy + a_texCoord * u_uvTransform.zw;
 
 	/*
 	 * We must multiply normal with normalMatrix because
