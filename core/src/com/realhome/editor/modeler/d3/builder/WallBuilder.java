@@ -23,6 +23,7 @@ import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.d3.builder.RealMeshBuilder.RealVertexInfo;
 import com.realhome.editor.modeler.d3.renderer.pbr.util.RealTextureAttribute;
 import com.realhome.editor.modeler.d3.renderer.pbr.util.TextureArrayAttribute;
+import com.realhome.editor.modeler.d3.util.GrayscaleTextureData;
 import com.realhome.editor.modeler.util.WallComputer;
 import com.realhome.editor.util.math.GeometryUtils;
 
@@ -169,12 +170,15 @@ public class WallBuilder {
 		Texture normal = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/normal.png"), true);
 		normal.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 
-		Texture roughness = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/roughness.png"));
+		Texture roughness = new Texture(new GrayscaleTextureData(
+			Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/roughness.png"), null,
+			null, false));
 
 		Texture metalness = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/metalness.png"));
 
 		Texture displacement = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/displacement.png"), true);
 		displacement.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
+
 
 		Material test = new Material(
 			new TextureAttribute(RealTextureAttribute.Albedo, albedo),
