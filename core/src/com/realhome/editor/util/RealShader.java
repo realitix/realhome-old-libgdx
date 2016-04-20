@@ -84,7 +84,8 @@ public class RealShader {
 
 		for( String line : lines ) {
 			if( line.contains("#include") ) {
-				String include = Gdx.files.internal(INCLUDE + line.substring(9) + INCLUDE_EXT).readString();
+				String includeName = line.substring(9).trim();
+				String include = Gdx.files.internal(INCLUDE + includeName + INCLUDE_EXT).readString();
 				result.append("\n").append(include).append("\n");
 			}
 			else {

@@ -47,7 +47,7 @@ void main() {
 	// Fill the g-buffers
 	gbuffer0 = vec4(albedo, metallic);
 	gbuffer1 = vec4(normal, 1.0);
-	gbuffer2 = vec4(roughness, 0.0, 0.0, 0.0);
+	gbuffer2 = vec4(roughness, displacement, 0.0, 0.0);
 
 	/**
 	 * Overwrite FragDepth in fragment shader
