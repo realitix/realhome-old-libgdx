@@ -1,8 +1,13 @@
 //http://learnopengl.com/#!Advanced-Lighting/Parallax-Mapping
 // viewDir in tangent space
 vec2 parallaxMapping(vec2 texCoords, vec3 viewDir, float heightScale) {
+   float depth = texture(u_displacementTexture, texCoords).r;
+   vec2 p = viewDir.xy / viewDir.z * (depth * 0.1);
+   return texCoords - p;
+
+
     // number of depth layers
-    const float minLayers = 10;
+   /* const float minLayers = 10;
     const float maxLayers = 20;
     float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));
 
@@ -41,5 +46,5 @@ vec2 parallaxMapping(vec2 texCoords, vec3 viewDir, float heightScale) {
     float weight = afterDepth / (afterDepth - beforeDepth);
     vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
 
-    return finalTexCoords;
+    return finalTexCoords;*/
 }

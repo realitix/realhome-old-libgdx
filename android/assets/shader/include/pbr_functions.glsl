@@ -95,9 +95,10 @@ vec3 computeLightContribution(vec3 normal, vec3 lightDir, vec3 viewDir, vec3 alb
 
 	// Compute diffuse and specular
 	vec3 specularCoefficient = cookTorrance(albedo, NdotH, NdotL, NdotV, VdotH, alpha, metallic);
-	specularCoefficient = vec3(0.0);
+	//specularCoefficient = vec3(0.0);
 
 	vec3 diffuseCoefficient = conservativeDiffuse(albedo, specularCoefficient);
 
-	return lightColor * NdotL * (specularCoefficient + diffuseCoefficient);
+	return lightColor * albedo * NdotL;
+	//return lightColor * NdotL * (specularCoefficient + diffuseCoefficient);
 }

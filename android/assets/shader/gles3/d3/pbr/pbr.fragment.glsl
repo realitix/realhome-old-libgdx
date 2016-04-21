@@ -41,19 +41,17 @@ void main() {
 	// Direction from camera to pixel in world space
 	vec3 viewDir = normalize(u_cameraPosition - position);
 	// Computed light
-	vec3 finalLight = vec3(texture(u_gbuffer2, v_uv).g);
+	vec3 finalLight = vec3(0.0);
 
 	#ifdef lightingFlag
 		#if numDirectionalLights > 0
-			/*for (int i = 0; i < numDirectionalLights; i++) {
+			for (int i = 0; i < numDirectionalLights; i++) {
 				vec3 lightDir = -u_dirLights[i].direction;
+				metallic = 1.0;
+				roughness = 0.0;
 				vec3 lightContribution = computeLightContribution(normal, lightDir, viewDir, albedo, u_dirLights[i].color, metallic, roughness);
 				finalLight += lightContribution;
-			}*/
-
-			vec3 lightDir = normalize(-u_dirLights[0].direction);
-			vec3 lightContribution = computeLightContribution(normal, lightDir, viewDir, albedo, u_dirLights[0].color, metallic, roughness);
-			//finalLight += lightContribution;
+			}
 		#endif
 
 		#if numPointLights > 0

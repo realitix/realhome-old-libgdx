@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.shaders.BaseShader;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.realhome.editor.modeler.d3.renderer.pbr.util.RealTextureAttribute;
 import com.realhome.editor.util.RealShader;
 
@@ -16,6 +17,7 @@ public class MrtShader extends DefaultShader {
 	public static class Inputs extends DefaultShader.Inputs {
 		public final static Uniform cameraNear = new Uniform("u_cameraNear");
 		public final static Uniform cameraFar = new Uniform("u_cameraFar");
+		public final static Uniform displacementScale = new Uniform("u_displacementScale");
 		public final static Uniform albedoTexture = new Uniform("u_albedoTexture", RealTextureAttribute.Albedo);
 		public final static Uniform displacementTexture = new Uniform("u_displacementTexture", RealTextureAttribute.Displacement);
 		public final static Uniform metalnessTexture = new Uniform("u_metalnessTexture", RealTextureAttribute.Metalness);
@@ -35,6 +37,16 @@ public class MrtShader extends DefaultShader {
 			@Override
 			public void set (BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes) {
 				shader.set(inputID, shader.camera.far);
+			}
+		};
+
+		public final static Setter displacementScale = new GlobalSetter() {
+			@Override
+			public void set (BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes) {
+				int time = 3000;
+				long m = TimeUtils.millis() % time;
+				float state = (float)m / (float)time;
+				shader.set(inputID, state);
 			}
 		};
 
@@ -104,5 +116,6 @@ public class MrtShader extends DefaultShader {
 		register(Inputs.metalnessTexture, Setters.metalnessTexture);
 		register(Inputs.roughnessTexture, Setters.roughnessTexture);
 		register(Inputs.uvTransform, Setters.uvTransform);
+		register(Inputs.displacementScale, Setters.displacementScale);
 	}
 }

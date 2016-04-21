@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.attributes.DepthTestAttribute;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
+import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Config;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
@@ -34,10 +35,11 @@ public class PbrRenderer implements D3Renderer {
 		mrt = new MrtFrameBuffer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch = new ModelBatch(context, new MrtShaderProvider());
 		quadRenderable = new QuadRenderable(mrt, environment);
-		pbrShader = new PbrShader(quadRenderable);
+
+		Config config = new Config();
+		config.numDirectionalLights = 1;
+		pbrShader = new PbrShader(quadRenderable, config);
 		pbrShader.init();
-
-
 	}
 
 	@Override

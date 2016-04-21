@@ -40,6 +40,10 @@ public class HouseModelBuilder {
 		// begin meshbuilder
 		builder.begin(houseModel.meshes.get(0).getVertexAttributes(), GL20.GL_TRIANGLES);
 
+		// Flip uv because pixmap use Y down
+		builder.setUVRange(0, 1, 1, 0);
+
+		// Builds
 		wallBuilder.sync();
 		roomBuilder.sync();
 

@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.FirstPersonCameraController;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector3;
 import com.realhome.editor.RealHomeApp;
 import com.realhome.editor.model.house.House;
 import com.realhome.editor.modeler.Modeler;
@@ -38,6 +39,8 @@ public class D3Modeler implements Modeler {
 	private Environment environment;
 	private D3Debugger debugger;
 
+	private DirectionalLight dirLight;
+
 	public D3Modeler (RealHomeApp app) {
 		this.app = app;
 		init();
@@ -55,9 +58,8 @@ public class D3Modeler implements Modeler {
 
 		interactor = new Interactor(this, house, houseModel);
 
-		environment = new Environment()
-			//.add(new DirectionalLight().setColor(1, 1, 1, 1).setDirection(0.5f, 0.5f, 0.5f))
-			.add(new DirectionalLight().setColor(0.5f, 0.5f, 0.5f, 1).setDirection(0.5f, 0.5f, 0.5f));
+		environment = new Environment().add(dirLight = new DirectionalLight().setColor(1f, 1f, 1f, 1)
+			.setDirection(0.5f, 0.5f, 0.5f));
 
 		if(Gdx.graphics.isGL30Available())
 			renderer = new PbrRenderer(environment);
@@ -108,6 +110,7 @@ public class D3Modeler implements Modeler {
 		renderer.begin(camera);
 		renderer.render(modelInstance, environment);
 		renderer.end();
+
 
 		//debugger.debug(camera, modelInstance);
 	}

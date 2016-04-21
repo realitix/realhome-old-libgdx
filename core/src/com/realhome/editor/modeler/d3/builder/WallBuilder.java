@@ -189,8 +189,9 @@ public class WallBuilder {
 		displacement.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
 
+		// TODO WARNING uv must be flipped by the mesh bulder
 		TextureAttribute albedoAttribute = new TextureAttribute(RealTextureAttribute.Albedo, albedo);
-		albedoAttribute.scaleV = -1;
+		// albedoAttribute.scaleV = -1;
 		Material test = new Material(
 			albedoAttribute,
 			new TextureAttribute(RealTextureAttribute.Normal, normal),

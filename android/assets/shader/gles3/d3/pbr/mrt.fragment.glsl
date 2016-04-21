@@ -13,6 +13,7 @@ uniform sampler2D u_metalnessTexture;
 uniform sampler2D u_displacementTexture;
 
 uniform float u_cameraFar;
+uniform float u_displacementScale;
 
 in mat3 v_tbn;
 in vec2 v_uv;
@@ -29,11 +30,8 @@ layout(location = 2) out vec4 gbuffer2;
 
 void main() {
 	vec3 tangentViewDir = normalize(v_tangentCameraPosition - v_tangentPosition);
-	float heightScale = 1;
-	float displacement = texture(u_displacementTexture, v_uv).r;
-	//vec2 uv = parallaxMapping(v_uv, tangentViewDir, heightScale);
+	vec2 uv = parallaxMapping(v_uv, tangentViewDir, u_displacementScale);
 
-	vec2 uv = v_uv;
 	// Fetch parameters
 	vec3 albedo = texture(u_albedoTexture, uv).rgb;
 	vec3 normal = texture(u_normalTexture, uv).rgb;
@@ -47,7 +45,7 @@ void main() {
 	// Fill the g-buffers
 	gbuffer0 = vec4(albedo, metallic);
 	gbuffer1 = vec4(normal, 1.0);
-	gbuffer2 = vec4(roughness, displacement, 0.0, 0.0);
+	gbuffer2 = vec4(roughness, 0.0, 0.0, 0.0);
 
 	/**
 	 * Overwrite FragDepth in fragment shader
