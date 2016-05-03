@@ -164,7 +164,7 @@ public class WallBuilder {
 		Texture albedo = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/albedo.png"), true);
 		albedo.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 		albedo.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-		
+
 		Texture normal = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/normal.png"), true);
 		normal.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 		normal.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
@@ -174,7 +174,7 @@ public class WallBuilder {
 			null,	null, true));
 		roughness.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 		roughness.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-		
+
 
 		Texture metalness = new Texture(new GrayscaleTextureData(
 			Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/metalness.png"),

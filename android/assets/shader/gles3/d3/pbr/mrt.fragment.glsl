@@ -30,13 +30,14 @@ layout(location = 2) out vec4 gbuffer2;
 
 void main() {
 	vec3 tangentViewDir = normalize(v_tangentCameraPosition - v_tangentPosition);
-	vec2 uv = parallaxMapping(v_uv, tangentViewDir, u_displacementScale);
+	//vec2 uv = parallaxMapping(v_uv, tangentViewDir, u_displacementScale);
+	vec2 uv = v_uv;
 
 	// Fetch parameters
 	vec3 albedo = texture(u_albedoTexture, uv).rgb;
 	vec3 normal = texture(u_normalTexture, uv).rgb;
 	float roughness = texture(u_roughnessTexture, uv).r;
-	float metallic = texture(u_metalnessTexture, uv).a;
+	float metallic = texture(u_metalnessTexture, uv).r;
 
 	// Compute normal in world space
 	normal = v_tbn * normalize(2.0 * normal - 1.0); // Pass in world space

@@ -28,7 +28,7 @@ public class QuadRenderable extends Renderable {
 		meshPart.size = mesh.getNumVertices();
 		meshPart.mesh = mesh;
 
-		// Environment
+		// Env
 		this.environment = environment;
 
 		// Material

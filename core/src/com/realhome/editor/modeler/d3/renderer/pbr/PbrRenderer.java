@@ -37,7 +37,8 @@ public class PbrRenderer implements D3Renderer {
 		quadRenderable = new QuadRenderable(mrt, environment);
 
 		Config config = new Config();
-		config.numDirectionalLights = 1;
+		// Warning, 1 dir light fail on my old driver!
+		config.numDirectionalLights = 2;
 		pbrShader = new PbrShader(quadRenderable, config);
 		pbrShader.init();
 	}

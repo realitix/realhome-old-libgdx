@@ -45,13 +45,12 @@ void main() {
 
 	#ifdef lightingFlag
 		#if numDirectionalLights > 0
-			for (int i = 0; i < numDirectionalLights; i++) {
+			//for (int i = 0; i < numDirectionalLights; i++) {
+				int i = 0;
 				vec3 lightDir = -u_dirLights[i].direction;
-				metallic = 1.0;
-				roughness = 0.0;
 				vec3 lightContribution = computeLightContribution(normal, lightDir, viewDir, albedo, u_dirLights[i].color, metallic, roughness);
 				finalLight += lightContribution;
-			}
+			//}
 		#endif
 
 		#if numPointLights > 0
@@ -92,3 +91,4 @@ void main() {
 	fragmentColor = vec4(finalLight, 1.0);
 	//fragmentColor = vec4(finalLight, 1.0);
 }
+

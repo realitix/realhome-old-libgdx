@@ -90,7 +90,7 @@ public class PbrShader extends DefaultShader {
 		register(Inputs.cameraFar, Setters.cameraFar);
 
 		for(int i = 0; i < 4; i++)
-			u_frustumCorners[i] = program.fetchUniformLocation("u_frustumCorners["+i+"]", false);
+			u_frustumCorners[i] = program.fetchUniformLocation("u_frustumCorners["+i+"]", true);
 	}
 
 	public static String createPrefix (final Renderable renderable, final Config config) {
