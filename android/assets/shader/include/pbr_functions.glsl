@@ -100,6 +100,5 @@ vec3 computeLightContribution(vec3 normal, vec3 lightDir, vec3 viewDir, vec3 alb
 	vec3 diffuseCoefficient = conservativeDiffuse(albedo, specularCoefficient);
 
 	return lightColor * NdotL * (specularCoefficient + diffuseCoefficient);
-	//return lightColor * NdotL * (specularCoefficient + diffuseCoefficient);
 }
 

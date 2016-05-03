@@ -3,7 +3,7 @@ uniform mat4 u_viewTrans;
 uniform mat4 u_worldTrans;
 uniform mat3 u_normalMatrix;
 uniform vec4 u_uvTransform;
-uniform vec3 u_cameraPosition;
+uniform vec4 u_cameraPosition;
 uniform float u_cameraNear;
 uniform float u_cameraFar;
 
@@ -45,7 +45,7 @@ void main() {
 	v_depth = (-viewPos.z - u_cameraNear) / (u_cameraFar - u_cameraNear);
 
 	mat3 tbnInversed = transpose(v_tbn);
-	v_tangentCameraPosition = tbnInversed * u_cameraPosition;
+	v_tangentCameraPosition = tbnInversed * u_cameraPosition.xyz;
 	v_tangentPosition = tbnInversed * worldPos.xyz;
 
 	gl_Position = u_projTrans * viewPos;

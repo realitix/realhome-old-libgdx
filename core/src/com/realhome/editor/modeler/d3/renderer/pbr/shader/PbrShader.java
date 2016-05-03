@@ -65,7 +65,7 @@ public class PbrShader extends DefaultShader {
 	}
 
 	/** Uniforms */
-	private int[] u_frustumCorners = new int[4];
+	private final int[] u_frustumCorners = new int[4];
 
 	public PbrShader (final Renderable renderable) {
 		this(renderable, new Config());
@@ -90,7 +90,7 @@ public class PbrShader extends DefaultShader {
 		register(Inputs.cameraFar, Setters.cameraFar);
 
 		for(int i = 0; i < 4; i++)
-			u_frustumCorners[i] = program.fetchUniformLocation("u_frustumCorners["+i+"]", true);
+			u_frustumCorners[i] = program.fetchUniformLocation("u_frustumCorners["+i+"]", false);
 	}
 
 	public static String createPrefix (final Renderable renderable, final Config config) {

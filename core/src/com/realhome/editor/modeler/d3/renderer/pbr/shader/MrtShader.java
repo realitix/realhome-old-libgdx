@@ -46,6 +46,7 @@ public class MrtShader extends DefaultShader {
 				int time = 3000;
 				long m = TimeUtils.millis() % time;
 				float state = (float)m / (float)time;
+				state = 0.1f;
 				shader.set(inputID, state);
 			}
 		};
