@@ -19,6 +19,7 @@ import com.realhome.editor.model.house.Floor;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.d3.builder.RealMeshBuilder.RealVertexInfo;
 import com.realhome.editor.modeler.d3.renderer.pbr.util.RealTextureAttribute;
+import com.realhome.editor.modeler.d3.renderer.pbr.util.UVMappingAttribute;
 import com.realhome.editor.modeler.d3.util.GrayscaleTextureData;
 import com.realhome.editor.modeler.util.WallComputer;
 import com.realhome.editor.util.math.GeometryUtils;
@@ -161,7 +162,7 @@ public class WallBuilder {
 		String wallId = wallId(wall);
 
 		// @TODO TEST
-		Texture albedo = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/albedo.png"), true);
+		/*Texture albedo = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/albedo.png"), true);
 		albedo.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 		albedo.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
@@ -188,27 +189,23 @@ public class WallBuilder {
 		displacement.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 		displacement.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
-
-		// TODO WARNING uv must be flipped by the mesh bulder
-		TextureAttribute albedoAttribute = new TextureAttribute(RealTextureAttribute.Albedo, albedo);
-		// albedoAttribute.scaleV = -1;
 		Material test = new Material(
-			albedoAttribute,
+			new TextureAttribute(RealTextureAttribute.Albedo, albedo),
 			new TextureAttribute(RealTextureAttribute.Normal, normal),
 			new TextureAttribute(RealTextureAttribute.Roughness, roughness),
 			new TextureAttribute(RealTextureAttribute.Metalness, metalness),
 			new TextureAttribute(RealTextureAttribute.Displacement, displacement));
-
+*/
 		if(!p0linked) {
 			part = builder.getBuilder().part(wallId + "0", GL20.GL_TRIANGLES);
 			buildRect(builder.getBuilder(), points[0], points[1], points[5], points[4]);
-			faces.add(new WallFace(part, test));
+			faces.add(new WallFace(part, computeMaterial(points[0], points[1], points[4])));
 		}
 
 		if(!p1linked) {
 			part = builder.getBuilder().part(wallId + "1", GL20.GL_TRIANGLES);
 			buildRect(builder.getBuilder(), points[3], points[2], points[6], points[7]);
-			faces.add(new WallFace(part, test));
+			faces.add(new WallFace(part, computeMaterial(points[3], points[2], points[7])));
 		}
 
 		// Create sides
@@ -216,14 +213,24 @@ public class WallBuilder {
 		// Left side
 		part = builder.getBuilder().part(wallId + "2", GL20.GL_TRIANGLES);
 		buildRect(builder.getBuilder(), points[2], points[0], points[4], points[6]);
-		faces.add(new WallFace(part, test));
+		faces.add(new WallFace(part, computeMaterial(points[2], points[0], points[6])));
 
 		// Right side
 		part = builder.getBuilder().part(wallId + "3", GL20.GL_TRIANGLES);
 		buildRect(builder.getBuilder(), points[1], points[3], points[7], points[5]);
-		faces.add(new WallFace(part, test));
+		faces.add(new WallFace(part, computeMaterial(points[1], points[3], points[5])));
 
 		return faces;
+	}
+
+	// p0 => bottom left
+	// p1 => bottom right
+	// p2 => top left
+	private Material computeMaterial(Material base, Vector3 p0, Vector3 p1, Vector3 p2) {
+		float width = p0.dst(p1);
+		float height = p0.dst(p2);
+
+		return builder.getMaterialProvider().get("realhome", "cinderblock", width, height);
 	}
 
 	/**

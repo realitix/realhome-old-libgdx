@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.realhome.editor.modeler.d3.renderer.pbr.util.RealTextureAttribute;
+import com.realhome.editor.modeler.d3.renderer.pbr.util.UVMappingAttribute;
 import com.realhome.editor.util.RealShader;
 
 public class MrtShader extends DefaultShader {
@@ -22,7 +23,7 @@ public class MrtShader extends DefaultShader {
 		public final static Uniform displacementTexture = new Uniform("u_displacementTexture", RealTextureAttribute.Displacement);
 		public final static Uniform metalnessTexture = new Uniform("u_metalnessTexture", RealTextureAttribute.Metalness);
 		public final static Uniform roughnessTexture = new Uniform("u_roughnessTexture", RealTextureAttribute.Roughness);
-		public final static Uniform uvTransform = new Uniform("u_uvTransform", RealTextureAttribute.Albedo);
+		public final static Uniform uvTransform = new Uniform("u_uvTransform", UVMappingAttribute.UV);
 	}
 
 	public static class Setters extends DefaultShader.Setters {
@@ -59,12 +60,12 @@ public class MrtShader extends DefaultShader {
 				shader.set(inputID, unit);
 			}
 		};
-		
+
 		public final static Setter uvTransform = new LocalSetter() {
 			@Override
 			public void set (BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes) {
-				final TextureAttribute ta = (TextureAttribute)(combinedAttributes.get(RealTextureAttribute.Albedo));
-				shader.set(inputID, ta.offsetU, ta.offsetV, ta.scaleU, ta.scaleV);
+				final UVMappingAttribute uv = (UVMappingAttribute)(combinedAttributes.get(UVMappingAttribute.UV));
+				shader.set(inputID, uv.offsetU, uv.offsetV, uv.scaleU, uv.scaleV);
 			}
 		};
 

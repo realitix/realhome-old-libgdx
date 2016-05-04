@@ -23,14 +23,16 @@ public class HouseModelBuilder {
 	private Array<Vector3> vertices = new Array<Vector3>();
 	private IntArray indices = new IntArray();
 
+	private MaterialProvider materialProvider;
+
 	private WallBuilder wallBuilder;
 	private RoomBuilder roomBuilder;
 
 	public HouseModelBuilder(House house, Model houseModel) {
 		this.house = house;
 		this.houseModel = houseModel;
-		//builder = new HouseMeshBuilder(houseModel.meshes.get(0));
 		builder = new RealMeshBuilder();
+		materialProvider = new MaterialProvider();
 
 		wallBuilder = new WallBuilder(this);
 		roomBuilder = new RoomBuilder(this);
@@ -57,6 +59,10 @@ public class HouseModelBuilder {
 
 	public House getHouse() {
 		return house;
+	}
+
+	public MaterialProvider getMaterialProvider() {
+		return materialProvider;
 	}
 
 	public RealMeshBuilder getBuilder() {

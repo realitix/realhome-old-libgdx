@@ -22,6 +22,7 @@ out vec3 v_tangentPosition;
 void main() {
 	v_uv = u_uvTransform.xy + a_texCoord * u_uvTransform.zw;
 
+
 	/*
 	 * We must multiply normal with normalMatrix because
 	 * worldTrans matrix doesn't preserver normal if scaled.
