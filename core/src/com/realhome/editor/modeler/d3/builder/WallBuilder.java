@@ -1,14 +1,9 @@
 package com.realhome.editor.modeler.d3.builder;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.model.MeshPart;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.model.NodePart;
@@ -18,9 +13,6 @@ import com.badlogic.gdx.utils.Array;
 import com.realhome.editor.model.house.Floor;
 import com.realhome.editor.model.house.Wall;
 import com.realhome.editor.modeler.d3.builder.RealMeshBuilder.RealVertexInfo;
-import com.realhome.editor.modeler.d3.renderer.pbr.util.RealTextureAttribute;
-import com.realhome.editor.modeler.d3.renderer.pbr.util.UVMappingAttribute;
-import com.realhome.editor.modeler.d3.util.GrayscaleTextureData;
 import com.realhome.editor.modeler.util.WallComputer;
 import com.realhome.editor.util.math.GeometryUtils;
 
@@ -161,41 +153,6 @@ public class WallBuilder {
 		MeshPart part = null;
 		String wallId = wallId(wall);
 
-		// @TODO TEST
-		/*Texture albedo = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/albedo.png"), true);
-		albedo.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
-		albedo.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-
-		Texture normal = new Texture(Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/normal.png"), true);
-		normal.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
-		normal.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-
-		Texture roughness = new Texture(new GrayscaleTextureData(
-			Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/roughness.png"),
-			null,	null, true));
-		roughness.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
-		roughness.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-
-
-		Texture metalness = new Texture(new GrayscaleTextureData(
-			Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/metalness.png"),
-			null, null, true));
-		metalness.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
-		metalness.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-
-		Texture displacement = new Texture(new GrayscaleTextureData(
-			Gdx.files.internal("material/realhome-material/cinderblock/Brick_Cinderblock_1k_TGA/converted/displacement.png"),
-			null, null, true));
-		displacement.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
-		displacement.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-
-		Material test = new Material(
-			new TextureAttribute(RealTextureAttribute.Albedo, albedo),
-			new TextureAttribute(RealTextureAttribute.Normal, normal),
-			new TextureAttribute(RealTextureAttribute.Roughness, roughness),
-			new TextureAttribute(RealTextureAttribute.Metalness, metalness),
-			new TextureAttribute(RealTextureAttribute.Displacement, displacement));
-*/
 		if(!p0linked) {
 			part = builder.getBuilder().part(wallId + "0", GL20.GL_TRIANGLES);
 			buildRect(builder.getBuilder(), points[0], points[1], points[5], points[4]);
@@ -226,11 +183,11 @@ public class WallBuilder {
 	// p0 => bottom left
 	// p1 => bottom right
 	// p2 => top left
-	private Material computeMaterial(Material base, Vector3 p0, Vector3 p1, Vector3 p2) {
-		float width = p0.dst(p1);
-		float height = p0.dst(p2);
+	private Material computeMaterial(Vector3 p0, Vector3 p1, Vector3 p2) {
+		int width = (int)p0.dst(p1);
+		int height = (int)p0.dst(p2);
 
-		return builder.getMaterialProvider().get("realhome", "cinderblock", width, height);
+		return builder.getMaterialProvider().getMaterial("realhome", "cinderblock", width, height);
 	}
 
 	/**

@@ -2,11 +2,11 @@ package com.realhome.editor.modeler.d3.builder;
 
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.utils.MeshBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.realhome.editor.model.house.House;
+import com.realhome.editor.modeler.d3.material.MaterialProvider;
 
 public class HouseModelBuilder {
 	/* Model house */
@@ -20,13 +20,13 @@ public class HouseModelBuilder {
 	private final RealMeshBuilder builder;
 
 	/* Tmp variables */
-	private Array<Vector3> vertices = new Array<Vector3>();
-	private IntArray indices = new IntArray();
+	private final Array<Vector3> vertices = new Array<Vector3>();
+	private final IntArray indices = new IntArray();
 
-	private MaterialProvider materialProvider;
+	private final MaterialProvider materialProvider;
 
-	private WallBuilder wallBuilder;
-	private RoomBuilder roomBuilder;
+	private final WallBuilder wallBuilder;
+	private final RoomBuilder roomBuilder;
 
 	public HouseModelBuilder(House house, Model houseModel) {
 		this.house = house;

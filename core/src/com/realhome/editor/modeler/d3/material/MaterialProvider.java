@@ -1,7 +1,13 @@
+package com.realhome.editor.modeler.d3.material;
+
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.utils.ObjectMap;
+
 public class MaterialProvider {
 
-	private AssetManager assetManager;
-	private ObjectMap<String, MaterialLibrary> libraries;
+	private final AssetManager assetManager;
+	private final ObjectMap<String, MaterialLibrary> libraries;
 
 
 	public MaterialProvider () {

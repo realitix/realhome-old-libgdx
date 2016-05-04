@@ -1,14 +1,37 @@
+package com.realhome.editor.modeler.d3.material;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.attributes.IntAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.realhome.editor.modeler.d3.renderer.pbr.util.RealTextureAttribute;
+import com.realhome.editor.modeler.d3.renderer.pbr.util.UVMappingAttribute;
+import com.realhome.editor.modeler.d3.util.GrayscaleTextureData;
+
 public class MaterialLibrary {
 
 	public static class SizeAttribute extends IntAttribute {
+		public SizeAttribute (long type, int value) {
+			super(type, value);
+		}
+
+		public SizeAttribute (long type) {
+			super(type);
+		}
+
 		public final static String WidthAlias = "width";
     	public final static long Width = register(WidthAlias);
     	public final static String HeightAlias = "height";
     	public final static long Height = register(HeightAlias);
-
-	    static {
-	        Mask |= Width | Height;
-	    }
 	}
 
 	public static class JsonLibrary {
@@ -24,10 +47,10 @@ public class MaterialLibrary {
 	 * MaterialName => VersionName => Material
 	 * In material, we get size of material in IntAttribute
 	*/
-	private ObjectMap<String, ObjectMap<String, Material>> materials;
+	private final ObjectMap<String, ObjectMap<String, Material>> materials;
 
-	private Json json;
-	private AssetManager assetManager;
+	private final Json json;
+	private final AssetManager assetManager;
 
 	public MaterialLibrary(AssetManager assetManager, String libraryName) {
 		this.assetManager = assetManager;
@@ -41,7 +64,7 @@ public class MaterialLibrary {
 		String libraryPath = "material/realhome-material/"+library+"/";
 
 		// Load library
-		FileHandle file = new FileHandle(libraryPath + library+".json");
+		FileHandle file = Gdx.files.internal(libraryPath + library+".json");
 
 		if (!file.exists())
 			throw new GdxRuntimeException("Library " + library+" not found");
@@ -50,9 +73,9 @@ public class MaterialLibrary {
 
 		// Load materials
 		for (String mat : lib.materials) {
-			Stirng materialPath = libraryPath + mat + "/";
+			String materialPath = libraryPath + mat + "/";
 
-			FileHandle materialFile = new FileHandle(materialPath + mat+".json");
+			FileHandle materialFile = Gdx.files.internal(materialPath + mat+".json");
 			if (!materialFile.exists())
 				throw new GdxRuntimeException("Material "+mat+" not found in library "+library);
 
@@ -60,28 +83,28 @@ public class MaterialLibrary {
 			Material material = new Material();
 
 			// Load textures
-			Texture albedo = new Texture(new FileHandle(materialPath+jmat.albedo), true);
+			Texture albedo = new Texture(Gdx.files.internal(materialPath+jmat.albedo), true);
 			albedo.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 			albedo.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
-			Texture normal = new Texture(new FileHandle(materialPath+jmat.normal), true);
+			Texture normal = new Texture(Gdx.files.internal(materialPath+jmat.normal), true);
 			normal.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 			normal.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
 			Texture roughness = new Texture(new GrayscaleTextureData(
-				new FileHandle(materialPath+jmat.roughness),
+				Gdx.files.internal(materialPath+jmat.roughness),
 				null,	null, true));
 			roughness.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 			roughness.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
 			Texture metalness = new Texture(new GrayscaleTextureData(
-				new FileHandle(materialPath+jmat.metalness),
+				Gdx.files.internal(materialPath+jmat.metalness),
 				null, null, true));
 			metalness.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 			metalness.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
 			Texture displacement = new Texture(new GrayscaleTextureData(
-				new FileHandle(materialPath+jmat.displacement),
+				Gdx.files.internal(materialPath+jmat.displacement),
 				null, null, true));
 			displacement.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 			displacement.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
@@ -102,14 +125,14 @@ public class MaterialLibrary {
 	public Material getMaterial(String material, String version, int width, int height) {
 		Material copy = new Material(materials.get(material).get("default"));
 
-		int materialWidth = copy.get(SizeAttribute.class, SizeAttribute.Width).value;
-		int materialHeight = copy.get(SizeAttribute.class, SizeAttribute.Height).value;
+		int materialWidth = copy.get(IntAttribute.class, SizeAttribute.Width).value;
+		int materialHeight = copy.get(IntAttribute.class, SizeAttribute.Height).value;
 
 		float scaleU = (float) width / (float) materialWidth;
 		float scaleV = (float) height / (float) materialHeight;
 
-		material.set(new UVMappingAttribute(UVMappingAttribute.UV, scaleU, scaleV, 0, 0));
+		copy.set(new UVMappingAttribute(UVMappingAttribute.UV, scaleU, scaleV, 0, 0));
 
-		return material;
+		return copy;
 	}
 }
